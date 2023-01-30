@@ -1,0 +1,158 @@
+﻿@attribute [Route(PageConstants.ExpenseUrl)]
+@using Yugen.HomeBudget.Shared.Contants
+@using Yugen.HomeBudget.Client.ViewModels.Expense
+@inject ExpenseListViewModel ViewModel
+<!-- AllowAnonymous / Authorize -->
+@attribute [Authorize]
+
+<!-- ========== title-wrapper start ========== -->
+<TitleComponent PageTitle="@PageConstants.ExpenseTitle"
+				Title="@PageConstants.ExpenseTitle"
+				Breadcrumb="@PageConstants.ExpenseTitle" />
+<!-- ========== title-wrapper end ========== -->
+@if (ViewModel.IsLoading)
+{
+	<p><em>Loading...</em></p>
+}
+else
+{
+	<div class="row">
+	</div>
+	<div class="row">
+		<div class="card-style mb-30">
+			<div class="title d-flex flex-wrap align-items-center justify-content-between">
+				<div class="d-flex align-items-center">
+					<a href="@PageConstants.ExpenseAddUrl"
+					   class="main-btn primary-btn btn-hover btn-sm mr-5"
+					   title="Add">
+						<i class="bi bi-plus mr-5"></i> Add
+					</a>
+					<a href="@EndpointConstants.Export/@ViewModel.Year"
+					   class="main-btn primary-btn btn-hover btn-sm"
+					   title="Add">
+						<i class="bi bi-cloud-download mr-5"></i> Export
+					</a>
+				</div>
+				<div class="d-flex align-items-center">
+					<h6>Month:</h6>
+					<div class="select-style-1 mb-0 ml-10">
+						<div class="select-position">
+							<InputSelect @bind-Value="ViewModel.Month"
+										 @bind-Value:after="() => ViewModel.DateChanged()"
+										 class="border-0">
+								<option value="1">1</option>
+								<option value="2">2</option>
+								<option value="3">3</option>
+								<option value="4">4</option>
+								<option value="5">5</option>
+								<option value="6">6</option>
+								<option value="7">7</option>
+								<option value="8">8</option>
+								<option value="9">9</option>
+								<option value="10">10</option>
+								<option value="11">11</option>
+								<option value="12">12</option>
+							</InputSelect>
+						</div>
+					</div>
+				</div>
+				<div class="d-flex align-items-center">
+					<h6>Year:</h6>
+					<div class="select-style-1 mb-0 ml-10">
+						<div class="select-position">
+							<InputSelect @bind-Value="ViewModel.Year"
+										 @bind-Value:after="() => ViewModel.DateChanged()"
+										 class="border-0">
+								<option value="2023">2023</option>
+								<option value="2024">2024</option>
+								<option value="2025">2025</option>
+							</InputSelect>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- End Title -->
+			<div class="table-responsive">
+				<table class="table top-selling-table">
+					<thead>
+						<tr>
+							<th>
+								<h6 class="text-sm text-medium">Date</h6>
+							</th>
+							<th class="min-width">
+								<h6 class="text-sm text-medium">Title</h6>
+							</th>
+							<th class="min-width">
+								<h6 class="text-sm text-medium">Amount</h6>
+							</th>
+							<th class="min-width">
+								<h6 class="text-sm text-medium">Accrued</h6>
+							</th>
+							<th class="min-width">
+								<h6 class="text-sm text-medium">Category</h6>
+							</th>
+							<th class="min-width">
+								<h6 class="text-sm text-medium">Created On / Modified On</h6>
+							</th>
+							<th>
+								<h6 class="text-sm text-medium text-end">Actions</h6>
+							</th>
+						</tr>
+					</thead>
+					<tbody>
+						@foreach (var expense in ViewModel.Expenses)
+						{
+							<tr>
+								<td>
+									<p class="text-sm">@ExpenseListViewModel.GetDate(expense.DateTimeOffset)</p>
+								</td>
+								<td>
+									<p class="text-sm">@expense.Title</p>
+								</td>
+								<td>
+									<p class="text-sm">$ @expense.Amount</p>
+								</td>
+								<td>
+									<p class="text-sm">$ @expense.Accrued</p>
+								</td>
+								<td>
+									<span class="status-btn close-btn">@expense.CategoryDto.Title > @expense.SubCategoryDto.Title</span>
+								</td>
+								<td>
+									<p class="text-sm">@ExpenseListViewModel.GetDate(expense.CreatedOn)</p>
+									<p class="text-sm">@ExpenseListViewModel.GetDate(expense.LastModifiedOn)</p>
+									<p class="text-sm">@expense.CreatedByApplicationUserId</p>
+									<p class="text-sm">@expense.LastModifiedByApplicationUserId</p>
+								</td>
+								<td>
+									<div class="action justify-content-end">
+
+										<a href="@PageHelper.EditHref(PageConstants.ExpenseUrl, expense.Id)"
+										   class="main-btn warning-btn btn-hover btn-sm mr-10"
+										   title="Edit">
+											<i class="bi bi-pencil"></i>
+										</a>
+
+										<DeleteComponent Id="@expense.Id"
+														 DeleteCallback="(id) => ViewModel.DeleteAsync(id)" />
+									</div>
+								</td>
+							</tr>
+						}
+					</tbody>
+				</table>
+				<!-- End Table -->
+			</div>
+			<div class="pt-10 d-flex flex-wrap justify-content-between">
+				<div class="left">
+					<p class="text-sm text-gray">-</p>
+				</div>
+				<PagerComponent PageIndex=@ViewModel.PaginatedList.PageIndex
+								TotalPages=@ViewModel.PaginatedList.TotalPages
+								OnClick="(newPageNumber) => ViewModel.PageIndexChanged(newPageNumber)"
+								HasNextPage=@ViewModel.PaginatedList.HasNextPage
+								HasPreviousPage=@ViewModel.PaginatedList.HasPreviousPage />
+			</div>
+		</div>
+	</div>
+}

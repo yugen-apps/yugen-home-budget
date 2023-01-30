@@ -1,0 +1,1 @@
+const CACHE_VERSION = '%%CACHE_VERSION%%'

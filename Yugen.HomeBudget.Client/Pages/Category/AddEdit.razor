@@ -1,0 +1,169 @@
+﻿@attribute [Route(PageConstants.CategoryAddUrl)]
+@attribute [Route(PageConstants.CategoryEditUrl)]
+@using Yugen.HomeBudget.Client.ViewModels.Category
+@using Yugen.HomeBudget.Shared.Contants
+@inject CategoryAddEditViewModel ViewModel
+<!-- AllowAnonymous / Authorize -->
+@attribute [Authorize]
+
+<!-- ========== title-wrapper start ========== -->
+<TitleComponent PageTitle="@PageConstants.CategoryTitle"
+				Title="@PageHelper.AddEditTitle(PageConstants.CategoryTitle, Id)"
+				Breadcrumb="@PageConstants.CategoryTitle" />
+<!-- ========== title-wrapper end ========== -->
+@if (ViewModel.Category != null)
+{
+	<div class="row">
+		<div class="col-lg-6">
+			<EditForm Model="@ViewModel.Category"
+					  OnInvalidSubmit="(async () => await ViewModel.SubmitAsync(false))"
+					  OnValidSubmit="(async () => await ViewModel.SubmitAsync(true))">
+				<DataAnnotationsValidator />
+				<ValidationSummary />
+				<div class="card-style settings-card-2 mb-30">
+					<div class="row">
+						<div class="col-12">
+							<div class="input-style-1">
+								<label>Title</label>
+								<InputText @bind-Value="ViewModel.Category.Title" placeholder="Title" />
+							</div>
+						</div>
+						<div class="col-12">
+							<div class="input-style-1">
+								<label>Icon</label>
+								<button class="btn active m-2">
+									<i class="bi bi-@ViewModel.Category.Icon"
+									   style="font-size: 2rem;"></i>
+								</button>
+								<a class="main-btn warning-btn btn-hover btn-sm"
+								   @onclick="() => ViewModel.OpenIconsPopup()"
+								   title="Edit">
+									<i class="bi bi-pencil"></i>
+								</a>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="card-style settings-card-2 mb-30">
+					<div class="title mb-30 d-flex justify-content-between align-items-center">
+						<h6>Sub Categories</h6>
+						<a class="main-btn primary-btn btn-hover btn-sm"
+						   @onclick="() => ViewModel.OpenAddSubCategoryPopup()"
+						   title="Add">
+							<i class="bi bi-plus"></i>
+						</a>
+					</div>
+					<div class="row">
+						@if (ViewModel.Category?.SubCategoriesDto != null)
+						{
+							foreach (var subCategory in ViewModel.Category.SubCategoriesDto)
+							{
+								<SubCategoryComponent SubCategoryDto="@subCategory"
+													  DeleteCallback="(subCategoryDto) => ViewModel.DeleteSubCategoryAsync(subCategoryDto)" />
+							}
+						}
+					</div>
+				</div>
+				<div class="card-style settings-card-2 mb-30">
+					<div class="row">
+						<div class="col-12">
+							<button disabled="@ViewModel.Busy"
+									type="submit"
+									class="main-btn primary-btn btn-hover">
+								Save
+							</button>
+							<button disabled="@ViewModel.Busy"
+									class="main-btn warning-btn btn-hover"
+									@onclick="() => ViewModel.CancelAsync()">
+								Cancel
+							</button>
+						</div>
+					</div>
+				</div>
+			</EditForm>
+			<!-- end card -->
+		</div>
+		<!-- end col -->
+	</div>
+}
+@if (ViewModel.ConcurrencyError)
+{
+	<br />
+	<div class="alert alert-danger">
+		<p>
+			The details have changed since it was last loaded. The updated fields are highlighted in the form.
+			Please choose an option:
+		</p>
+		<p><b>Cancel</b> to lose your changes and keep the database version.</p>
+		<p><b>Submit</b> to force an update with your version.</p>
+	</div>
+}
+@if (ViewModel.Error)
+{
+	<br />
+	<div class="alert alert-danger">Failed to update (@ViewModel.ErrorMessage).</div>
+}
+@if (ViewModel.ShowAddSubCategoryPopup)
+{
+	<div class="modal" tabindex="-1" style="display:block">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h3 class="modal-title">Add</h3>
+					<a class="main-btn primary-btn btn-hover btn-sm"
+					   @onclick="() => ViewModel.CloseAddSubCategoryPopup()"
+					   title="Close">
+						<i class="bi bi-x"></i>
+					</a>
+				</div>
+				<div class="modal-body">
+					<div class="input-style-1">
+						<label>Title</label>
+						<InputText @bind-Value="ViewModel.NewSubCategoryTitle" placeholder="Title" />
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button class="main-btn primary-btn btn-hover"
+							@onclick="() => ViewModel.AddSubCategory()">
+						Save
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+}
+@if (ViewModel.ShowIconsPopup)
+{
+	<div class="modal" tabindex="-1" style="display:block">
+		<div class="modal-dialog modal-dialog-scrollable">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h3 class="modal-title">Add</h3>
+					<a class="main-btn primary-btn btn-hover btn-sm"
+					   @onclick="() => ViewModel.CloseIconsPopup()"
+					   title="Close">
+						<i class="bi bi-x"></i>
+					</a>
+				</div>
+				<div class="modal-body">
+					@{
+						foreach (var icon in ViewModel.IconList)
+						{
+							<button class="btn m-2 @ViewModel.IsActive(icon)"
+									@onclick="() => ViewModel.AddIcon(icon)">
+								<i class="bi bi-@icon"
+								   style="font-size: 2rem;"></i>
+							</button>
+						}
+					}
+				</div>
+				<div class="modal-footer">
+					<button class="main-btn primary-btn btn-hover"
+							@onclick="() => ViewModel.SaveIcon()">
+						Save
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+}

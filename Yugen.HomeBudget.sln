@@ -1,0 +1,56 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33424.131
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Yugen.HomeBudget.Server", "Yugen.HomeBudget.Server\Yugen.HomeBudget.Server.csproj", "{F35B74CE-D49C-425D-9B84-CE692FB0102D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Yugen.HomeBudget.Client", "Yugen.HomeBudget.Client\Yugen.HomeBudget.Client.csproj", "{73E77B45-0B72-4CCC-A461-9113075E97FE}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Yugen.HomeBudget.Shared", "Yugen.HomeBudget.Shared\Yugen.HomeBudget.Shared.csproj", "{8D73EAB8-09A5-4EFE-8AEF-BBA859834A98}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Yugen.HomeBudget.Application", "Yugen.HomeBudget.Application\Yugen.HomeBudget.Application.csproj", "{51E0A7FA-D22B-437C-AC11-79B5B0FC5DC6}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Yugen.HomeBudget.Data", "Yugen.HomeBudget.Data\Yugen.HomeBudget.Data.csproj", "{51811CAE-669F-4804-A96A-D9027A6D11B4}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{40AF22F8-F368-4916-880C-EC8FA96A1E1F}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\azcli-workflow.yml = .github\workflows\azcli-workflow.yml
+		.github\workflows\azure-webapps-dotnet-core.yml = .github\workflows\azure-webapps-dotnet-core.yml
+		README.md = README.md
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F35B74CE-D49C-425D-9B84-CE692FB0102D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F35B74CE-D49C-425D-9B84-CE692FB0102D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F35B74CE-D49C-425D-9B84-CE692FB0102D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F35B74CE-D49C-425D-9B84-CE692FB0102D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{73E77B45-0B72-4CCC-A461-9113075E97FE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{73E77B45-0B72-4CCC-A461-9113075E97FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{73E77B45-0B72-4CCC-A461-9113075E97FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{73E77B45-0B72-4CCC-A461-9113075E97FE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8D73EAB8-09A5-4EFE-8AEF-BBA859834A98}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8D73EAB8-09A5-4EFE-8AEF-BBA859834A98}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8D73EAB8-09A5-4EFE-8AEF-BBA859834A98}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8D73EAB8-09A5-4EFE-8AEF-BBA859834A98}.Release|Any CPU.Build.0 = Release|Any CPU
+		{51E0A7FA-D22B-437C-AC11-79B5B0FC5DC6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{51E0A7FA-D22B-437C-AC11-79B5B0FC5DC6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{51E0A7FA-D22B-437C-AC11-79B5B0FC5DC6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{51E0A7FA-D22B-437C-AC11-79B5B0FC5DC6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{51811CAE-669F-4804-A96A-D9027A6D11B4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{51811CAE-669F-4804-A96A-D9027A6D11B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{51811CAE-669F-4804-A96A-D9027A6D11B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{51811CAE-669F-4804-A96A-D9027A6D11B4}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {7AF5D32C-9818-47B8-B5EE-E3AEF7964837}
+	EndGlobalSection
+EndGlobal

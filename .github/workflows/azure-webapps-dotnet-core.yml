@@ -1,0 +1,154 @@
+# This workflow will build and push a .NET Core app to an Azure Web App when a commit is pushed to your default branch.
+#
+# This workflow assumes you have already created the target Azure App Service web app.
+# For instructions see https://docs.microsoft.com/en-us/azure/app-service/quickstart-dotnetcore?tabs=net60&pivots=development-environment-vscode
+#
+# To configure this workflow:
+#
+# 1. Download the Publish Profile for your Azure Web App. You can download this file from the Overview page of your Web App in the Azure Portal.
+#    For more information: https://docs.microsoft.com/en-us/azure/app-service/deploy-github-actions?tabs=applevel#generate-deployment-credentials
+#
+# 2. Create a secret in your repository named AZURE_WEBAPP_PUBLISH_PROFILE, paste the publish profile contents as the value of the secret.
+#    For instructions on obtaining the publish profile see: https://docs.microsoft.com/azure/app-service/deploy-github-actions#configure-the-github-secret
+#
+# 3. Change the value for the AZURE_WEBAPP_NAME. Optionally, change the AZURE_WEBAPP_PACKAGE and DOTNET_VERSION environment variables below.
+#
+# For more information on GitHub Actions for Azure: https://github.com/Azure/Actions
+# For more information on the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
+# For more samples to get started with GitHub Action workflows to deploy to Azure: https://github.com/Azure/actions-workflow-samples
+
+name: Build and deploy ASP.Net Core app to an Azure Web App
+
+env:
+  AZURE_WEBAPP_NAME: yugen-homebudget-app    # set this to the name of your Azure Web App
+  AZURE_WEBAPP_PACKAGE: 'myapp'              # set this to the path to your web app project, defaults to the repository root
+  DOTNET_VERSION: '8.0.x'                    # set this to the .NET Core version to use
+  CLIENT_PROJECT_NAME: Yugen.HomeBudget.Client
+  SERVER_PROJECT_NAME: Yugen.HomeBudget.Server
+  DATA_PROJECT_NAME: Yugen.HomeBudget.Data
+  EF_BUNDLE: 'efbundle'
+  SERVER_NAME: 'yugen-homebudget-sql-server.database.windows.net,1433'
+  DATABASE: 'yugen-homebudget-sql-db'
+
+on:
+  push:
+    branches:
+    - release/*
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Install GitVersion
+        uses: gittools/actions/gitversion/setup@v2
+        with:
+          versionSpec: '5.x'
+          
+      - name: Determine Version
+        id:   gitversion
+        uses: gittools/actions/gitversion/execute@v2
+
+      - name: Set service-worker version
+        uses: mh4647/replace-action-z@V2.0.12
+        with: 
+          files: '${{ env.CLIENT_PROJECT_NAME }}/wwwroot/assets/js/version.js'
+          replacements: '%%CACHE_VERSION%%=${{ steps.gitversion.outputs.MajorMinorPatch }}'
+          
+      - name: Set up .NET Core
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Set up dependency caching for faster builds
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+
+      - name: Build with dotnet
+        run: dotnet build ${{ env.SERVER_PROJECT_NAME }} --configuration Release -p:Version=${{ steps.gitversion.outputs.MajorMinorPatch }}
+
+      - name: Install EF Tool
+        run: dotnet tool install --global dotnet-ef
+            
+      - name: Generate EF migration script
+        run: dotnet ef migrations bundle --startup-project ${{ env.SERVER_PROJECT_NAME }} --project ${{ env.DATA_PROJECT_NAME }} --self-contained --verbose
+
+      - name: Upload artifact for deployment job
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.EF_BUNDLE }}
+          path: ${{ env.EF_BUNDLE }}
+
+      - name: dotnet publish
+        run: dotnet publish ${{ env.SERVER_PROJECT_NAME }} -c Release -o ${{env.DOTNET_ROOT}}/${{ env.AZURE_WEBAPP_PACKAGE }} -p:Version=${{ steps.gitversion.outputs.MajorMinorPatch }}
+
+      - name: Upload artifact for deployment job
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.AZURE_WEBAPP_PACKAGE }}
+          path: ${{env.DOTNET_ROOT}}/${{ env.AZURE_WEBAPP_PACKAGE }}/
+
+  deploy:
+    permissions:
+      contents: none
+    runs-on: ubuntu-latest
+    needs: build
+    environment:
+      name: 'PROD'
+      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+
+    steps:
+      - name: Download efbundle artifact from build job
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ env.EF_BUNDLE }}
+          path: ${{ env.EF_BUNDLE }}
+
+      - name: chmod
+        run: sudo chmod +x ./${{ env.EF_BUNDLE }}/${{ env.EF_BUNDLE }}
+
+      - name: ls
+        run: ls -al ${{ env.EF_BUNDLE }}
+
+      - uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+          enable-AzPSSession: true
+
+      - name: Apply EF migration script
+        uses: azure/powershell@v2
+        with:          
+          azPSVersion: "latest"
+          inlineScript: >            
+            ./${{ env.EF_BUNDLE }}/${{ env.EF_BUNDLE }} 
+            --connection 'Server=tcp:${{ env.SERVER_NAME }};Database=${{ env.DATABASE }};Encrypt=True;Authentication=Active Directory Managed Identity;'
+            --verbose
+
+      - name: Download webapp artifact from build job
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ env.AZURE_WEBAPP_PACKAGE }}
+          path: ${{ env.AZURE_WEBAPP_PACKAGE }}
+
+      - name: Display structure of downloaded files
+        run: ls -R
+
+      - name: Deploy to Azure Web App
+        id: deploy-to-webapp
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: ${{ env.AZURE_WEBAPP_NAME }}
+          # publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+          package: ./${{ env.AZURE_WEBAPP_PACKAGE }}

@@ -1,0 +1,30 @@
+﻿@using Microsoft.AspNetCore.Components.Authorization
+@using Yugen.HomeBudget.Shared.Contants
+
+<AuthorizeView>
+    <Authorized>
+        <div class="profile-info">
+            <div class="info">
+                <h6>@context.User.Identity?.Name!</h6>
+                <div class="image">
+                    <img src="assets/images/logo.png"
+                         alt="Logo" />
+                </div>
+            </div>
+        </div>
+        <button class="main-btn danger-btn btn-hover btn-sm ml-10"
+                @onclick="BeginLogOut">
+            <i class="bi bi-box-arrow-right"></i>
+        </button>
+    </Authorized>
+    <NotAuthorized>
+        <a href="@PageConstants.RegisterUrl"
+           class="main-btn primary-btn btn-hover btn-sm">
+            <i class="bi bi-plus mr-5"></i> Register
+        </a>
+        <a href="@PageConstants.LoginUrl"
+           class="main-btn primary-btn btn-hover btn-sm ml-15">
+            Log in
+        </a>
+    </NotAuthorized>
+</AuthorizeView>

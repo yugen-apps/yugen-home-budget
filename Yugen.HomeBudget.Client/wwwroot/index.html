@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Yugen.HomeBudget</title>
+    <base href="/" />
+    <!-- ========== All CSS files linkup ========= -->
+    <link href="assets/css/bootstrap/bootstrap.min.css" rel="stylesheet" />
+    <link href="assets/css/app.css" rel="stylesheet" />
+    <link href="assets/css/main.css" rel="stylesheet" />
+    <link href="Yugen.HomeBudget.Client.styles.css" rel="stylesheet" />
+    <link href="assets/images/favicon.png" rel="icon" type="image/png" />
+    <link href="manifest.json" rel="manifest" />
+    <link href="assets/images/icon-512.png" rel="apple-touch-icon" sizes="512x512" />
+    <link href="assets/images/icon-192.png" rel="apple-touch-icon" sizes="192x192" />
+</head>
+
+<body>
+    <div id="app">
+        <svg class="loading-progress">
+            <circle r="40%" cx="50%" cy="50%" />
+            <circle r="40%" cx="50%" cy="50%" />
+        </svg>
+        <div class="loading-progress-text"></div>
+    </div>
+
+    <div id="blazor-error-ui"
+         class="alert-box orange-alert mt-10">
+        <div class="alert">
+            An unhandled error has occurred.
+            <a href=""
+               class="reload main-btn primary-btn btn-hover btn-sm">
+                <i class="bi bi-arrow-clockwise"></i>
+            </a>
+            <a href=""
+               class="dismiss main-btn primary-btn btn-hover btn-sm">
+                <i class="bi bi-x"></i>
+            </a>
+        </div>
+    </div>
+
+    <!-- ========= All Javascript files linkup ======== -->
+    <!--<script src="assets/js/bootstrap.bundle.min.js"></script>-->
+    <script src="assets/js/Chart.min.js"></script>
+    <script src="_framework/blazor.webassembly.js"></script>
+    <script>navigator.serviceWorker.register('service-worker.js');</script>
+    <script>navigator.serviceWorker.register('assets/js/version.js');</script>
+</body>
+</html>
