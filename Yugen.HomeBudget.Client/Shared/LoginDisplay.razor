@@ -1,0 +1,35 @@
+﻿@using Microsoft.AspNetCore.Components.Authorization
+
+<AuthorizeView>
+    <Authorized>
+        <button class="dropdown-toggle bg-transparent border-0"
+                type="button"
+                id="profile"
+                data-bs-toggle="dropdown"
+                aria-expanded="false">
+            <div class="profile-info">
+                <div class="info">
+                    <h6>@context.User.Identity?.Name!</h6>
+                    <div class="image">
+                        <img src="logo.png"
+                             alt="" />
+                    </div>
+                </div>
+            </div>
+        </button>
+        <button class="main-btn primary-btn btn-hover ml-15"
+                @onclick="BeginLogOut">
+            Log out
+        </button>
+    </Authorized>
+    <NotAuthorized>
+        <a href="@PageHelper.AuthHref(PageList.Register)"
+           class="main-btn primary-btn btn-hover btn-sm">
+            <i class="bi bi-plus mr-5"></i> Register
+        </a>
+        <a href="@PageHelper.AuthHref(PageList.Login)"
+           class="main-btn primary-btn btn-hover btn-sm ml-15">
+            Log in
+        </a>
+    </NotAuthorized>
+</AuthorizeView>

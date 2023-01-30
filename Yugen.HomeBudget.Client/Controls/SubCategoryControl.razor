@@ -1,0 +1,37 @@
+﻿
+<div class="col-10">
+    <div class="input-style-1">
+        <InputText @bind-Value="@SubCategoryDto.Title" placeholder="Title" />
+        @if (DeleteConfirmation)
+        {
+            <div class="alert-box danger-alert mt-10">
+                <div class="alert">
+                    <h6 class="alert-heading">Are you sure you want to delete this?</h6>
+                    <p class="text-medium">
+                        <button class="main-btn primary-btn btn-hover btn-sm"
+                            disabled="@_busy"
+                            @onclick="@(() => ConfirmAsync(false))">
+                            No
+                        </button>
+
+                        <button class="main-btn danger-btn btn-hover btn-sm"
+                            disabled="@_busy"
+                            @onclick="@(() => ConfirmAsync(true))">
+                            Yes
+                        </button>
+                    </p>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+<div class="col-1">
+    @if (!DeleteConfirmation)
+    {
+        <a class="main-btn primary-btn btn-hover btn-sm"
+           @onclick="@DeleteRequestAsync"
+           title="Delete">
+            <i class="bi bi-trash"></i>
+        </a>
+    }
+</div>

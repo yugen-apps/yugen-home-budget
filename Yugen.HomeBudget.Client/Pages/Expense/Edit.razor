@@ -1,0 +1,149 @@
+﻿@page "/expense/edit"
+@page "/expense/edit/{Id:int}"
+@using Yugen.HomeBudget.Client.Models
+@inject EditSuccess EditSuccessState
+<!-- AllowAnonymous / Authorize -->
+@attribute [AllowAnonymous]
+
+<PageTitle>@PageList.Expenses</PageTitle>
+
+<!-- ========== title-wrapper start ========== -->
+<div class="title-wrapper pt-30">
+    <div class="row align-items-center">
+        <div class="col-md-6">
+            <div class="title mb-30">
+                <h2>@PageHelper.AddEditTitle(PageList.Expense, Id)</h2>
+            </div>
+        </div>
+        <!-- end col -->
+        <div class="col-md-6">
+            <div class="breadcrumb-wrapper mb-30">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a href="#0">Dashboard</a>
+                        </li>
+                        <li class="breadcrumb-item active" aria-current="page">
+                            @PageList.Expenses
+                        </li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+        <!-- end col -->
+    </div>
+    <!-- end row -->
+</div>
+<!-- ========== title-wrapper end ========== -->
+@if (ExpenseDto != null)
+{
+    <div class="row">
+        <div class="col-lg-6">
+            <EditForm Model="@ExpenseDto"
+                  OnInvalidSubmit="(async () => await SubmitAsync(false))"
+                  OnValidSubmit="(async () => await SubmitAsync(true))">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+                <div class="card-style settings-card-2 mb-30">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="input-style-1">
+                                <label>Title</label>
+                                <InputText @bind-Value="ExpenseDto.Title" placeholder="Title" />
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="input-style-1">
+                                <label>Amount</label>
+                                <InputNumber @bind-Value="ExpenseDto.Amount" placeholder="Amount" />
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="input-style-1">
+                                <label>Date</label>
+                                <InputDate @bind-Value="ExpenseDto.DateTimeOffset" />
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="select-style-1">
+                                <label>Category</label>
+                                <div class="select-position">
+                                    <InputSelect @bind-Value="ExpenseDto.CategoryDto.Id">
+                                        @foreach (var category in _categories)
+                                        {
+                                            if (ExpenseDto.CategoryDto.Id == category.Id)
+                                            {
+                                                <option value="@category.Id" selected="selected">@category.Title</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@category.Id">@category.Title</option>
+                                            }
+                                        }
+                                    </InputSelect>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="select-style-1">
+                                <label>Sub Category</label>
+                                <div class="select-position">
+                                    <InputSelect @bind-Value="ExpenseDto.SubCategoryDto.Id">
+                                        @{
+                                            var currentCategory = _categories.FirstOrDefault(x => x.Id == ExpenseDto.CategoryDto.Id);
+                                            if (currentCategory != null)
+                                            {
+                                                foreach (var subCategory in currentCategory.SubCategoriesDto)
+                                                {
+                                                    if (ExpenseDto.SubCategoryDto.Id == subCategory.Id)
+                                                    {
+                                                        <option value="@subCategory.Id" selected="selected">@subCategory.Title</option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="@subCategory.Id">@subCategory.Title</option>
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    </InputSelect>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <button disabled="@_busy"
+                                type="submit"
+                                class="main-btn primary-btn btn-hover">
+                                Save
+                            </button>
+                            <button disabled="@_busy"
+                                class="main-btn warning-btn btn-hover"
+                                @onclick="CancelAsync">
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </EditForm>
+            <!-- end card -->
+        </div>
+        <!-- end col -->
+    </div>
+}
+@if (_concurrencyError)
+{
+    <br />
+    <div class="alert alert-danger">
+        <p>
+            The contact details have changed since it was last loaded. The updated fields are highlighted in the form.
+            Please choose an option:
+        </p>
+        <p><b>Cancel</b> to lose your changes and keep the database version.</p>
+        <p><b>Submit</b> to force an update with your version.</p>
+    </div>
+}
+@if (_error)
+{
+    <br />
+    <div class="alert alert-danger">Failed to update the contact (@_errorMessage).</div>
+}

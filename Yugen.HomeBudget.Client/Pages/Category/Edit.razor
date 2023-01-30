@@ -1,0 +1,144 @@
+﻿@page "/category/edit"
+@page "/category/edit/{Id:int}"
+@using Yugen.HomeBudget.Client.Models
+@inject EditSuccess EditSuccessState
+<!-- AllowAnonymous / Authorize -->
+@attribute [AllowAnonymous]
+
+<PageTitle>@PageList.Categories</PageTitle>
+
+<!-- ========== title-wrapper start ========== -->
+<div class="title-wrapper pt-30">
+    <div class="row align-items-center">
+        <div class="col-md-6">
+            <div class="title mb-30">
+                <h2>@PageHelper.AddEditTitle(PageList.Category, Id)</h2>
+            </div>
+        </div>
+        <!-- end col -->
+        <div class="col-md-6">
+            <div class="breadcrumb-wrapper mb-30">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a href="#0">Dashboard</a>
+                        </li>
+                        <li class="breadcrumb-item active" aria-current="page">
+                            @PageList.Categories
+                        </li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+        <!-- end col -->
+    </div>
+    <!-- end row -->
+</div>
+<!-- ========== title-wrapper end ========== -->
+@if (CategoryDto != null)
+{
+    <div class="row">
+        <div class="col-lg-6">
+            <EditForm Model="@CategoryDto"
+                  OnInvalidSubmit="(async () => await SubmitAsync(false))"
+                  OnValidSubmit="(async () => await SubmitAsync(true))">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+                <div class="card-style settings-card-2 mb-30">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="input-style-1">
+                                <label>Title</label>
+                                <InputText @bind-Value="CategoryDto.Title" placeholder="Title" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-style settings-card-2 mb-30">
+                    <div class="title mb-30 d-flex justify-content-between align-items-center">
+                        <h6>Sub Categories</h6>
+                        <a class="main-btn primary-btn btn-hover btn-sm"
+                           @onclick="ShowAddPopup"
+                           title="Add">
+                            <i class="bi bi-plus"></i>
+                        </a>
+                    </div>
+                    <div class="row">
+                        @if (CategoryDto?.SubCategoriesDto != null)
+                        {
+                            foreach (var subCategory in CategoryDto.SubCategoriesDto)
+                            {
+                                <SubCategoryControl SubCategoryDto="@subCategory"
+                                                    DeleteCallback="@DeleteSubCategoryAsync" />
+                            }
+                        }
+                    </div>
+                </div>
+                <div class="card-style settings-card-2 mb-30">
+                    <div class="row">
+                        <div class="col-12">
+                            <button disabled="@_busy"
+                                type="submit"
+                                class="main-btn primary-btn btn-hover">
+                                Save
+                            </button>
+                            <button disabled="@_busy"
+                                class="main-btn warning-btn btn-hover"
+                                @onclick="CancelAsync">
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </EditForm>
+            <!-- end card -->
+        </div>
+        <!-- end col -->
+    </div>
+}
+@if (_concurrencyError)
+{
+    <br />
+    <div class="alert alert-danger">
+        <p>
+            The contact details have changed since it was last loaded. The updated fields are highlighted in the form.
+            Please choose an option:
+        </p>
+        <p><b>Cancel</b> to lose your changes and keep the database version.</p>
+        <p><b>Submit</b> to force an update with your version.</p>
+    </div>
+}
+@if (_error)
+{
+    <br />
+    <div class="alert alert-danger">Failed to update the contact (@_errorMessage).</div>
+}
+@if (_showPopup)
+{
+    <div class="modal" tabindex="-1" style="display:block">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">Add</h3>
+                    <a class="main-btn primary-btn btn-hover btn-sm"
+                       @onclick="ClosePopup"
+                       title="Close">
+                        <i class="bi bi-x"></i>
+                    </a>
+                </div>
+                <div class="modal-body">
+                    <div class="input-style-1">
+                        <label>Title</label>
+                        <InputText @bind-Value="NewSubCategoryTitle" placeholder="Title" />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="main-btn primary-btn btn-hover"
+                            @onclick="AddSubCategory">
+                        Save
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+}

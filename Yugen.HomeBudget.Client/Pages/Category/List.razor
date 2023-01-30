@@ -1,0 +1,66 @@
+﻿@page "/category/list"
+<!-- AllowAnonymous / Authorize -->
+@attribute [AllowAnonymous]
+
+<PageTitle>@PageList.Categories</PageTitle>
+
+<!-- ========== title-wrapper start ========== -->
+<div class="title-wrapper pt-30">
+    <div class="row align-items-center">
+        <div class="col-md-6">
+            <div class="title mb-30">
+                <h2>@PageList.Categories</h2>
+            </div>
+        </div>
+        <!-- end col -->
+        <div class="col-md-6">
+            <div class="breadcrumb-wrapper mb-30">
+                <nav aria-label="breadcrumb">
+                    <a href="@PageHelper.AddHref(PageList.Category)"
+                       class="main-btn primary-btn btn-hover btn-sm"
+                       title="Add">
+                        <i class="bi bi-plus mr-5"></i> Add
+                    </a>
+                </nav>
+            </div>
+        </div>
+        <!-- end col -->
+    </div>
+    <!-- end row -->
+</div>
+<!-- ========== title-wrapper end ========== -->
+
+@if (_categories == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="row">
+        @foreach (var category in _categories)
+        {
+            <div class="col-xl-3 col-lg-4 col-sm-6">
+                <div class="card-style-3 mb-30">
+                    <div class="card-content">
+                        <h4>@category.Title</h4>
+                        <ul class="text-sm">
+                            @foreach (var subCategory in category.SubCategoriesDto)
+                            {
+                                <li class="bi bi-chevron-right">@subCategory.Title</li>
+                            }
+                        </ul>
+
+                        <a href="@PageHelper.EditHref(PageList.Category, category.Id)"
+                           class="main-btn warning-btn btn-hover btn-sm"
+                           title="Edit">
+                            <i class="bi bi-pencil"></i>
+                        </a>
+
+                        <DeleteControl Id="@category.Id"
+                                       DeleteCallback="@DeleteAsync" />
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
