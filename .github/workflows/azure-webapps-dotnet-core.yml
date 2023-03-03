@@ -23,6 +23,8 @@ env:
   AZURE_WEBAPP_NAME: yugen-homebudget-app    # set this to the name of your Azure Web App
   AZURE_WEBAPP_PACKAGE_PATH: '.'             # set this to the path to your web app project, defaults to the repository root
   DOTNET_VERSION: '7.0.x'                    # set this to the .NET Core version to use
+  CLIENT_PROJECT_NAME: Yugen.HomeBudget.Client
+  SERVER_PROJECT_NAME: Yugen.HomeBudget.Server
 
 on:
   push:
@@ -55,13 +57,13 @@ jobs:
         id: update
         uses: vers-one/dotnet-project-version-updater@v1.2
         with:
-          file: Yugen.HomeBudget/Client/Yugen.HomeBudget.Client.csproj
+          file: ${{ env.CLIENT_PROJECT_NAME }}/${{ env.CLIENT_PROJECT_NAME }}.csproj
           version: ${{ steps.gitversion.outputs.MajorMinorPatch }}
 
       - name: Set service-worker version
         uses: datamonsters/replace-action@v2
         with: 
-          files: 'Yugen.HomeBudget/Client/wwwroot/assets/js/version.js'
+          files: '${{ env.CLIENT_PROJECT_NAME }}/wwwroot/assets/js/version.js'
           replacements: '%%CACHE_VERSION%%=${{ steps.gitversion.outputs.MajorMinorPatch }}'
 
       - name: Set up .NET Core
@@ -78,10 +80,10 @@ jobs:
             ${{ runner.os }}-nuget-
 
       - name: Build with dotnet
-        run: dotnet build ${{ github.workspace }}/Yugen.HomeBudget/Server/Yugen.HomeBudget.Server.csproj --configuration Release
+        run: dotnet build ${{ github.workspace }}/${{ env.SERVER_PROJECT_NAME }}/${{ env.SERVER_PROJECT_NAME }}.csproj --configuration Release
 
       - name: dotnet publish
-        run: dotnet publish ${{ github.workspace }}/Yugen.HomeBudget/Server/Yugen.HomeBudget.Server.csproj -c Release -o ${{env.DOTNET_ROOT}}/myapp
+        run: dotnet publish ${{ github.workspace }}/${{ env.SERVER_PROJECT_NAME }}/${{ env.SERVER_PROJECT_NAME }}.csproj -c Release -o ${{env.DOTNET_ROOT}}/myapp
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v3
