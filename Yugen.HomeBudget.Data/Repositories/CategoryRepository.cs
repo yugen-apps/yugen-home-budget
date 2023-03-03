@@ -19,6 +19,15 @@ namespace Yugen.HomeBudget.Data.Repositories
                 .ToListAsync();
         }
 
+        public Task<List<Category>> ListAsync(int skip, int pageSize)
+        {
+            return _context.Categories
+                .Include(category => category.SubCategories)
+                .Skip(skip)
+                .Take(pageSize)
+                .ToListAsync();
+        }
+
         public async Task<Category?> GetAsync(int id)
         {
             var category = await _context.Categories.FindAsync(id);
@@ -60,6 +69,11 @@ namespace Yugen.HomeBudget.Data.Repositories
             _context.Categories.Remove(category);
 
             await _context.SaveChangesAsync();
+        }
+
+        public Task<int> CountAsync()
+        {
+            return _context.Categories.CountAsync();
         }
 
         public Task<bool> ExistsAsync(string title)

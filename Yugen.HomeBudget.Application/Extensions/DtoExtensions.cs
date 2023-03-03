@@ -24,7 +24,7 @@ public static class DtoExtensions
     }
 
     public static SubCategoryDto ToDto(this SubCategory subCategory) => new(subCategory.Id, subCategory.Title);
-    
+
     public static ExpenseDto ToDto(this Expense expense)
     {
         var expenseDto = new ExpenseDto(expense.Id, expense.Title, expense.Amount, expense.DateTimeOffset, expense.Category.ToDto(), expense.SubCategory.ToDto());

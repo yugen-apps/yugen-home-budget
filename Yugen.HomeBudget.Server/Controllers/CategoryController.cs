@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Yugen.HomeBudget.Application.Services;
+using Yugen.HomeBudget.Shared.Models;
 using Yugen.HomeBudget.Shared.Models.Category;
 
 namespace Yugen.HomeBudget.Server.Controllers
@@ -27,9 +28,16 @@ namespace Yugen.HomeBudget.Server.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
+        [Route("all")]
         public Task<IEnumerable<CategoryDto>> ListAsync()
         {
             return _categoryService.ListAsync();
+        }
+
+        [HttpGet]
+        public Task<PaginatedList<CategoryDto>> ListAsync(int pageNumber, int pageSize)
+        {
+            return _categoryService.ListAsync(pageNumber, pageSize);
         }
 
         /// <summary>
@@ -72,7 +80,7 @@ namespace Yugen.HomeBudget.Server.Controllers
 
             return _categoryService.UpdateAsync(id, updateCategoryDto);
         }
-        
+
         /// <summary>
         /// DELETE: Category/5
         /// </summary>

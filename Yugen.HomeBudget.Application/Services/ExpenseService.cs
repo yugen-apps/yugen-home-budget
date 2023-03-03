@@ -1,6 +1,7 @@
 ﻿using Yugen.HomeBudget.Application.Extensions;
 using Yugen.HomeBudget.Data.Models;
 using Yugen.HomeBudget.Data.Repositories;
+using Yugen.HomeBudget.Shared.Models;
 using Yugen.HomeBudget.Shared.Models.Expense;
 
 namespace Yugen.HomeBudget.Application.Services
@@ -13,13 +14,24 @@ namespace Yugen.HomeBudget.Application.Services
         {
             _expenseRepository = expenseRepository;
         }
-        
+
         public async Task<IEnumerable<ExpenseDto>> ListAsync()
         {
             var expenses = await _expenseRepository.ListAsync();
             return expenses.Select(e => e.ToDto()).ToList();
         }
-        
+
+        public async Task<PaginatedList<ExpenseDto>> ListAsync(int pageIndex, int pageSize)
+        {
+            var totalItemCount = await _expenseRepository.CountAsync();
+            var skip = (pageIndex - 1) * pageSize;
+            var categoriesDto = (await _expenseRepository.ListAsync(skip, pageSize))
+                .Select(e => e.ToDto())
+                .ToList();
+
+            return new PaginatedList<ExpenseDto>(categoriesDto, totalItemCount, pageIndex, pageSize);
+        }
+
         public async Task<ExpenseDto> GetAsync(int id)
         {
             var expense = await _expenseRepository.GetAsync(id);
@@ -29,9 +41,9 @@ namespace Yugen.HomeBudget.Application.Services
         public async Task<ExpenseDto?> CreateAsync(CreateExpenseDto createExpenseDto)
         {
             var expense = new Expense(
-                createExpenseDto.Title, 
-                createExpenseDto.Amount, 
-                createExpenseDto.DateTimeOffset, 
+                createExpenseDto.Title,
+                createExpenseDto.Amount,
+                createExpenseDto.DateTimeOffset,
                 createExpenseDto.CategoryId,
                 createExpenseDto.SubCategoryId);
 
@@ -56,7 +68,7 @@ namespace Yugen.HomeBudget.Application.Services
             var expenseResult = await _expenseRepository.UpdateAsync(expense);
             return expenseResult.ToDto();
         }
-        
+
         public async Task<bool> DeleteAsync(int id)
         {
             var expense = await _expenseRepository.GetAsync(id);

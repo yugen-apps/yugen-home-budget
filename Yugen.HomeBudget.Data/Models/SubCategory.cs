@@ -1,6 +1,6 @@
 ﻿namespace Yugen.HomeBudget.Data.Models;
 
-public class SubCategory
+public class SubCategory : Entity
 {
     public SubCategory()
     {
@@ -10,9 +10,7 @@ public class SubCategory
     {
         Title = title;
     }
-
-    public int Id { get; set; }
-
+    
     public string Title { get; set; }
 
     public int CategoryId { get; set; }

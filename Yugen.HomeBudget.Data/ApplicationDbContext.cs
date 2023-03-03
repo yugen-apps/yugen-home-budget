@@ -1,10 +1,11 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Yugen.HomeBudget.Data.Models;
 
 namespace Yugen.HomeBudget.Data
 {
-    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityRole<int>, int>
     {
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {
@@ -15,13 +16,13 @@ namespace Yugen.HomeBudget.Data
         public DbSet<SubCategory> SubCategories { get; set; } = default!;
 
         public DbSet<Expense> Expenses { get; set; } = default!;
-
+        
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<Category>().HasData(
-                new Category { Id = 1, Title = "Vienna Flat" },
+                new Category { Id = 1, Title = "Vienna Flat"},
                 new Category { Id = 2, Title = "Vienna Car" },
                 new Category { Id = 3, Title = "Riga Flat" },
                 new Category { Id = 4, Title = "Balozi Flat" },
@@ -35,7 +36,7 @@ namespace Yugen.HomeBudget.Data
                 );
 
             modelBuilder.Entity<SubCategory>().HasData(
-                new SubCategory { Id = 1, Title = "Rent", CategoryId = 1 },
+                new SubCategory { Id = 1, Title = "Rent", CategoryId = 1},
                 new SubCategory { Id = 2, Title = "Utility Bills", CategoryId = 1 },
                 new SubCategory { Id = 3, Title = "GIS", CategoryId = 1 },
                 new SubCategory { Id = 4, Title = "Internet", CategoryId = 1 },

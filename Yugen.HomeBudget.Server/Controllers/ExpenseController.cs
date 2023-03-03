@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Yugen.HomeBudget.Application.Services;
+using Yugen.HomeBudget.Shared.Models;
 using Yugen.HomeBudget.Shared.Models.Expense;
 
 namespace Yugen.HomeBudget.Server.Controllers
@@ -27,9 +28,16 @@ namespace Yugen.HomeBudget.Server.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
+        [Route("all")]
         public Task<IEnumerable<ExpenseDto>> ListAsync()
         {
             return _expenseService.ListAsync();
+        }
+
+        [HttpGet]
+        public Task<PaginatedList<ExpenseDto>> ListAsync(int pageNumber, int pageSize)
+        {
+            return _expenseService.ListAsync(pageNumber, pageSize);
         }
 
         /// <summary>
@@ -72,7 +80,7 @@ namespace Yugen.HomeBudget.Server.Controllers
 
             return await _expenseService.UpdateAsync(id, updateExpenseDto);
         }
-        
+
         /// <summary>
         /// DELETE: Expense/5
         /// </summary>

@@ -35,6 +35,13 @@
 }
 else
 {
+    <div class="row">
+        <PagerComponents PageIndex=@_paginatedList.PageIndex 
+                         TotalPages=@_paginatedList.TotalPages 
+                         OnClick="PageIndexChanged"
+                         HasNextPage=@_paginatedList.HasNextPage 
+                         HasPreviousPage=@_paginatedList.HasPreviousPage />
+    </div>
     <div class="table-responsive">
         <table class="table top-selling-table">
             <thead>
@@ -81,7 +88,7 @@ else
                                     <i class="bi bi-pencil"></i>
                                 </a>
 
-                                <DeleteControl Id="@expense.Id"
+                                <DeleteComponents Id="@expense.Id"
                                        DeleteCallback="@DeleteAsync" />
                             </div>
                         </td>

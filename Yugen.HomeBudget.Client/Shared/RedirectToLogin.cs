@@ -7,11 +7,11 @@ namespace Yugen.HomeBudget.Client.Shared;
 public class RedirectToLogin : ComponentBase
 {
     [Inject]
-    private NavigationManager _navigation { get; set; }
+    private NavigationManager _navigationManager { get; set; }
 
     protected override void OnInitialized()
     {
-        _navigation.NavigateTo(PageHelper.AuthHref(PageList.Login));
+        _navigationManager.NavigateTo(PageHelper.AuthHref(PageList.Login));
     }
 
     //[CascadingParameter]
@@ -21,7 +21,7 @@ public class RedirectToLogin : ComponentBase
     //{
     //    if (!(await AuthenticationState).User.Identity.IsAuthenticated)
     //    {
-    //        _navigation.NavigateTo("authentication/login");
+    //        _navigationManager.NavigateTo("authentication/login");
     //    }
     //}
 }

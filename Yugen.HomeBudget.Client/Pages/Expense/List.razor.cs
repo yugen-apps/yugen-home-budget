@@ -1,22 +1,46 @@
 ﻿using Microsoft.AspNetCore.Components;
 using System.Globalization;
 using System.Net.Http.Json;
+using Yugen.HomeBudget.Shared.Models;
+using Yugen.HomeBudget.Shared.Models.Category;
 using Yugen.HomeBudget.Shared.Models.Expense;
 
 namespace Yugen.HomeBudget.Client.Pages.Expense
 {
     public partial class List
     {
+        private ICollection<ExpenseDto>? _expenses;
+
+        private PaginatedList<ExpenseDto> _paginatedList = new PaginatedList<ExpenseDto>();
+
+        private int? _pageNumber = 1;
+
         [Inject]
         private HttpClient _httpClient { get; set; }
 
-        private ICollection<ExpenseDto>? _expenses;
-
         protected override async Task OnInitializedAsync()
+        {
+            await GetData();
+        }
+
+        private async void PageIndexChanged(int newPageNumber)
+        {
+            if (newPageNumber < 1 || newPageNumber > _paginatedList.TotalPages)
+            {
+                return;
+            }
+
+            _pageNumber = newPageNumber;
+            await GetData();
+            StateHasChanged();
+        }
+
+        private async Task GetData()
         {
             //try
             //{
-                _expenses = await _httpClient.GetFromJsonAsync<ICollection<ExpenseDto>>("Expense");
+            _paginatedList = await _httpClient.GetFromJsonAsync<PaginatedList<ExpenseDto>>($"Expense?pageNumber={_pageNumber}&pageSize=5");
+            _expenses = _paginatedList.Items;
             //}
             //catch (AccessTokenNotAvailableException exception)
             //{
@@ -28,15 +52,15 @@ namespace Yugen.HomeBudget.Client.Pages.Expense
         {
             //try
             //{
-                var result = await _httpClient.DeleteAsync($"Expense/{id}");
-                if (result.IsSuccessStatusCode)
+            var result = await _httpClient.DeleteAsync($"Expense/{id}");
+            if (result.IsSuccessStatusCode)
+            {
+                var expense = _expenses?.FirstOrDefault(c => c.Id.Equals(id));
+                if (expense != null)
                 {
-                    var expense = _expenses?.FirstOrDefault(c => c.Id.Equals(id));
-                    if (expense != null)
-                    {
-                        _expenses?.Remove(expense);
-                    }
+                    _expenses?.Remove(expense);
                 }
+            }
             //}
             //catch (AccessTokenNotAvailableException exception)
             //{

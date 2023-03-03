@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 using System.Net.Http.Json;
 using Yugen.HomeBudget.Shared.Models.Category;
-using Yugen.HomeBudget.Shared.Models.Expense;
 
 namespace Yugen.HomeBudget.Client.Pages.Category
 {
@@ -39,7 +38,7 @@ namespace Yugen.HomeBudget.Client.Pages.Category
         private HttpClient _httpClient { get; set; }
 
         [Inject]
-        private NavigationManager _navigation { get; set; }
+        private NavigationManager _navigationManager { get; set; }
 
         /// <summary>
         /// Category entity.
@@ -85,7 +84,7 @@ namespace Yugen.HomeBudget.Client.Pages.Category
 
             //try
             //{
-                CategoryDto = await _httpClient.GetFromJsonAsync<CategoryDto>($"category/{Id}");
+            CategoryDto = await _httpClient.GetFromJsonAsync<CategoryDto>($"category/{Id}");
             //}
             //catch (AccessTokenNotAvailableException exception)
             //{
@@ -100,7 +99,7 @@ namespace Yugen.HomeBudget.Client.Pages.Category
         private void CancelAsync()
         {
             _busy = true;
-            _navigation.NavigateTo("/category/list");
+            _navigationManager.NavigateTo("/category/list");
         }
 
         /// <summary>
@@ -140,7 +139,7 @@ namespace Yugen.HomeBudget.Client.Pages.Category
 
                 EditSuccessState.Success = true;
                 // go to view to see the record
-                _navigation.NavigateTo("/category/list");
+                _navigationManager.NavigateTo("/category/list");
             }
             catch (Exception ex)
             {
@@ -151,7 +150,7 @@ namespace Yugen.HomeBudget.Client.Pages.Category
                 _busy = false;
             }
         }
-        
+
         private void DeleteSubCategoryAsync(SubCategoryDto subCategoryDto)
         {
             CategoryDto?.SubCategoriesDto.Remove(subCategoryDto);

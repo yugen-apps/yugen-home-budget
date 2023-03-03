@@ -4,10 +4,11 @@ namespace Yugen.HomeBudget.Client.Pages.Authentication
 {
     public partial class Register
     {
-        RegisterRequest registerRequest { get; set; } = new RegisterRequest();
-        string error { get; set; }
+        private RegisterRequest registerRequest { get; set; } = new RegisterRequest();
 
-        async Task OnSubmit()
+        private string error { get; set; }
+
+        private async Task OnSubmit()
         {
             error = null;
             try

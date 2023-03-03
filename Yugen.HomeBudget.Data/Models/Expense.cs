@@ -1,17 +1,16 @@
 ﻿namespace Yugen.HomeBudget.Data.Models;
 
-public class Expense
+public class Expense : Entity
 {
     public Expense()
     {
-
     }
 
     public Expense(
-        string title, 
-        decimal amount, 
-        DateTimeOffset dateTimeOffset, 
-        int categoryId, 
+        string title,
+        decimal amount,
+        DateTimeOffset dateTimeOffset,
+        int categoryId,
         int subCategoryId)
     {
         Title = title;
@@ -20,9 +19,7 @@ public class Expense
         CategoryId = categoryId;
         SubCategoryId = subCategoryId;
     }
-
-    public int Id { get; set; }
-
+    
     public string Title { get; set; }
 
     public decimal Amount { get; set; }

@@ -5,11 +5,11 @@ namespace Yugen.HomeBudget.Shared.Models.Expense;
 public class ExpenseDto
 {
     public ExpenseDto(
-        int id, 
-        string title, 
-        decimal amount, 
-        DateTimeOffset dateTimeOffset, 
-        CategoryDto categoryDto, 
+        int id,
+        string title,
+        decimal amount,
+        DateTimeOffset dateTimeOffset,
+        CategoryDto categoryDto,
         SubCategoryDto subCategoryDto)
     {
         Id = id;

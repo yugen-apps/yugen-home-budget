@@ -1,6 +1,7 @@
 ﻿using Yugen.HomeBudget.Application.Extensions;
 using Yugen.HomeBudget.Data.Models;
 using Yugen.HomeBudget.Data.Repositories;
+using Yugen.HomeBudget.Shared.Models;
 using Yugen.HomeBudget.Shared.Models.Category;
 
 namespace Yugen.HomeBudget.Application.Services
@@ -13,13 +14,24 @@ namespace Yugen.HomeBudget.Application.Services
         {
             _categoryRepository = categoryRepository;
         }
-        
+
         public async Task<IEnumerable<CategoryDto>> ListAsync()
         {
             var categories = await _categoryRepository.ListAsync();
             return categories.Select(c => c.ToDto()).ToList();
         }
-        
+
+        public async Task<PaginatedList<CategoryDto>> ListAsync(int pageIndex, int pageSize)
+        {
+            var totalItemCount = await _categoryRepository.CountAsync();
+            var skip = (pageIndex - 1) * pageSize;
+            var categoriesDto = (await _categoryRepository.ListAsync(skip, pageSize))
+                                .Select(c => c.ToDto())
+                                .ToList();
+            
+            return new PaginatedList<CategoryDto>(categoriesDto, totalItemCount, pageIndex, pageSize);
+        }
+
         public async Task<CategoryDto> GetAsync(int id)
         {
             var category = await _categoryRepository.GetAsync(id);
@@ -33,7 +45,7 @@ namespace Yugen.HomeBudget.Application.Services
             {
                 return null;
             }
-            
+
             var category = new Category(createCategoryDto.Title);
 
             foreach (var subCategoryDto in createCategoryDto.SubCategoriesDto)
@@ -52,7 +64,7 @@ namespace Yugen.HomeBudget.Application.Services
             {
                 return null;
             }
-            
+
             category.Title = updateCategoryDto.Title;
 
             var existingSubCategoryIds = category.SubCategories.Select(x => x.Id).Distinct();
@@ -85,7 +97,7 @@ namespace Yugen.HomeBudget.Application.Services
             var categoryResult = await _categoryRepository.UpdateAsync(category);
             return categoryResult.ToDto();
         }
-        
+
         public async Task<bool> DeleteAsync(int id)
         {
             var category = await _categoryRepository.GetAsync(id);

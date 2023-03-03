@@ -1,0 +1,45 @@
+﻿@if (TotalPages > 0)
+{
+    <div class="pt-10 d-flex flex-wrap justify-content-between">
+        <div class="left">
+            <p class="text-sm text-gray">Page @PageIndex/@TotalPages</p>
+        </div>
+        <div class="right table-pagination">
+            <ul class="d-flex justify-content-end align-items-center">
+                <li class="ms-2">
+                    <a disabled="@((PageIndex == 1) ? "disabled" : null)"
+                   @onclick="@(() => OnClick.InvokeAsync(1))">
+                        <i class="bi bi-chevron-double-left" aria-hidden="true"></i>
+                    </a>
+                </li>
+                <li class="ms-2">
+                    <a disabled="@(HasPreviousPage ? null : "disabled")"
+                   @onclick="@(() => OnClick.InvokeAsync(PageIndex - 1))">
+                        <i class="bi bi-chevron-left" aria-hidden="true"></i>
+                    </a>
+                </li>
+                <li class="ms-2">
+                    <a href="#"> @(PageIndex - 1) </a>
+                </li>
+                <li class="ms-2">
+                    <a href="#" class="active"> @PageIndex </a>
+                </li>
+                <li class="ms-2">
+                    <a href="#"> @(PageIndex + 1) </a>
+                </li>
+                <li class="ms-2">
+                    <a disabled="@(HasNextPage ? null : "disabled")"
+                   @onclick="@(() => OnClick.InvokeAsync(PageIndex + 1))">
+                        <i class="bi bi-chevron-right" aria-hidden="true"></i>
+                    </a>
+                </li>
+                <li class="ms-2">
+                    <a disabled="@((PageIndex == TotalPages) ? "disabled" : null)"
+                   @onclick="@(() => OnClick.InvokeAsync(TotalPages))">
+                        <i class="bi bi-chevron-double-right" aria-hidden="true"></i>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+}

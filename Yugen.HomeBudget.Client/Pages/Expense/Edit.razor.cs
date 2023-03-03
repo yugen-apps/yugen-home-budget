@@ -27,6 +27,10 @@ namespace Yugen.HomeBudget.Client.Pages.Expense
         /// </summary>
         private string _errorMessage = string.Empty;
 
+        private CategoryDto[]? _categories;
+
+        private CategoryDto? _selectedCategory;
+
         /// <summary>
         /// Id of entity to edit
         /// </summary>
@@ -37,16 +41,12 @@ namespace Yugen.HomeBudget.Client.Pages.Expense
         private HttpClient _httpClient { get; set; }
 
         [Inject]
-        private NavigationManager _navigation { get; set; }
+        private NavigationManager _navigationManager { get; set; }
 
         /// <summary>
         /// Expense entity.
         /// </summary>
         private ExpenseDto? ExpenseDto { get; set; }
-
-        private CategoryDto[]? _categories;
-
-        private CategoryDto? _selectedCategory;
 
         /// <summary>
         /// Start it up
@@ -58,14 +58,14 @@ namespace Yugen.HomeBudget.Client.Pages.Expense
 
             try
             {
-                _categories = await _httpClient.GetFromJsonAsync<CategoryDto[]>("Category");
+                _categories = await _httpClient.GetFromJsonAsync<CategoryDto[]>("Category/all");
                 if (Id != null)
                 {
                     await LoadAsync();
                 }
                 else
                 {
-                    ExpenseDto = new ExpenseDto(0, "", 0, DateTimeOffset.UtcNow,  new CategoryDto(1, null), new SubCategoryDto(1, null));
+                    ExpenseDto = new ExpenseDto(0, "", 0, DateTimeOffset.UtcNow, new CategoryDto(1, null), new SubCategoryDto(1, null));
                 }
             }
             finally
@@ -86,7 +86,7 @@ namespace Yugen.HomeBudget.Client.Pages.Expense
 
             //try
             //{
-                ExpenseDto = await _httpClient.GetFromJsonAsync<ExpenseDto>($"expense/{Id}");
+            ExpenseDto = await _httpClient.GetFromJsonAsync<ExpenseDto>($"expense/{Id}");
             //}
             //catch (AccessTokenNotAvailableException exception)
             //{
@@ -101,7 +101,7 @@ namespace Yugen.HomeBudget.Client.Pages.Expense
         private void CancelAsync()
         {
             _busy = true;
-            _navigation.NavigateTo("/expense/list");
+            _navigationManager.NavigateTo("/expense/list");
         }
 
         /// <summary>
@@ -140,7 +140,7 @@ namespace Yugen.HomeBudget.Client.Pages.Expense
 
                 EditSuccessState.Success = true;
                 // go to view to see the record
-                _navigation.NavigateTo("/expense/list");
+                _navigationManager.NavigateTo("/expense/list");
             }
             catch (Exception ex)
             {

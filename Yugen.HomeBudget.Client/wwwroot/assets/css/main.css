@@ -1096,26 +1096,26 @@ h6,
         min-height: 250px;
     }
 
-    .card-style-3 .card-content h4 a {
-        color: inherit;
-        margin-bottom: 15px;
-        display: block;
-    }
-
-        .card-style-3 .card-content h4 a:hover {
-            color: #4a6cf7;
+        .card-style-3 .card-content h4 a {
+            color: inherit;
+            margin-bottom: 15px;
+            display: block;
         }
 
-    .card-style-3 .card-content a.read-more {
-        font-weight: 500;
-        color: #262d3f;
-        margin-top: 20px;
-    }
+            .card-style-3 .card-content h4 a:hover {
+                color: #4a6cf7;
+            }
 
-        .card-style-3 .card-content a.read-more:hover {
-            color: #4a6cf7;
-            letter-spacing: 2px;
+        .card-style-3 .card-content a.read-more {
+            font-weight: 500;
+            color: #262d3f;
+            margin-top: 20px;
         }
+
+            .card-style-3 .card-content a.read-more:hover {
+                color: #4a6cf7;
+                letter-spacing: 2px;
+            }
 
 /* ======= icon-card ======== */
 .icon-card {
@@ -3258,6 +3258,11 @@ h6,
             opacity: 1;
             visibility: visible;
         }
+
+    .sidebar-nav-wrapper .sidebar-nav ul .nav-item .bi {
+        width: 1.5rem;
+        font-size: 1.1rem;
+    }
 
 .overlay {
     position: fixed;

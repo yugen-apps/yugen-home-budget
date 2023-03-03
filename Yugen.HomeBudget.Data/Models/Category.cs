@@ -1,6 +1,6 @@
 ﻿namespace Yugen.HomeBudget.Data.Models;
 
-public class Category
+public class Category : Entity
 {
     public Category()
     {
@@ -11,8 +11,6 @@ public class Category
         Title = title;
         SubCategories = new List<SubCategory>();
     }
-
-    public int Id { get; set; }
 
     public string Title { get; set; }
 
