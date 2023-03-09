@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 using System.Net.Http.Json;
+using Yugen.HomeBudget.Client.Models;
 using Yugen.HomeBudget.Shared.Models;
 using Yugen.HomeBudget.Shared.Models.Category;
 
@@ -37,7 +38,7 @@ namespace Yugen.HomeBudget.Client.Pages.Category
         {
             //try
             //{
-            _paginatedList = await _httpClient.GetFromJsonAsync<PaginatedList<CategoryDto>>($"Category?pageNumber={_pageNumber}&pageSize=5");
+            _paginatedList = await _httpClient.GetFromJsonAsync<PaginatedList<CategoryDto>>($"Category?pageNumber={_pageNumber}&pageSize={Constants.PageSize}");
             _categories = _paginatedList.Items;
             //}
             //catch (AccessTokenNotAvailableException exception)

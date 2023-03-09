@@ -29,7 +29,6 @@
     <!-- end row -->
 </div>
 <!-- ========== title-wrapper end ========== -->
-
 @if (_categories == null)
 {
     <p><em>Loading...</em></p>
@@ -37,11 +36,13 @@
 else
 {
     <div class="row">
-        <PagerComponents PageIndex=@_paginatedList.PageIndex 
-               TotalPages=@_paginatedList.TotalPages 
-               OnClick="PageIndexChanged"
-               HasNextPage=@_paginatedList.HasNextPage 
-               HasPreviousPage=@_paginatedList.HasPreviousPage />
+        <div class="card-style mb-30">
+            <PagerComponents PageIndex=@_paginatedList.PageIndex
+                         TotalPages=@_paginatedList.TotalPages
+                         OnClick="PageIndexChanged"
+                         HasNextPage=@_paginatedList.HasNextPage
+                         HasPreviousPage=@_paginatedList.HasPreviousPage />
+        </div>
     </div>
     <div class="row">
         @foreach (var category in _categories)
@@ -64,7 +65,7 @@ else
                         </a>
 
                         <DeleteComponents Id="@category.Id"
-                                       DeleteCallback="@DeleteAsync" />
+                                  DeleteCallback="@DeleteAsync" />
                     </div>
                 </div>
             </div>

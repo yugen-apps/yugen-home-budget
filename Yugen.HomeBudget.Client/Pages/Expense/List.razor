@@ -36,66 +36,69 @@
 else
 {
     <div class="row">
-        <PagerComponents PageIndex=@_paginatedList.PageIndex 
-                         TotalPages=@_paginatedList.TotalPages 
+        <div class="card-style mb-30">
+            <PagerComponents PageIndex=@_paginatedList.PageIndex
+                         TotalPages=@_paginatedList.TotalPages
                          OnClick="PageIndexChanged"
-                         HasNextPage=@_paginatedList.HasNextPage 
+                         HasNextPage=@_paginatedList.HasNextPage
                          HasPreviousPage=@_paginatedList.HasPreviousPage />
-    </div>
-    <div class="table-responsive">
-        <table class="table top-selling-table">
-            <thead>
-                <tr>
-                    <th>
-                        <h6 class="text-sm text-medium">Date</h6>
-                    </th>
-                    <th class="min-width">
-                        <h6 class="text-sm text-medium">Title</h6>
-                    </th>
-                    <th class="min-width">
-                        <h6 class="text-sm text-medium">Amount</h6>
-                    </th>
-                    <th class="min-width">
-                        <h6 class="text-sm text-medium">Category</h6>
-                    </th>
-                    <th>
-                        <h6 class="text-sm text-medium text-end">Actions</h6>
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var expense in _expenses)
-                {
-                    <tr>
-                        <td>
-                            <p class="text-sm">@GetDate(expense.DateTimeOffset)</p>
-                        </td>
-                        <td>
-                            <p class="text-sm">@expense.Title</p>
-                        </td>
-                        <td>
-                            <p class="text-sm">$ @expense.Amount</p>
-                        </td>
-                        <td>
-                            <span class="status-btn close-btn">@expense.CategoryDto.Title > @expense.SubCategoryDto.Title</span>
-                        </td>
-                        <td>
-                            <div class="action justify-content-end">
+            <!-- End Title -->
+            <div class="table-responsive">
+                <table class="table top-selling-table">
+                    <thead>
+                        <tr>
+                            <th>
+                                <h6 class="text-sm text-medium">Date</h6>
+                            </th>
+                            <th class="min-width">
+                                <h6 class="text-sm text-medium">Title</h6>
+                            </th>
+                            <th class="min-width">
+                                <h6 class="text-sm text-medium">Amount</h6>
+                            </th>
+                            <th class="min-width">
+                                <h6 class="text-sm text-medium">Category</h6>
+                            </th>
+                            <th>
+                                <h6 class="text-sm text-medium text-end">Actions</h6>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var expense in _expenses)
+                        {
+                            <tr>
+                                <td>
+                                    <p class="text-sm">@GetDate(expense.DateTimeOffset)</p>
+                                </td>
+                                <td>
+                                    <p class="text-sm">@expense.Title</p>
+                                </td>
+                                <td>
+                                    <p class="text-sm">$ @expense.Amount</p>
+                                </td>
+                                <td>
+                                    <span class="status-btn close-btn">@expense.CategoryDto.Title > @expense.SubCategoryDto.Title</span>
+                                </td>
+                                <td>
+                                    <div class="action justify-content-end">
 
-                                <a href="@PageHelper.EditHref(PageList.Expense, expense.Id)"
-                                   class="main-btn warning-btn btn-hover btn-sm mr-10"
-                                   title="Edit">
-                                    <i class="bi bi-pencil"></i>
-                                </a>
+                                        <a href="@PageHelper.EditHref(PageList.Expense, expense.Id)"
+                                           class="main-btn warning-btn btn-hover btn-sm mr-10"
+                                           title="Edit">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
 
-                                <DeleteComponents Id="@expense.Id"
-                                       DeleteCallback="@DeleteAsync" />
-                            </div>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-        <!-- End Table -->
+                                        <DeleteComponents Id="@expense.Id"
+                                                  DeleteCallback="@DeleteAsync" />
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                <!-- End Table -->
+            </div>
+        </div>
     </div>
 }
