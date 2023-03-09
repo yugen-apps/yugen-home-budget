@@ -1,18 +1,19 @@
-﻿@page "/category/edit"
-@page "/category/edit/{Id:int}"
+﻿@attribute [Route(PageConstants.CategoryAddEdit)]
+@attribute [Route(PageConstants.CategoryAddEditId)]
 @using Yugen.HomeBudget.Client.Models
+@using Yugen.HomeBudget.Shared.Contants
 @inject EditSuccess EditSuccessState
 <!-- AllowAnonymous / Authorize -->
 @attribute [AllowAnonymous]
 
-<PageTitle>@PageList.Categories</PageTitle>
+<PageTitle>@PageConstants.Category</PageTitle>
 
 <!-- ========== title-wrapper start ========== -->
 <div class="title-wrapper pt-30">
     <div class="row align-items-center">
         <div class="col-md-6">
             <div class="title mb-30">
-                <h2>@PageHelper.AddEditTitle(PageList.Category, Id)</h2>
+                <h2>@PageHelper.AddEditTitle(PageConstants.Category, Id)</h2>
             </div>
         </div>
         <!-- end col -->
@@ -24,7 +25,7 @@
                             <a href="#0">Dashboard</a>
                         </li>
                         <li class="breadcrumb-item active" aria-current="page">
-                            @PageList.Categories
+                            @PageConstants.Category
                         </li>
                     </ol>
                 </nav>

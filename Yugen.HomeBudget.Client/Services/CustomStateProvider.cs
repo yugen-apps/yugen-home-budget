@@ -28,7 +28,7 @@ public class CustomStateProvider : AuthenticationStateProvider
         }
         catch (HttpRequestException ex)
         {
-            Console.WriteLine("Request failed:" + ex.ToString());
+            Console.WriteLine("Request failed:" + ex);
         }
 
         return new AuthenticationState(new ClaimsPrincipal(identity));

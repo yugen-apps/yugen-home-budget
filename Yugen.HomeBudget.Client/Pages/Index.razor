@@ -1,4 +1,5 @@
-﻿@page "/"
+﻿@attribute [Route(PageConstants.HomeUrl)]
+@using Yugen.HomeBudget.Shared.Contants
 
 <PageTitle>Index</PageTitle>
 
@@ -7,7 +8,7 @@
     <div class="row align-items-center">
         <div class="col-md-6">
             <div class="title mb-30">
-                <h2>@PageList.Home</h2>
+                <h2>@PageConstants.Home</h2>
             </div>
         </div>
         <!-- end col -->
@@ -19,7 +20,7 @@
                             <a href="#0">Dashboard</a>
                         </li>
                         <li class="breadcrumb-item active" aria-current="page">
-                            @PageList.Home
+                            @PageConstants.Home
                         </li>
                     </ol>
                 </nav>

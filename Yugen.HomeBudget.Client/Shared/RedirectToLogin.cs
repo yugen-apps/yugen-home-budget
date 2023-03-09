@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
-using Yugen.HomeBudget.Shared.Enums;
+using Yugen.HomeBudget.Shared.Contants;
 using Yugen.HomeBudget.Shared.Helpers;
 
 namespace Yugen.HomeBudget.Client.Shared;
@@ -11,7 +11,7 @@ public class RedirectToLogin : ComponentBase
 
     protected override void OnInitialized()
     {
-        _navigationManager.NavigateTo(PageHelper.AuthHref(PageList.Login));
+        _navigationManager.NavigateTo(PageHelper.AuthHref(PageConstants.Login));
     }
 
     //[CascadingParameter]

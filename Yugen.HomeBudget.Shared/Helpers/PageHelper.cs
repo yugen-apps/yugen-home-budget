@@ -1,18 +1,14 @@
-﻿using Yugen.HomeBudget.Shared.Enums;
-
-namespace Yugen.HomeBudget.Shared.Helpers;
+﻿namespace Yugen.HomeBudget.Shared.Helpers;
 
 public static class PageHelper
 {
-    public static string ListHref(PageList pageList) => $"{pageList}/list";
+    public static string AddHref(string page) => $"{page}/addedit";
 
-    public static string AddHref(PageList pageList) => $"{pageList}/edit";
+    public static string EditHref(string page, int id) => $"{page}/addedit/{id}";
 
-    public static string EditHref(PageList pageList, int id) => $"{pageList}/edit/{id}";
+    public static string AuthHref(string page) => $"authentication/{page}";
 
-    public static string AuthHref(PageList pageList) => $"authentication/{pageList}";
-
-    public static string AddEditTitle(PageList pageList, int? id) => id == null
-        ? $"Add {pageList}"
-        : $"Edit {pageList}";
+    public static string AddEditTitle(string page, int? id) => id == null
+        ? $"Add {page}"
+        : $"Edit {page}";
 }

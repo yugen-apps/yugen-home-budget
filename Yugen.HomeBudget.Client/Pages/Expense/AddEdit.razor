@@ -1,18 +1,19 @@
-﻿@page "/expense/edit"
-@page "/expense/edit/{Id:int}"
+﻿@attribute [Route(PageConstants.ExpenseAddEdit)]
+@attribute [Route(PageConstants.ExpenseAddEditId)]
 @using Yugen.HomeBudget.Client.Models
+@using Yugen.HomeBudget.Shared.Contants
 @inject EditSuccess EditSuccessState
 <!-- AllowAnonymous / Authorize -->
 @attribute [AllowAnonymous]
 
-<PageTitle>@PageList.Expenses</PageTitle>
+<PageTitle>@PageConstants.Expense</PageTitle>
 
 <!-- ========== title-wrapper start ========== -->
 <div class="title-wrapper pt-30">
     <div class="row align-items-center">
         <div class="col-md-6">
             <div class="title mb-30">
-                <h2>@PageHelper.AddEditTitle(PageList.Expense, Id)</h2>
+                <h2>@PageHelper.AddEditTitle(PageConstants.Expense, Id)</h2>
             </div>
         </div>
         <!-- end col -->
@@ -24,7 +25,7 @@
                             <a href="#0">Dashboard</a>
                         </li>
                         <li class="breadcrumb-item active" aria-current="page">
-                            @PageList.Expenses
+                            @PageConstants.Expense
                         </li>
                     </ol>
                 </nav>

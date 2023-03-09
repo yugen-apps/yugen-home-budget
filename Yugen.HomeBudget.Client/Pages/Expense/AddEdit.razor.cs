@@ -1,11 +1,12 @@
 ﻿using Microsoft.AspNetCore.Components;
 using System.Net.Http.Json;
+using Yugen.HomeBudget.Shared.Contants;
 using Yugen.HomeBudget.Shared.Models.Category;
 using Yugen.HomeBudget.Shared.Models.Expense;
 
 namespace Yugen.HomeBudget.Client.Pages.Expense
 {
-    public partial class Edit
+    public partial class AddEdit
     {
         /// <summary>
         /// Avoid concurrent requests
@@ -58,7 +59,7 @@ namespace Yugen.HomeBudget.Client.Pages.Expense
 
             try
             {
-                _categories = await _httpClient.GetFromJsonAsync<CategoryDto[]>("Category/all");
+                _categories = await _httpClient.GetFromJsonAsync<CategoryDto[]>($"{EndpointConstants.Category}/all");
                 if (Id != null)
                 {
                     await LoadAsync();
@@ -86,7 +87,7 @@ namespace Yugen.HomeBudget.Client.Pages.Expense
 
             //try
             //{
-            ExpenseDto = await _httpClient.GetFromJsonAsync<ExpenseDto>($"expense/{Id}");
+            ExpenseDto = await _httpClient.GetFromJsonAsync<ExpenseDto>($"{EndpointConstants.Expense}/{Id}");
             //}
             //catch (AccessTokenNotAvailableException exception)
             //{
@@ -101,7 +102,7 @@ namespace Yugen.HomeBudget.Client.Pages.Expense
         private void CancelAsync()
         {
             _busy = true;
-            _navigationManager.NavigateTo("/expense/list");
+            _navigationManager.NavigateTo(PageConstants.Expense);
         }
 
         /// <summary>
@@ -130,17 +131,17 @@ namespace Yugen.HomeBudget.Client.Pages.Expense
                 if (Id != null)
                 {
                     var createExpenseDto = new CreateExpenseDto(ExpenseDto.Title, ExpenseDto.Amount, ExpenseDto.DateTimeOffset, ExpenseDto.CategoryDto.Id, ExpenseDto.SubCategoryDto.Id);
-                    var response = await _httpClient.PutAsJsonAsync<CreateExpenseDto>($"expense/{Id}", createExpenseDto);
+                    var response = await _httpClient.PutAsJsonAsync<CreateExpenseDto>($"{EndpointConstants.Expense}/{Id}", createExpenseDto);
                 }
                 else
                 {
                     var updateExpenseDto = new UpdateExpenseDto(ExpenseDto.Id, ExpenseDto.Title, ExpenseDto.Amount, ExpenseDto.DateTimeOffset, ExpenseDto.CategoryDto.Id, ExpenseDto.SubCategoryDto.Id);
-                    var response = await _httpClient.PostAsJsonAsync<UpdateExpenseDto>("expense", updateExpenseDto);
+                    var response = await _httpClient.PostAsJsonAsync<UpdateExpenseDto>($"{EndpointConstants.Expense}", updateExpenseDto);
                 }
 
                 EditSuccessState.Success = true;
                 // go to view to see the record
-                _navigationManager.NavigateTo("/expense/list");
+                _navigationManager.NavigateTo(PageConstants.Expense);
             }
             catch (Exception ex)
             {

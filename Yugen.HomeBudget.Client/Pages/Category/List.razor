@@ -1,22 +1,23 @@
-﻿@page "/category/list"
+﻿@attribute [Route(PageConstants.Category)]
+@using Yugen.HomeBudget.Shared.Contants
 <!-- AllowAnonymous / Authorize -->
 @attribute [AllowAnonymous]
 
-<PageTitle>@PageList.Categories</PageTitle>
+<PageTitle>@PageConstants.Category</PageTitle>
 
 <!-- ========== title-wrapper start ========== -->
 <div class="title-wrapper pt-30">
     <div class="row align-items-center">
         <div class="col-md-6">
             <div class="title mb-30">
-                <h2>@PageList.Categories</h2>
+                <h2>@PageConstants.Category</h2>
             </div>
         </div>
         <!-- end col -->
         <div class="col-md-6">
             <div class="breadcrumb-wrapper mb-30">
                 <nav aria-label="breadcrumb">
-                    <a href="@PageHelper.AddHref(PageList.Category)"
+                    <a href="@PageHelper.AddHref(PageConstants.Category)"
                        class="main-btn primary-btn btn-hover btn-sm"
                        title="Add">
                         <i class="bi bi-plus mr-5"></i> Add
@@ -58,7 +59,7 @@ else
                             }
                         </ul>
 
-                        <a href="@PageHelper.EditHref(PageList.Category, category.Id)"
+                        <a href="@PageHelper.EditHref(PageConstants.Category, category.Id)"
                            class="main-btn warning-btn btn-hover btn-sm"
                            title="Edit">
                             <i class="bi bi-pencil"></i>

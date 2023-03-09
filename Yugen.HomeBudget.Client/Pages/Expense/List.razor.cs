@@ -2,6 +2,7 @@
 using System.Globalization;
 using System.Net.Http.Json;
 using Yugen.HomeBudget.Client.Models;
+using Yugen.HomeBudget.Shared.Contants;
 using Yugen.HomeBudget.Shared.Models;
 using Yugen.HomeBudget.Shared.Models.Expense;
 
@@ -39,7 +40,7 @@ namespace Yugen.HomeBudget.Client.Pages.Expense
         {
             //try
             //{
-            _paginatedList = await _httpClient.GetFromJsonAsync<PaginatedList<ExpenseDto>>($"Expense?pageNumber={_pageNumber}&pageSize={Constants.PageSize}");
+            _paginatedList = await _httpClient.GetFromJsonAsync<PaginatedList<ExpenseDto>>($"{EndpointConstants.Expense}?pageNumber={_pageNumber}&pageSize={Constants.PageSize}");
             _expenses = _paginatedList.Items;
             //}
             //catch (AccessTokenNotAvailableException exception)
@@ -52,7 +53,7 @@ namespace Yugen.HomeBudget.Client.Pages.Expense
         {
             //try
             //{
-            var result = await _httpClient.DeleteAsync($"Expense/{id}");
+            var result = await _httpClient.DeleteAsync($"{EndpointConstants.Expense}/{id}");
             if (result.IsSuccessStatusCode)
             {
                 var expense = _expenses?.FirstOrDefault(c => c.Id.Equals(id));

@@ -1,22 +1,23 @@
-﻿@page "/expense/list"
+﻿@attribute [Route(PageConstants.Expense)]
+@using Yugen.HomeBudget.Shared.Contants
 <!-- AllowAnonymous / Authorize -->
 @attribute [AllowAnonymous]
 
-<PageTitle>@PageList.Expenses</PageTitle>
+<PageTitle>@PageConstants.Expense</PageTitle>
 
 <!-- ========== title-wrapper start ========== -->
 <div class="title-wrapper pt-30">
     <div class="row align-items-center">
         <div class="col-md-6">
             <div class="title mb-30">
-                <h2>@PageList.Expenses</h2>
+                <h2>@PageConstants.Expense</h2>
             </div>
         </div>
         <!-- end col -->
         <div class="col-md-6">
             <div class="breadcrumb-wrapper mb-30">
                 <nav aria-label="breadcrumb">
-                    <a href="@PageHelper.AddHref(PageList.Expense)"
+                    <a href="@PageHelper.AddHref(PageConstants.Expense)"
                        class="main-btn primary-btn btn-hover btn-sm"
                        title="Add">
                         <i class="bi bi-plus mr-5"></i> Add
@@ -83,7 +84,7 @@ else
                                 <td>
                                     <div class="action justify-content-end">
 
-                                        <a href="@PageHelper.EditHref(PageList.Expense, expense.Id)"
+                                        <a href="@PageHelper.EditHref(PageConstants.Expense, expense.Id)"
                                            class="main-btn warning-btn btn-hover btn-sm mr-10"
                                            title="Edit">
                                             <i class="bi bi-pencil"></i>

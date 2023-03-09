@@ -1,5 +1,6 @@
-﻿@page "/authentication/login"
+﻿@attribute [Route(PageConstants.LoginUrl)]
 @using Yugen.HomeBudget.Client.Services
+@using Yugen.HomeBudget.Shared.Contants
 @layout MainLayout
 @inject NavigationManager navigationManager
 @inject CustomStateProvider authStateProvider
@@ -129,7 +130,7 @@
                 <div class="singin-option pt-40">
                     <p class="text-sm text-medium text-dark text-center">
                         Don’t have any account yet?
-                        <a href="@PageHelper.AuthHref(PageList.Register)">Create an account</a>
+                        <a href="@PageHelper.AuthHref(PageConstants.Register)">Create an account</a>
                     </p>
                 </div>
             </div>

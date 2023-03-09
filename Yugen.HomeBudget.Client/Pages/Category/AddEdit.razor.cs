@@ -1,10 +1,11 @@
 ﻿using Microsoft.AspNetCore.Components;
 using System.Net.Http.Json;
+using Yugen.HomeBudget.Shared.Contants;
 using Yugen.HomeBudget.Shared.Models.Category;
 
 namespace Yugen.HomeBudget.Client.Pages.Category
 {
-    public partial class Edit
+    public partial class AddEdit
     {
         /// <summary>
         /// Avoid concurrent requests
@@ -84,7 +85,7 @@ namespace Yugen.HomeBudget.Client.Pages.Category
 
             //try
             //{
-            CategoryDto = await _httpClient.GetFromJsonAsync<CategoryDto>($"category/{Id}");
+            CategoryDto = await _httpClient.GetFromJsonAsync<CategoryDto>($"{EndpointConstants.Category}/{Id}");
             //}
             //catch (AccessTokenNotAvailableException exception)
             //{
@@ -99,7 +100,7 @@ namespace Yugen.HomeBudget.Client.Pages.Category
         private void CancelAsync()
         {
             _busy = true;
-            _navigationManager.NavigateTo("/category/list");
+            _navigationManager.NavigateTo(PageConstants.Category);
         }
 
         /// <summary>
@@ -128,18 +129,18 @@ namespace Yugen.HomeBudget.Client.Pages.Category
                 if (Id != null)
                 {
                     var createCategoryDto = new CreateCategoryDto(CategoryDto.Title, CategoryDto.SubCategoriesDto);
-                    var response = await _httpClient.PutAsJsonAsync<CreateCategoryDto>($"category/{Id}", createCategoryDto);
+                    var response = await _httpClient.PutAsJsonAsync<CreateCategoryDto>($"{EndpointConstants.Category}/{Id}", createCategoryDto);
                     //var c = await response.Content.ReadFromJsonAsync<CategoryDto>();
                 }
                 else
                 {
                     var updateCategoryDto = new UpdateCategoryDto(CategoryDto.Id, CategoryDto.Title, CategoryDto.SubCategoriesDto);
-                    var response = await _httpClient.PostAsJsonAsync<UpdateCategoryDto>("category", updateCategoryDto);
+                    var response = await _httpClient.PostAsJsonAsync<UpdateCategoryDto>($"{EndpointConstants.Category}", updateCategoryDto);
                 }
 
                 EditSuccessState.Success = true;
                 // go to view to see the record
-                _navigationManager.NavigateTo("/category/list");
+                _navigationManager.NavigateTo(PageConstants.Category);
             }
             catch (Exception ex)
             {

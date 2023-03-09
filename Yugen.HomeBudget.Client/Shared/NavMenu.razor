@@ -1,7 +1,7 @@
 ﻿@using Yugen.HomeBudget.Shared.Models
-@using Yugen.HomeBudget.Shared.Enums
 @using Yugen.HomeBudget.Shared
 @using System.Reflection
+@using Yugen.HomeBudget.Shared.Contants
 
 <aside class="sidebar-nav-wrapper @NavMenuCssClass">
     <nav class="sidebar-nav">
@@ -12,14 +12,14 @@
                 </NavLink>
             </li>
             <span class="divider"><hr /></span>
-            <li class="nav-item @GetActive(PageHelper.ListHref(PageList.Category), NavLinkMatch.Prefix)">
-                <NavLink href="@PageHelper.ListHref(PageList.Category)" Match="NavLinkMatch.Prefix">
-                    <span class="bi bi-list" aria-hidden="true"></span>@PageList.Categories
+            <li class="nav-item @GetActive(PageConstants.Category, NavLinkMatch.Prefix)">
+                <NavLink href="@PageConstants.Category" Match="NavLinkMatch.Prefix">
+                    <span class="bi bi-list" aria-hidden="true"></span>@PageConstants.Category
                 </NavLink>
             </li>
-            <li class="nav-item @GetActive(PageHelper.ListHref(PageList.Expense), NavLinkMatch.Prefix)">
-                <NavLink href="@PageHelper.ListHref(PageList.Expense)" Match="NavLinkMatch.Prefix">
-                    <span class="bi bi-list" aria-hidden="true"></span>@PageList.Expenses
+            <li class="nav-item @GetActive(PageConstants.Expense, NavLinkMatch.Prefix)">
+                <NavLink href="@PageConstants.Expense" Match="NavLinkMatch.Prefix">
+                    <span class="bi bi-list" aria-hidden="true"></span>@PageConstants.Expense
                 </NavLink>
             </li>
         </ul>

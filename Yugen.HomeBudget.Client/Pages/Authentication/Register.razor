@@ -1,6 +1,7 @@
-﻿@page "/authentication/register"
+﻿@attribute [Route(PageConstants.RegisterUrl)]
 @using Yugen.HomeBudget.Client.Services
 @using Microsoft.AspNetCore.Components
+@using Yugen.HomeBudget.Shared.Contants
 @layout MainLayout
 @inject NavigationManager navigationManager
 @inject CustomStateProvider authStateProvider
@@ -134,7 +135,7 @@
                 </EditForm>
                 <div class="singup-option pt-40">
                     <p class="text-sm text-medium text-dark text-center">
-                        Already have an account? <a href="@PageHelper.AuthHref(PageList.Login)">Sign In</a>
+                        Already have an account? <a href="@PageHelper.AuthHref(PageConstants.Login)">Sign In</a>
                     </p>
                 </div>
             </div>
