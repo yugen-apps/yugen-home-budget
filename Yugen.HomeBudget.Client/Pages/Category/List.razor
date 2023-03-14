@@ -1,7 +1,7 @@
 ﻿@attribute [Route(PageConstants.Category)]
 @using Yugen.HomeBudget.Shared.Contants
 <!-- AllowAnonymous / Authorize -->
-@attribute [AllowAnonymous]
+@attribute [Authorize]
 
 <PageTitle>@PageConstants.Category</PageTitle>
 
@@ -58,6 +58,12 @@ else
                                 <li class="bi bi-chevron-right">@subCategory.Title</li>
                             }
                         </ul>
+                        @*
+                            <small>@category.CreatedOn</small>
+                            <small>@category.LastModifiedOn</small>
+                            <small>@category.CreatedByApplicationUserId</small>
+                            <small>@category.LastModifiedByApplicationUserId</small>
+                        *@
 
                         <a href="@PageHelper.EditHref(PageConstants.Category, category.Id)"
                            class="main-btn warning-btn btn-hover btn-sm"

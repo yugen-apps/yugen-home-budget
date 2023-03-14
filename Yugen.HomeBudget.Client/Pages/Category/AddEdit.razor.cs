@@ -1,6 +1,9 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
 using System.Net.Http.Json;
+using Yugen.HomeBudget.Client.Services;
 using Yugen.HomeBudget.Shared.Contants;
+using Yugen.HomeBudget.Shared.Models.Authentication;
 using Yugen.HomeBudget.Shared.Models.Category;
 
 namespace Yugen.HomeBudget.Client.Pages.Category
@@ -41,12 +44,17 @@ namespace Yugen.HomeBudget.Client.Pages.Category
         [Inject]
         private NavigationManager _navigationManager { get; set; }
 
+        [Inject]
+        private CustomStateProvider _authStateProvider { get; set; }
+
         /// <summary>
         /// Category entity.
         /// </summary>
         private CategoryDto? CategoryDto { get; set; }
 
         private string? NewSubCategoryTitle { get; set; }
+
+        private CurrentUser? _currentUser { get; set; }
 
         /// <summary>
         /// Start it up
@@ -56,6 +64,8 @@ namespace Yugen.HomeBudget.Client.Pages.Category
         {
             _busy = true;
 
+            _currentUser = await _authStateProvider.GetCurrentUser();
+
             try
             {
                 if (Id != null)
@@ -64,7 +74,7 @@ namespace Yugen.HomeBudget.Client.Pages.Category
                 }
                 else
                 {
-                    CategoryDto = new CategoryDto(0, "");
+                    CategoryDto = new CategoryDto(0, "", DateTimeOffset.UtcNow, DateTimeOffset.UtcNow, _currentUser?.Id, _currentUser?.Id);
                 }
             }
             finally
@@ -128,13 +138,13 @@ namespace Yugen.HomeBudget.Client.Pages.Category
             {
                 if (Id != null)
                 {
-                    var createCategoryDto = new CreateCategoryDto(CategoryDto.Title, CategoryDto.SubCategoriesDto);
+                    var createCategoryDto = new CreateCategoryDto(CategoryDto.Title, CategoryDto.SubCategoriesDto, _currentUser?.Id, _currentUser?.Id);
                     var response = await _httpClient.PutAsJsonAsync<CreateCategoryDto>($"{EndpointConstants.Category}/{Id}", createCategoryDto);
                     //var c = await response.Content.ReadFromJsonAsync<CategoryDto>();
                 }
                 else
                 {
-                    var updateCategoryDto = new UpdateCategoryDto(CategoryDto.Id, CategoryDto.Title, CategoryDto.SubCategoriesDto);
+                    var updateCategoryDto = new UpdateCategoryDto(CategoryDto.Id, CategoryDto.Title, CategoryDto.SubCategoriesDto, _currentUser?.Id, _currentUser?.Id);
                     var response = await _httpClient.PostAsJsonAsync<UpdateCategoryDto>($"{EndpointConstants.Category}", updateCategoryDto);
                 }
 

@@ -6,12 +6,12 @@ namespace Yugen.HomeBudget.Client.Services;
 
 public class CustomStateProvider : AuthenticationStateProvider
 {
-    private readonly IAuthService api;
-    private CurrentUser _currentUser;
+    private readonly IAuthService _api;
+    private CurrentUser? _currentUser;
 
     public CustomStateProvider(IAuthService api)
     {
-        this.api = api;
+        _api = api;
     }
 
     public override async Task<AuthenticationState> GetAuthenticationStateAsync()
@@ -19,8 +19,13 @@ public class CustomStateProvider : AuthenticationStateProvider
         var identity = new ClaimsIdentity();
         try
         {
-            var userInfo = await GetCurrentUser();
-            if (userInfo.IsAuthenticated)
+            if (_currentUser == null ||
+                _currentUser.IsAuthenticated == false)
+            {
+                _currentUser = await _api.CurrentUserInfo();
+            }
+
+            if (_currentUser?.IsAuthenticated ?? false)
             {
                 var claims = new[] { new Claim(ClaimTypes.Name, _currentUser.UserName) }.Concat(_currentUser.Claims.Select(c => new Claim(c.Key, c.Value)));
                 identity = new ClaimsIdentity(claims, "Server authentication");
@@ -36,27 +41,27 @@ public class CustomStateProvider : AuthenticationStateProvider
 
     public async Task Logout()
     {
-        await api.Logout();
+        await _api.Logout();
         _currentUser = null;
         NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
     }
 
     public async Task Login(LoginRequest loginParameters)
     {
-        await api.Login(loginParameters);
+        await _api.Login(loginParameters);
         NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
     }
 
     public async Task Register(RegisterRequest registerParameters)
     {
-        await api.Register(registerParameters);
+        await _api.Register(registerParameters);
         NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
     }
 
-    private async Task<CurrentUser> GetCurrentUser()
+    public async Task<CurrentUser?> GetCurrentUser()
     {
-        if (_currentUser != null && _currentUser.IsAuthenticated) return _currentUser;
-        _currentUser = await api.CurrentUserInfo();
+        await GetAuthenticationStateAsync();
+        
         return _currentUser;
     }
 }

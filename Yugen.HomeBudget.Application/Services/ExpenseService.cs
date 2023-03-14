@@ -2,6 +2,7 @@
 using Yugen.HomeBudget.Data.Models;
 using Yugen.HomeBudget.Data.Repositories;
 using Yugen.HomeBudget.Shared.Models;
+using Yugen.HomeBudget.Shared.Models.Category;
 using Yugen.HomeBudget.Shared.Models.Expense;
 
 namespace Yugen.HomeBudget.Application.Services
@@ -45,7 +46,8 @@ namespace Yugen.HomeBudget.Application.Services
                 createExpenseDto.Amount,
                 createExpenseDto.DateTimeOffset,
                 createExpenseDto.CategoryId,
-                createExpenseDto.SubCategoryId);
+                createExpenseDto.SubCategoryId,
+                createExpenseDto.CreatedByApplicationUserId);
 
             var expenseResult = await _expenseRepository.CreateAsync(expense);
             return expenseResult.ToDto();
@@ -64,6 +66,7 @@ namespace Yugen.HomeBudget.Application.Services
             expense.DateTimeOffset = updateExpenseDto.DateTimeOffset;
             expense.CategoryId = updateExpenseDto.CategoryId;
             expense.SubCategoryId = updateExpenseDto.SubCategoryId;
+            expense.LastModifiedByApplicationUserId = updateExpenseDto.LastModifiedByApplicationUserId;
 
             var expenseResult = await _expenseRepository.UpdateAsync(expense);
             return expenseResult.ToDto();

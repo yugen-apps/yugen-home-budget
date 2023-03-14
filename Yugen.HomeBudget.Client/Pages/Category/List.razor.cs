@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Components;
 using System.Net.Http.Json;
 using Yugen.HomeBudget.Client.Models;
+using Yugen.HomeBudget.Client.Services;
 using Yugen.HomeBudget.Shared.Contants;
 using Yugen.HomeBudget.Shared.Models;
+using Yugen.HomeBudget.Shared.Models.Authentication;
 using Yugen.HomeBudget.Shared.Models.Category;
 
 namespace Yugen.HomeBudget.Client.Pages.Category
@@ -17,7 +19,7 @@ namespace Yugen.HomeBudget.Client.Pages.Category
 
         [Inject]
         private HttpClient _httpClient { get; set; }
-
+        
         protected override async Task OnInitializedAsync()
         {
             await GetData();

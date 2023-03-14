@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Components;
 using System.Net.Http.Json;
+using Yugen.HomeBudget.Client.Services;
 using Yugen.HomeBudget.Shared.Contants;
+using Yugen.HomeBudget.Shared.Models.Authentication;
 using Yugen.HomeBudget.Shared.Models.Category;
 using Yugen.HomeBudget.Shared.Models.Expense;
 
@@ -30,8 +32,6 @@ namespace Yugen.HomeBudget.Client.Pages.Expense
 
         private CategoryDto[]? _categories;
 
-        private CategoryDto? _selectedCategory;
-
         /// <summary>
         /// Id of entity to edit
         /// </summary>
@@ -44,10 +44,15 @@ namespace Yugen.HomeBudget.Client.Pages.Expense
         [Inject]
         private NavigationManager _navigationManager { get; set; }
 
+        [Inject]
+        private CustomStateProvider _authStateProvider { get; set; }
+
         /// <summary>
         /// Expense entity.
         /// </summary>
         private ExpenseDto? ExpenseDto { get; set; }
+
+        private CurrentUser? _currentUser { get; set; }
 
         /// <summary>
         /// Start it up
@@ -56,6 +61,8 @@ namespace Yugen.HomeBudget.Client.Pages.Expense
         protected override async Task OnInitializedAsync()
         {
             _busy = true;
+
+            _currentUser = await _authStateProvider.GetCurrentUser();
 
             try
             {
@@ -66,7 +73,7 @@ namespace Yugen.HomeBudget.Client.Pages.Expense
                 }
                 else
                 {
-                    ExpenseDto = new ExpenseDto(0, "", 0, DateTimeOffset.UtcNow, new CategoryDto(1, null), new SubCategoryDto(1, null));
+                    ExpenseDto = new ExpenseDto(0, "", 0, DateTimeOffset.UtcNow, _categories.First(), _categories.First().SubCategoriesDto.First(), DateTimeOffset.UtcNow, DateTimeOffset.UtcNow, _currentUser?.Id, _currentUser?.Id);
                 }
             }
             finally
@@ -130,12 +137,12 @@ namespace Yugen.HomeBudget.Client.Pages.Expense
             {
                 if (Id != null)
                 {
-                    var createExpenseDto = new CreateExpenseDto(ExpenseDto.Title, ExpenseDto.Amount, ExpenseDto.DateTimeOffset, ExpenseDto.CategoryDto.Id, ExpenseDto.SubCategoryDto.Id);
+                    var createExpenseDto = new CreateExpenseDto(ExpenseDto.Title, ExpenseDto.Amount, ExpenseDto.DateTimeOffset, ExpenseDto.CategoryDto.Id, ExpenseDto.SubCategoryDto.Id, _currentUser?.Id, _currentUser?.Id);
                     var response = await _httpClient.PutAsJsonAsync<CreateExpenseDto>($"{EndpointConstants.Expense}/{Id}", createExpenseDto);
                 }
                 else
                 {
-                    var updateExpenseDto = new UpdateExpenseDto(ExpenseDto.Id, ExpenseDto.Title, ExpenseDto.Amount, ExpenseDto.DateTimeOffset, ExpenseDto.CategoryDto.Id, ExpenseDto.SubCategoryDto.Id);
+                    var updateExpenseDto = new UpdateExpenseDto(ExpenseDto.Id, ExpenseDto.Title, ExpenseDto.Amount, ExpenseDto.DateTimeOffset, ExpenseDto.CategoryDto.Id, ExpenseDto.SubCategoryDto.Id, _currentUser?.Id, _currentUser?.Id);
                     var response = await _httpClient.PostAsJsonAsync<UpdateExpenseDto>($"{EndpointConstants.Expense}", updateExpenseDto);
                 }
 

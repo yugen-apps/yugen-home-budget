@@ -52,6 +52,8 @@ namespace Yugen.HomeBudget.Data.Repositories
 
         public async Task<Expense> CreateAsync(Expense expense)
         {
+            expense.CreatedOn = DateTimeOffset.UtcNow;
+
             _context.Expenses.Add(expense);
 
             await _context.Entry(expense)
@@ -69,7 +71,7 @@ namespace Yugen.HomeBudget.Data.Repositories
 
         public async Task<Expense> UpdateAsync(Expense expense)
         {
-            //expense.UpdatedAt = DateTime.UtcNow;
+            expense.LastModifiedOn = DateTimeOffset.UtcNow;
 
             _context.Expenses.Update(expense);
 

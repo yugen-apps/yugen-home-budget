@@ -11,13 +11,15 @@ public class Expense : Entity
         decimal amount,
         DateTimeOffset dateTimeOffset,
         int categoryId,
-        int subCategoryId)
+        int subCategoryId,
+        int? createdByApplicationUserId)
     {
         Title = title;
         Amount = amount;
         DateTimeOffset = dateTimeOffset;
         CategoryId = categoryId;
         SubCategoryId = subCategoryId;
+        CreatedByApplicationUserId = createdByApplicationUserId;
     }
     
     public string Title { get; set; }

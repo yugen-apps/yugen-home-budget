@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
 using Yugen.HomeBudget.Shared.Contants;
 using Yugen.HomeBudget.Shared.Helpers;
 
@@ -13,15 +14,4 @@ public class RedirectToLogin : ComponentBase
     {
         _navigationManager.NavigateTo(PageHelper.AuthHref(PageConstants.Login));
     }
-
-    //[CascadingParameter]
-    //Task<AuthenticationState> AuthenticationState { get; set; }
-
-    //protected override async void OnInitialized()
-    //{
-    //    if (!(await AuthenticationState).User.Identity.IsAuthenticated)
-    //    {
-    //        _navigationManager.NavigateTo("authentication/login");
-    //    }
-    //}
 }

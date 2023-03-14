@@ -7,13 +7,17 @@ public class CreateExpenseDto
         decimal amount,
         DateTimeOffset dateTimeOffset,
         int categoryId,
-        int subCategoryId)
+        int subCategoryId,
+        int? createdByApplicationUserId,
+        int? lastModifiedByApplicationUserId)
     {
         Title = title;
         Amount = amount;
         DateTimeOffset = dateTimeOffset;
         CategoryId = categoryId;
         SubCategoryId = subCategoryId;
+        CreatedByApplicationUserId = createdByApplicationUserId;
+        LastModifiedByApplicationUserId = lastModifiedByApplicationUserId;
     }
 
     public string Title { get; set; }
@@ -25,4 +29,8 @@ public class CreateExpenseDto
     public int CategoryId { get; set; }
 
     public int SubCategoryId { get; set; }
+
+    public int? CreatedByApplicationUserId { get; set; }
+
+    public int? LastModifiedByApplicationUserId { get; set; }
 }

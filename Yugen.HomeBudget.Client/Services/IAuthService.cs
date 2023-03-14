@@ -10,5 +10,5 @@ public interface IAuthService
 
     Task Logout();
 
-    Task<CurrentUser> CurrentUserInfo();
+    Task<CurrentUser?> CurrentUserInfo();
 }

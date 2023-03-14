@@ -8,7 +8,9 @@ public class UpdateExpenseDto
         decimal amount,
         DateTimeOffset dateTimeOffset,
         int categoryId,
-        int subCategoryId)
+        int subCategoryId,
+        int? createdByApplicationUserId,
+        int? lastModifiedByApplicationUserId)
     {
         Id = id;
         Title = title;
@@ -16,6 +18,8 @@ public class UpdateExpenseDto
         DateTimeOffset = dateTimeOffset;
         CategoryId = categoryId;
         SubCategoryId = subCategoryId;
+        CreatedByApplicationUserId = createdByApplicationUserId;
+        LastModifiedByApplicationUserId = lastModifiedByApplicationUserId;
     }
 
     public int Id { get; set; }
@@ -29,4 +33,8 @@ public class UpdateExpenseDto
     public int CategoryId { get; set; }
 
     public int SubCategoryId { get; set; }
+
+    public int? CreatedByApplicationUserId { get; set; }
+
+    public int? LastModifiedByApplicationUserId { get; set; }
 }

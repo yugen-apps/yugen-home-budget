@@ -46,6 +46,8 @@ namespace Yugen.HomeBudget.Data.Repositories
 
         public async Task<Category> CreateAsync(Category category)
         {
+            category.CreatedOn = DateTimeOffset.UtcNow;
+
             _context.Categories.Add(category);
 
             await _context.SaveChangesAsync();
@@ -55,7 +57,7 @@ namespace Yugen.HomeBudget.Data.Repositories
 
         public async Task<Category> UpdateAsync(Category category)
         {
-            //category.UpdatedAt = DateTime.UtcNow;
+            category.LastModifiedOn = DateTimeOffset.UtcNow;
 
             _context.Categories.Update(category);
 

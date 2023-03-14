@@ -8,7 +8,7 @@ public static class DtoExtensions
 {
     public static CategoryDto ToDto(this Category category)
     {
-        var categoryDto = new CategoryDto(category.Id, category.Title);
+        var categoryDto = new CategoryDto(category.Id, category.Title, category.CreatedOn, category.LastModifiedOn, category.CreatedByApplicationUserId, category.LastModifiedByApplicationUserId);
 
         if (category.SubCategories != null)
         {
@@ -27,7 +27,7 @@ public static class DtoExtensions
 
     public static ExpenseDto ToDto(this Expense expense)
     {
-        var expenseDto = new ExpenseDto(expense.Id, expense.Title, expense.Amount, expense.DateTimeOffset, expense.Category.ToDto(), expense.SubCategory.ToDto());
+        var expenseDto = new ExpenseDto(expense.Id, expense.Title, expense.Amount, expense.DateTimeOffset, expense.Category.ToDto(), expense.SubCategory.ToDto(), expense.CreatedOn, expense.LastModifiedOn, expense.CreatedByApplicationUserId, expense.LastModifiedByApplicationUserId);
         return expenseDto;
     }
 }

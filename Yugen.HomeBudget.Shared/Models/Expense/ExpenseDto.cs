@@ -10,7 +10,11 @@ public class ExpenseDto
         decimal amount,
         DateTimeOffset dateTimeOffset,
         CategoryDto categoryDto,
-        SubCategoryDto subCategoryDto)
+        SubCategoryDto subCategoryDto,
+        DateTimeOffset createdOn, 
+        DateTimeOffset lastModifiedOn,
+        int? createdByApplicationUserId,
+        int? lastModifiedByApplicationUserId)
     {
         Id = id;
         Title = title;
@@ -20,6 +24,10 @@ public class ExpenseDto
         //SubCategoryId = subCategoryId;
         CategoryDto = categoryDto;
         SubCategoryDto = subCategoryDto;
+        CreatedOn = createdOn;
+        LastModifiedOn = lastModifiedOn;
+        CreatedByApplicationUserId = createdByApplicationUserId;
+        LastModifiedByApplicationUserId = lastModifiedByApplicationUserId;
     }
 
     public int Id { get; set; }
@@ -37,4 +45,13 @@ public class ExpenseDto
     public CategoryDto CategoryDto { get; set; }
 
     public SubCategoryDto SubCategoryDto { get; set; }
+
+
+    public DateTimeOffset CreatedOn { get; set; }
+
+    public DateTimeOffset LastModifiedOn { get; set; }
+
+    public int? CreatedByApplicationUserId { get; set; }
+
+    public int? LastModifiedByApplicationUserId { get; set; }
 }
