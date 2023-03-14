@@ -3,32 +3,10 @@
 <!-- AllowAnonymous / Authorize -->
 @attribute [Authorize]
 
-<PageTitle>@PageConstants.Category</PageTitle>
-
 <!-- ========== title-wrapper start ========== -->
-<div class="title-wrapper pt-30">
-    <div class="row align-items-center">
-        <div class="col-md-6">
-            <div class="title mb-30">
-                <h2>@PageConstants.Category</h2>
-            </div>
-        </div>
-        <!-- end col -->
-        <div class="col-md-6">
-            <div class="breadcrumb-wrapper mb-30">
-                <nav aria-label="breadcrumb">
-                    <a href="@PageHelper.AddHref(PageConstants.Category)"
-                       class="main-btn primary-btn btn-hover btn-sm"
-                       title="Add">
-                        <i class="bi bi-plus mr-5"></i> Add
-                    </a>
-                </nav>
-            </div>
-        </div>
-        <!-- end col -->
-    </div>
-    <!-- end row -->
-</div>
+<TitleComponent PageTitle="@PageConstants.Category"
+                Title="@PageConstants.Category"
+                Breadcrumb="@PageConstants.Category" />
 <!-- ========== title-wrapper end ========== -->
 @if (_categories == null)
 {
@@ -38,11 +16,20 @@ else
 {
     <div class="row">
         <div class="card-style mb-30">
-            <PagerComponents PageIndex=@_paginatedList.PageIndex
-                         TotalPages=@_paginatedList.TotalPages
-                         OnClick="PageIndexChanged"
-                         HasNextPage=@_paginatedList.HasNextPage
-                         HasPreviousPage=@_paginatedList.HasPreviousPage />
+            <div class="title d-flex flex-wrap align-items-center justify-content-between ">
+                <div class="left">
+                    <a href="@PageHelper.AddHref(PageConstants.Category)"
+                       class="main-btn primary-btn btn-hover btn-sm"
+                       title="Add">
+                        <i class="bi bi-plus mr-5"></i> Add
+                    </a>
+                </div>
+                <PagerComponent PageIndex=@_paginatedList.PageIndex
+                            TotalPages=@_paginatedList.TotalPages
+                            OnClick="PageIndexChanged"
+                            HasNextPage=@_paginatedList.HasNextPage
+                            HasPreviousPage=@_paginatedList.HasPreviousPage />
+            </div>
         </div>
     </div>
     <div class="row">
@@ -59,11 +46,11 @@ else
                             }
                         </ul>
                         @*
-                            <small>@category.CreatedOn</small>
-                            <small>@category.LastModifiedOn</small>
-                            <small>@category.CreatedByApplicationUserId</small>
-                            <small>@category.LastModifiedByApplicationUserId</small>
-                        *@
+                <small>@category.CreatedOn</small>
+                <small>@category.LastModifiedOn</small>
+                <small>@category.CreatedByApplicationUserId</small>
+                <small>@category.LastModifiedByApplicationUserId</small>
+                *@
 
                         <a href="@PageHelper.EditHref(PageConstants.Category, category.Id)"
                            class="main-btn warning-btn btn-hover btn-sm"
@@ -71,8 +58,8 @@ else
                             <i class="bi bi-pencil"></i>
                         </a>
 
-                        <DeleteComponents Id="@category.Id"
-                                  DeleteCallback="@DeleteAsync" />
+                        <DeleteComponent Id="@category.Id"
+                                 DeleteCallback="@DeleteAsync" />
                     </div>
                 </div>
             </div>

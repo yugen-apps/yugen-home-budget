@@ -1,8 +1,9 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Yugen.HomeBudget.Shared.Models.Category;
 
 namespace Yugen.HomeBudget.Client.Components
 {
-    public partial class DeleteComponents
+    public partial class SubCategoryComponent
     {
         /// <summary>
         /// Avoid concurrent requests
@@ -10,10 +11,10 @@ namespace Yugen.HomeBudget.Client.Components
         private bool _busy;
 
         [Parameter]
-        public int Id { get; set; }
+        public SubCategoryDto SubCategoryDto { get; set; }
 
         [Parameter]
-        public EventCallback<int> DeleteCallback { get; set; }
+        public EventCallback<SubCategoryDto> DeleteCallback { get; set; }
 
         /// <summary>
         /// Confirm the delete.
@@ -37,7 +38,7 @@ namespace Yugen.HomeBudget.Client.Components
         {
             if (confirmed)
             {
-                DeleteCallback.InvokeAsync(Id);
+                DeleteCallback.InvokeAsync(SubCategoryDto);
             }
 
             DeleteConfirmation = false;

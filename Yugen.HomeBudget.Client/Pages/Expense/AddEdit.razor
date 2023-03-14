@@ -6,35 +6,10 @@
 <!-- AllowAnonymous / Authorize -->
 @attribute [Authorize]
 
-<PageTitle>@PageConstants.Expense</PageTitle>
-
 <!-- ========== title-wrapper start ========== -->
-<div class="title-wrapper pt-30">
-    <div class="row align-items-center">
-        <div class="col-md-6">
-            <div class="title mb-30">
-                <h2>@PageHelper.AddEditTitle(PageConstants.Expense, Id)</h2>
-            </div>
-        </div>
-        <!-- end col -->
-        <div class="col-md-6">
-            <div class="breadcrumb-wrapper mb-30">
-                <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item">
-                            <a href="#0">Dashboard</a>
-                        </li>
-                        <li class="breadcrumb-item active" aria-current="page">
-                            @PageConstants.Expense
-                        </li>
-                    </ol>
-                </nav>
-            </div>
-        </div>
-        <!-- end col -->
-    </div>
-    <!-- end row -->
-</div>
+<TitleComponent PageTitle="@PageConstants.Expense"
+                Title="@PageHelper.AddEditTitle(PageConstants.Expense, Id)"
+                Breadcrumb="@PageConstants.Expense" />
 <!-- ========== title-wrapper end ========== -->
 @if (ExpenseDto != null)
 {

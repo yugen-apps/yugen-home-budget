@@ -2,7 +2,7 @@
 
 namespace Yugen.HomeBudget.Client.Components
 {
-    public partial class PagerComponents
+    public partial class PagerComponent
     {
         [Parameter]
         public int PageIndex { get; set; }
