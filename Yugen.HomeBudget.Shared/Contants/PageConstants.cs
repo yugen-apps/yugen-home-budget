@@ -2,17 +2,21 @@
 {
     public static class PageConstants
     {
-        public const string Category = "Category";
+        public const string CategoryTitle = "Category";
 
-        public const string CategoryAddEdit = "Category/addedit";
+        public const string CategoryUrl = "category";
 
-        public const string CategoryAddEditId = "Category/addedit/{Id:int}";
+        public const string CategoryAddUrl = $"{CategoryUrl}/addedit";
 
-        public const string Expense = "Expense";
+        public const string CategoryEditUrl = $"{CategoryUrl}/addedit/{{Id:int}}";
 
-        public const string ExpenseAddEdit = "Expense/addedit";
+        public const string ExpenseTitle = "Expense";
 
-        public const string ExpenseAddEditId = "Expense/addedit/{Id:int}";
+        public const string ExpenseUrl = "expense";
+
+        public const string ExpenseAddUrl = $"{ExpenseUrl}/addedit";
+
+        public const string ExpenseEditUrl = $"{ExpenseUrl}/addedit/{{Id:int}}";
         
         public const string Home = "Home";
 
@@ -22,8 +26,10 @@
 
         public const string Register = "Register";
 
-        public const string LoginUrl = "authentication/Login";
+        public const string Authentication = "authentication";
 
-        public const string RegisterUrl = "authentication/Register";
+        public const string LoginUrl = $"{Authentication}/login";
+
+        public const string RegisterUrl = $"{Authentication}/register";
     }
 }

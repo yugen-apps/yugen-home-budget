@@ -2,18 +2,19 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Yugen.HomeBudget.Data.Models;
+using Yugen.HomeBudget.Shared.Contants;
 using Yugen.HomeBudget.Shared.Models.Authentication;
 
 namespace Yugen.HomeBudget.Server.Controllers;
 
 [ApiController]
-[Route("[controller]/[action]")]
-public class AuthController : ControllerBase
+[Route($"{EndpointConstants.Prefix}/[controller]/[action]")]
+public class AuthenticationController : ControllerBase
 {
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly SignInManager<ApplicationUser> _signInManager;
 
-    public AuthController(
+    public AuthenticationController(
         UserManager<ApplicationUser> userManager, 
         SignInManager<ApplicationUser> signInManager)
     {

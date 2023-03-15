@@ -1,5 +1,5 @@
-﻿@attribute [Route(PageConstants.ExpenseAddEdit)]
-@attribute [Route(PageConstants.ExpenseAddEditId)]
+﻿@attribute [Route(PageConstants.ExpenseAddUrl)]
+@attribute [Route(PageConstants.ExpenseEditUrl)]
 @using Yugen.HomeBudget.Client.Models
 @using Yugen.HomeBudget.Shared.Contants
 @inject EditSuccess EditSuccessState
@@ -7,9 +7,9 @@
 @attribute [Authorize]
 
 <!-- ========== title-wrapper start ========== -->
-<TitleComponent PageTitle="@PageConstants.Expense"
-                Title="@PageHelper.AddEditTitle(PageConstants.Expense, Id)"
-                Breadcrumb="@PageConstants.Expense" />
+<TitleComponent PageTitle="@PageConstants.ExpenseTitle"
+                Title="@PageHelper.AddEditTitle(PageConstants.ExpenseTitle, Id)"
+                Breadcrumb="@PageConstants.ExpenseTitle" />
 <!-- ========== title-wrapper end ========== -->
 @if (ExpenseDto != null)
 {

@@ -109,7 +109,7 @@ namespace Yugen.HomeBudget.Client.Pages.Expense
         private void CancelAsync()
         {
             _busy = true;
-            _navigationManager.NavigateTo(PageConstants.Expense);
+            _navigationManager.NavigateTo(PageConstants.ExpenseUrl);
         }
 
         /// <summary>
@@ -148,7 +148,7 @@ namespace Yugen.HomeBudget.Client.Pages.Expense
 
                 EditSuccessState.Success = true;
                 // go to view to see the record
-                _navigationManager.NavigateTo(PageConstants.Expense);
+                _navigationManager.NavigateTo(PageConstants.ExpenseUrl);
             }
             catch (Exception ex)
             {

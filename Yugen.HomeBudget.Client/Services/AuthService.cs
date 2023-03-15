@@ -13,11 +13,11 @@ public class AuthService : IAuthService
         _httpClient = httpClient;
     }
 
-    public Task<CurrentUser?> CurrentUserInfo() =>_httpClient.GetFromJsonAsync<CurrentUser>($"{EndpointConstants.Auth}/currentuserinfo");
+    public Task<CurrentUser?> CurrentUserInfo() =>_httpClient.GetFromJsonAsync<CurrentUser>($"{EndpointConstants.Authentication}/currentuserinfo");
 
     public async Task Login(LoginRequest loginRequest)
     {
-        var result = await _httpClient.PostAsJsonAsync($"{EndpointConstants.Auth}/login", loginRequest);
+        var result = await _httpClient.PostAsJsonAsync($"{EndpointConstants.Authentication}/login", loginRequest);
         if (result.StatusCode != System.Net.HttpStatusCode.BadRequest)
         {
             result.EnsureSuccessStatusCode();
@@ -30,13 +30,13 @@ public class AuthService : IAuthService
 
     public async Task Logout()
     {
-        var result = await _httpClient.PostAsync($"{EndpointConstants.Auth}/logout", null);
+        var result = await _httpClient.PostAsync($"{EndpointConstants.Authentication}/logout", null);
         result.EnsureSuccessStatusCode();
     }
 
     public async Task Register(RegisterRequest registerRequest)
     {
-        var result = await _httpClient.PostAsJsonAsync($"{EndpointConstants.Auth}/register", registerRequest);
+        var result = await _httpClient.PostAsJsonAsync($"{EndpointConstants.Authentication}/register", registerRequest);
         if (result.StatusCode != System.Net.HttpStatusCode.BadRequest)
         {
             result.EnsureSuccessStatusCode();

@@ -1,5 +1,5 @@
-﻿@attribute [Route(PageConstants.CategoryAddEdit)]
-@attribute [Route(PageConstants.CategoryAddEditId)]
+﻿@attribute [Route(PageConstants.CategoryAddUrl)]
+@attribute [Route(PageConstants.CategoryEditUrl)]
 @using Yugen.HomeBudget.Client.Models
 @using Yugen.HomeBudget.Shared.Contants
 @inject EditSuccess EditSuccessState
@@ -7,9 +7,9 @@
 @attribute [Authorize]
 
 <!-- ========== title-wrapper start ========== -->
-<TitleComponent PageTitle="@PageConstants.Category" 
-                Title="@PageHelper.AddEditTitle(PageConstants.Category, Id)"
-                Breadcrumb="@PageConstants.Category" />
+<TitleComponent PageTitle="@PageConstants.CategoryTitle"
+                Title="@PageHelper.AddEditTitle(PageConstants.CategoryTitle, Id)"
+                Breadcrumb="@PageConstants.CategoryTitle" />
 <!-- ========== title-wrapper end ========== -->
 @if (CategoryDto != null)
 {

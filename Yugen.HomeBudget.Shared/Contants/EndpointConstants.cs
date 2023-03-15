@@ -2,9 +2,11 @@
 
 public static class EndpointConstants
 {
-    public const string Category = "Category";
+    public const string Prefix = "api";
 
-    public const string Expense = "Expense";
+    public const string Category = $"{Prefix}/category";
 
-    public const string Auth = "auth";
+    public const string Expense = $"{Prefix}/expense";
+
+    public const string Authentication = $"{Prefix}/authentication";
 }

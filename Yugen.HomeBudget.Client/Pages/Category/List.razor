@@ -1,12 +1,12 @@
-﻿@attribute [Route(PageConstants.Category)]
+﻿@attribute [Route(PageConstants.CategoryUrl)]
 @using Yugen.HomeBudget.Shared.Contants
 <!-- AllowAnonymous / Authorize -->
 @attribute [Authorize]
 
 <!-- ========== title-wrapper start ========== -->
-<TitleComponent PageTitle="@PageConstants.Category"
-                Title="@PageConstants.Category"
-                Breadcrumb="@PageConstants.Category" />
+<TitleComponent PageTitle="@PageConstants.CategoryTitle"
+                Title="@PageConstants.CategoryTitle"
+                Breadcrumb="@PageConstants.CategoryTitle" />
 <!-- ========== title-wrapper end ========== -->
 @if (_categories == null)
 {
@@ -18,7 +18,7 @@ else
         <div class="card-style mb-30">
             <div class="title d-flex flex-wrap align-items-center justify-content-between ">
                 <div class="left">
-                    <a href="@PageHelper.AddHref(PageConstants.Category)"
+                    <a href="@PageConstants.CategoryAddUrl"
                        class="main-btn primary-btn btn-hover btn-sm"
                        title="Add">
                         <i class="bi bi-plus mr-5"></i> Add
@@ -52,7 +52,7 @@ else
                 <small>@category.LastModifiedByApplicationUserId</small>
                 *@
 
-                        <a href="@PageHelper.EditHref(PageConstants.Category, category.Id)"
+                        <a href="@PageHelper.EditHref(PageConstants.CategoryUrl, category.Id)"
                            class="main-btn warning-btn btn-hover btn-sm"
                            title="Edit">
                             <i class="bi bi-pencil"></i>

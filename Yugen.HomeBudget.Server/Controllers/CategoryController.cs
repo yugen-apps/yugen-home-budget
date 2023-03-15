@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Yugen.HomeBudget.Application.Services;
+using Yugen.HomeBudget.Shared.Contants;
 using Yugen.HomeBudget.Shared.Models;
 using Yugen.HomeBudget.Shared.Models.Category;
 
@@ -9,7 +10,7 @@ namespace Yugen.HomeBudget.Server.Controllers
     //[Authorize]
     [AllowAnonymous]
     [ApiController]
-    [Route("[controller]")]
+    [Route($"{EndpointConstants.Prefix}/[controller]")]
     public class CategoryController : ControllerBase
     {
         private readonly ILogger<CategoryController> _logger;

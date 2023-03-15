@@ -110,7 +110,7 @@ namespace Yugen.HomeBudget.Client.Pages.Category
         private void CancelAsync()
         {
             _busy = true;
-            _navigationManager.NavigateTo(PageConstants.Category);
+            _navigationManager.NavigateTo(PageConstants.CategoryUrl);
         }
 
         /// <summary>
@@ -150,7 +150,7 @@ namespace Yugen.HomeBudget.Client.Pages.Category
 
                 EditSuccessState.Success = true;
                 // go to view to see the record
-                _navigationManager.NavigateTo(PageConstants.Category);
+                _navigationManager.NavigateTo(PageConstants.CategoryUrl);
             }
             catch (Exception ex)
             {

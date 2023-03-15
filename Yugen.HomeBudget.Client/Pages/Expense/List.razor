@@ -1,12 +1,12 @@
-﻿@attribute [Route(PageConstants.Expense)]
+﻿@attribute [Route(PageConstants.ExpenseUrl)]
 @using Yugen.HomeBudget.Shared.Contants
 <!-- AllowAnonymous / Authorize -->
 @attribute [Authorize]
 
 <!-- ========== title-wrapper start ========== -->
-<TitleComponent PageTitle="@PageConstants.Expense"
-                Title="@PageConstants.Expense"
-                Breadcrumb="@PageConstants.Expense" />
+<TitleComponent PageTitle="@PageConstants.ExpenseTitle"
+                Title="@PageConstants.ExpenseTitle"
+                Breadcrumb="@PageConstants.ExpenseTitle" />
 <!-- ========== title-wrapper end ========== -->
 @if (_expenses == null)
 {
@@ -20,7 +20,7 @@ else
         <div class="card-style mb-30">
             <div class="title d-flex flex-wrap align-items-center justify-content-between ">
                 <div class="left">
-                    <a href="@PageHelper.AddHref(PageConstants.Expense)"
+                    <a href="@PageConstants.ExpenseAddUrl"
                        class="main-btn primary-btn btn-hover btn-sm"
                        title="Add">
                         <i class="bi bi-plus mr-5"></i> Add
@@ -82,7 +82,7 @@ else
                                 <td>
                                     <div class="action justify-content-end">
 
-                                        <a href="@PageHelper.EditHref(PageConstants.Expense, expense.Id)"
+                                        <a href="@PageHelper.EditHref(PageConstants.ExpenseUrl, expense.Id)"
                                            class="main-btn warning-btn btn-hover btn-sm mr-10"
                                            title="Edit">
                                             <i class="bi bi-pencil"></i>
