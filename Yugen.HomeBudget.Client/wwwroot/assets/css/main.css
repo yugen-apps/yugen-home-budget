@@ -2228,39 +2228,7 @@ h6,
         display: flex;
         justify-content: flex-end;
     }
-
-        .header .header-right button {
-            border: 1px solid #efefef;
-            background: rgba(239, 239, 239, 0.5);
-            border-radius: 10px;
-            height: 46px;
-            width: 46px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-        }
-
-            .header .header-right button::after {
-                display: none;
-            }
-
-            .header .header-right button span {
-                position: absolute;
-                width: 20px;
-                height: 20px;
-                background: #4a6cf7;
-                color: #fff;
-                border-radius: 50%;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                top: -8px;
-                right: -6px;
-                font-size: 12px;
-                font-weight: 500;
-            }
-
+    
         .header .header-right .dropdown-menu {
             width: 350px;
             border: 1px solid #efefef;

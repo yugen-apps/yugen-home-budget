@@ -3,24 +3,18 @@
 
 <AuthorizeView>
     <Authorized>
-        <button class="dropdown-toggle bg-transparent border-0"
-                type="button"
-                id="profile"
-                data-bs-toggle="dropdown"
-                aria-expanded="false">
-            <div class="profile-info">
-                <div class="info">
-                    <h6>@context.User.Identity?.Name!</h6>
-                    <div class="image">
-                        <img src="assets/images/logo.png"
-                             alt="Logo" />
-                    </div>
+        <div class="profile-info">
+            <div class="info">
+                <h6>@context.User.Identity?.Name!</h6>
+                <div class="image">
+                    <img src="assets/images/logo.png"
+                         alt="Logo" />
                 </div>
             </div>
-        </button>
-        <button class="main-btn primary-btn btn-hover ml-15"
+        </div>
+        <button class="main-btn danger-btn btn-hover btn-sm ml-10"
                 @onclick="BeginLogOut">
-            Log out
+            <i class="bi bi-box-arrow-right"></i>
         </button>
     </Authorized>
     <NotAuthorized>
