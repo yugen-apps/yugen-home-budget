@@ -11,11 +11,11 @@
                 Title="@PageHelper.AddEditTitle(PageConstants.CategoryTitle, Id)"
                 Breadcrumb="@PageConstants.CategoryTitle" />
 <!-- ========== title-wrapper end ========== -->
-@if (CategoryDto != null)
+@if (Category != null)
 {
     <div class="row">
         <div class="col-lg-6">
-            <EditForm Model="@CategoryDto"
+            <EditForm Model="@Category"
                   OnInvalidSubmit="(async () => await SubmitAsync(false))"
                   OnValidSubmit="(async () => await SubmitAsync(true))">
                 <DataAnnotationsValidator />
@@ -25,7 +25,7 @@
                         <div class="col-12">
                             <div class="input-style-1">
                                 <label>Title</label>
-                                <InputText @bind-Value="CategoryDto.Title" placeholder="Title" />
+                                <InputText @bind-Value="Category.Title" placeholder="Title" />
                             </div>
                         </div>
                     </div>
@@ -40,9 +40,9 @@
                         </a>
                     </div>
                     <div class="row">
-                        @if (CategoryDto?.SubCategoriesDto != null)
+                        @if (Category?.SubCategoriesDto != null)
                         {
-                            foreach (var subCategory in CategoryDto.SubCategoriesDto)
+                            foreach (var subCategory in Category.SubCategoriesDto)
                             {
                                 <SubCategoryComponent SubCategoryDto="@subCategory"
                                                     DeleteCallback="@DeleteSubCategoryAsync" />

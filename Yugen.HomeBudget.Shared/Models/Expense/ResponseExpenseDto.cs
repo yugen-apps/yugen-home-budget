@@ -2,14 +2,14 @@
 
 namespace Yugen.HomeBudget.Shared.Models.Expense;
 
-public class ExpenseDto
+public class ResponseExpenseDto
 {
-    public ExpenseDto(
+    public ResponseExpenseDto(
         int id,
         string title,
         decimal amount,
         DateTimeOffset dateTimeOffset,
-        CategoryDto categoryDto,
+        ResponseCategoryDto categoryDto,
         SubCategoryDto subCategoryDto,
         DateTimeOffset createdOn, 
         DateTimeOffset lastModifiedOn,
@@ -20,8 +20,6 @@ public class ExpenseDto
         Title = title;
         Amount = amount;
         DateTimeOffset = dateTimeOffset;
-        //CategoryId = categoryId;
-        //SubCategoryId = subCategoryId;
         CategoryDto = categoryDto;
         SubCategoryDto = subCategoryDto;
         CreatedOn = createdOn;
@@ -38,11 +36,8 @@ public class ExpenseDto
 
     public DateTimeOffset DateTimeOffset { get; set; }
 
-    //public int CategoryId { get; set; }
 
-    //public int SubCategoryId { get; set; }
-
-    public CategoryDto CategoryDto { get; set; }
+    public ResponseCategoryDto CategoryDto { get; set; }
 
     public SubCategoryDto SubCategoryDto { get; set; }
 

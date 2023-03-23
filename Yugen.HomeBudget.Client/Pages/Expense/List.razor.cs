@@ -10,9 +10,9 @@ namespace Yugen.HomeBudget.Client.Pages.Expense
 {
     public partial class List
     {
-        private ICollection<ExpenseDto>? _expenses;
+        private ICollection<ResponseExpenseDto>? _expenses;
 
-        private PaginatedList<ExpenseDto> _paginatedList = new PaginatedList<ExpenseDto>();
+        private PaginatedList<ResponseExpenseDto> _paginatedList = new PaginatedList<ResponseExpenseDto>();
 
         private int? _pageNumber = 1;
 
@@ -40,7 +40,7 @@ namespace Yugen.HomeBudget.Client.Pages.Expense
         {
             //try
             //{
-            _paginatedList = await _httpClient.GetFromJsonAsync<PaginatedList<ExpenseDto>>($"{EndpointConstants.Expense}?pageNumber={_pageNumber}&pageSize={Constants.PageSize}");
+            _paginatedList = await _httpClient.GetFromJsonAsync<PaginatedList<ResponseExpenseDto>>($"{EndpointConstants.Expense}?pageNumber={_pageNumber}&pageSize={Constants.PageSize}");
             _expenses = _paginatedList.Items;
             //}
             //catch (AccessTokenNotAvailableException exception)

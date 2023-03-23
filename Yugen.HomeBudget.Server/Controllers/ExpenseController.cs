@@ -30,13 +30,13 @@ namespace Yugen.HomeBudget.Server.Controllers
         /// <returns></returns>
         [HttpGet]
         [Route("all")]
-        public Task<IEnumerable<ExpenseDto>> ListAsync()
+        public Task<IEnumerable<ResponseExpenseDto>> ListAsync()
         {
             return _expenseService.ListAsync();
         }
 
         [HttpGet]
-        public Task<PaginatedList<ExpenseDto>> ListAsync(int pageNumber, int pageSize)
+        public Task<PaginatedList<ResponseExpenseDto>> ListAsync(int pageNumber, int pageSize)
         {
             return _expenseService.ListAsync(pageNumber, pageSize);
         }
@@ -47,7 +47,7 @@ namespace Yugen.HomeBudget.Server.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet("{id}")]
-        public Task<ExpenseDto> GetAsync(int id)
+        public Task<ResponseExpenseDto> GetAsync(int id)
         {
             return _expenseService.GetAsync(id);
         }
@@ -59,7 +59,7 @@ namespace Yugen.HomeBudget.Server.Controllers
         /// <param name="createExpenseDto"></param>
         /// <returns></returns>
         [HttpPost]
-        public Task<ExpenseDto?> CreateAsync(CreateExpenseDto createExpenseDto)
+        public Task<ResponseExpenseDto?> CreateAsync(CreateExpenseDto createExpenseDto)
         {
             return _expenseService.CreateAsync(createExpenseDto);
         }
@@ -72,7 +72,7 @@ namespace Yugen.HomeBudget.Server.Controllers
         /// <param name="updateExpenseDto"></param>
         /// <returns></returns>
         [HttpPut("{id}")]
-        public async Task<ExpenseDto?> UpdateAsync(int id, UpdateExpenseDto updateExpenseDto)
+        public async Task<ResponseExpenseDto?> UpdateAsync(int id, UpdateExpenseDto updateExpenseDto)
         {
             //if (id != editExpenseDto.Id)
             //{

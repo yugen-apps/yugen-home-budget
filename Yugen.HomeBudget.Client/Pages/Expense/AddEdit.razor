@@ -11,11 +11,11 @@
                 Title="@PageHelper.AddEditTitle(PageConstants.ExpenseTitle, Id)"
                 Breadcrumb="@PageConstants.ExpenseTitle" />
 <!-- ========== title-wrapper end ========== -->
-@if (ExpenseDto != null)
+@if (Expense != null)
 {
     <div class="row">
         <div class="col-lg-6">
-            <EditForm Model="@ExpenseDto"
+            <EditForm Model="@Expense"
                   OnInvalidSubmit="(async () => await SubmitAsync(false))"
                   OnValidSubmit="(async () => await SubmitAsync(true))">
                 <DataAnnotationsValidator />
@@ -25,36 +25,29 @@
                         <div class="col-12">
                             <div class="input-style-1">
                                 <label>Title</label>
-                                <InputText @bind-Value="ExpenseDto.Title" placeholder="Title" />
+                                <InputText @bind-Value="Expense.Title" placeholder="Title" />
                             </div>
                         </div>
                         <div class="col-12">
                             <div class="input-style-1">
                                 <label>Amount</label>
-                                <InputNumber @bind-Value="ExpenseDto.Amount" placeholder="Amount" />
+                                <InputNumber @bind-Value="Expense.Amount" placeholder="Amount" />
                             </div>
                         </div>
                         <div class="col-12">
                             <div class="input-style-1">
                                 <label>Date</label>
-                                <InputDate @bind-Value="ExpenseDto.DateTimeOffset" />
+                                <InputDate @bind-Value="Expense.DateTimeOffset" />
                             </div>
                         </div>
                         <div class="col-12">
                             <div class="select-style-1">
                                 <label>Category</label>
                                 <div class="select-position">
-                                    <InputSelect @bind-Value="ExpenseDto.CategoryDto.Id">
+                                    <InputSelect @bind-Value="Expense.CategoryId">
                                         @foreach (var category in _categories)
                                         {
-                                            if (ExpenseDto.CategoryDto.Id == category.Id)
-                                            {
-                                                <option value="@category.Id" selected="selected">@category.Title</option>
-                                            }
-                                            else
-                                            {
-                                                <option value="@category.Id">@category.Title</option>
-                                            }
+                                            <option value="@category.Id">@category.Title</option>
                                         }
                                     </InputSelect>
                                 </div>
@@ -64,21 +57,14 @@
                             <div class="select-style-1">
                                 <label>Sub Category</label>
                                 <div class="select-position">
-                                    <InputSelect @bind-Value="ExpenseDto.SubCategoryDto.Id">
+                                    <InputSelect @bind-Value="Expense.SubCategoryId">
                                         @{
-                                            var currentCategory = _categories.FirstOrDefault(x => x.Id == ExpenseDto.CategoryDto.Id);
+                                            var currentCategory = _categories.FirstOrDefault(x => x.Id == Expense.CategoryId);
                                             if (currentCategory != null)
                                             {
                                                 foreach (var subCategory in currentCategory.SubCategoriesDto)
                                                 {
-                                                    if (ExpenseDto.SubCategoryDto.Id == subCategory.Id)
-                                                    {
-                                                        <option value="@subCategory.Id" selected="selected">@subCategory.Title</option>
-                                                    }
-                                                    else
-                                                    {
-                                                        <option value="@subCategory.Id">@subCategory.Title</option>
-                                                    }
+                                                    <option value="@subCategory.Id">@subCategory.Title</option>
                                                 }
                                             }
                                         }
@@ -88,12 +74,12 @@
                         </div>
                         <div class="col-12">
                             <button disabled="@_busy"
-                                type="submit"
-                                class="main-btn primary-btn btn-hover">
+                                    type="submit"
+                                    class="main-btn primary-btn btn-hover">
                                 Save
                             </button>
                             <button disabled="@_busy"
-                                class="main-btn warning-btn btn-hover"
+                                    class="main-btn warning-btn btn-hover"
                                 @onclick="CancelAsync">
                                 Cancel
                             </button>

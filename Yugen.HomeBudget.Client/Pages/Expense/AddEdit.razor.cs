@@ -30,7 +30,7 @@ namespace Yugen.HomeBudget.Client.Pages.Expense
         /// </summary>
         private string _errorMessage = string.Empty;
 
-        private CategoryDto[]? _categories;
+        private List<ResponseCategoryDto>? _categories;
 
         /// <summary>
         /// Id of entity to edit
@@ -50,7 +50,7 @@ namespace Yugen.HomeBudget.Client.Pages.Expense
         /// <summary>
         /// Expense entity.
         /// </summary>
-        private ExpenseDto? ExpenseDto { get; set; }
+        private Yugen.HomeBudget.Client.Models.Expense? Expense { get; set; }
 
         private CurrentUser? _currentUser { get; set; }
 
@@ -66,14 +66,14 @@ namespace Yugen.HomeBudget.Client.Pages.Expense
 
             try
             {
-                _categories = await _httpClient.GetFromJsonAsync<CategoryDto[]>($"{EndpointConstants.Category}/all");
+                _categories = await _httpClient.GetFromJsonAsync<List<ResponseCategoryDto>>($"{EndpointConstants.Category}/all");
                 if (Id != null)
                 {
                     await LoadAsync();
                 }
                 else
                 {
-                    ExpenseDto = new ExpenseDto(0, "", 0, DateTimeOffset.UtcNow, _categories.First(), _categories.First().SubCategoriesDto.First(), DateTimeOffset.UtcNow, DateTimeOffset.UtcNow, _currentUser?.Id, _currentUser?.Id);
+                    Expense = new(0, "", 0, DateTimeOffset.UtcNow, 1, 1);
                 }
             }
             finally
@@ -90,11 +90,12 @@ namespace Yugen.HomeBudget.Client.Pages.Expense
         /// <returns>Task</returns>
         private async Task LoadAsync()
         {
-            ExpenseDto = null;
+            Expense = null;
 
             //try
             //{
-            ExpenseDto = await _httpClient.GetFromJsonAsync<ExpenseDto>($"{EndpointConstants.Expense}/{Id}");
+                var expenseDto = await _httpClient.GetFromJsonAsync<ResponseExpenseDto>($"{EndpointConstants.Expense}/{Id}");
+                Expense = new(expenseDto.Id, expenseDto.Title, expenseDto.Amount, expenseDto.DateTimeOffset, expenseDto.CategoryDto.Id, expenseDto.SubCategoryDto.Id);
             //}
             //catch (AccessTokenNotAvailableException exception)
             //{
@@ -137,12 +138,12 @@ namespace Yugen.HomeBudget.Client.Pages.Expense
             {
                 if (Id != null)
                 {
-                    var createExpenseDto = new CreateExpenseDto(ExpenseDto.Title, ExpenseDto.Amount, ExpenseDto.DateTimeOffset, ExpenseDto.CategoryDto.Id, ExpenseDto.SubCategoryDto.Id, _currentUser?.Id, _currentUser?.Id);
+                    var createExpenseDto = new CreateExpenseDto(Expense.Title, Expense.Amount, Expense.DateTimeOffset, Expense.CategoryId, Expense.SubCategoryId, _currentUser?.Id, _currentUser?.Id);
                     var response = await _httpClient.PutAsJsonAsync<CreateExpenseDto>($"{EndpointConstants.Expense}/{Id}", createExpenseDto);
                 }
                 else
                 {
-                    var updateExpenseDto = new UpdateExpenseDto(ExpenseDto.Id, ExpenseDto.Title, ExpenseDto.Amount, ExpenseDto.DateTimeOffset, ExpenseDto.CategoryDto.Id, ExpenseDto.SubCategoryDto.Id, _currentUser?.Id, _currentUser?.Id);
+                    var updateExpenseDto = new UpdateExpenseDto(Expense.Id, Expense.Title, Expense.Amount, Expense.DateTimeOffset, Expense.CategoryId, Expense.SubCategoryId, _currentUser?.Id, _currentUser?.Id);
                     var response = await _httpClient.PostAsJsonAsync<UpdateExpenseDto>($"{EndpointConstants.Expense}", updateExpenseDto);
                 }
 

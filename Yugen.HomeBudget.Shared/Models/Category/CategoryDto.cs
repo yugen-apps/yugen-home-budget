@@ -1,8 +1,8 @@
 ﻿namespace Yugen.HomeBudget.Shared.Models.Category;
 
-public class CategoryDto
+public class ResponseCategoryDto
 {
-    public CategoryDto(
+    public ResponseCategoryDto(
         int id, 
         string title, 
         DateTimeOffset createdOn, 

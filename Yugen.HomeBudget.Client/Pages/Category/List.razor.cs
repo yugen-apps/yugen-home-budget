@@ -11,9 +11,9 @@ namespace Yugen.HomeBudget.Client.Pages.Category
 {
     public partial class List
     {
-        private ICollection<CategoryDto>? _categories;
+        private ICollection<ResponseCategoryDto>? _categories;
 
-        private PaginatedList<CategoryDto> _paginatedList = new PaginatedList<CategoryDto>();
+        private PaginatedList<ResponseCategoryDto> _paginatedList = new PaginatedList<ResponseCategoryDto>();
 
         private int? _pageNumber = 1;
 
@@ -41,7 +41,7 @@ namespace Yugen.HomeBudget.Client.Pages.Category
         {
             //try
             //{
-            _paginatedList = await _httpClient.GetFromJsonAsync<PaginatedList<CategoryDto>>($"{EndpointConstants.Category}?pageNumber={_pageNumber}&pageSize={Constants.PageSize}");
+            _paginatedList = await _httpClient.GetFromJsonAsync<PaginatedList<ResponseCategoryDto>>($"{EndpointConstants.Category}?pageNumber={_pageNumber}&pageSize={Constants.PageSize}");
             _categories = _paginatedList.Items;
             //}
             //catch (AccessTokenNotAvailableException exception)

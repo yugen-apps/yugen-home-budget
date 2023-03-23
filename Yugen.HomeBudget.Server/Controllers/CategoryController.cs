@@ -30,13 +30,13 @@ namespace Yugen.HomeBudget.Server.Controllers
         /// <returns></returns>
         [HttpGet]
         [Route("all")]
-        public Task<IEnumerable<CategoryDto>> ListAsync()
+        public Task<IEnumerable<ResponseCategoryDto>> ListAsync()
         {
             return _categoryService.ListAsync();
         }
 
         [HttpGet]
-        public Task<PaginatedList<CategoryDto>> ListAsync(int pageNumber, int pageSize)
+        public Task<PaginatedList<ResponseCategoryDto>> ListAsync(int pageNumber, int pageSize)
         {
             return _categoryService.ListAsync(pageNumber, pageSize);
         }
@@ -47,7 +47,7 @@ namespace Yugen.HomeBudget.Server.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet("{id}")]
-        public Task<CategoryDto> GetAsync(int id)
+        public Task<ResponseCategoryDto> GetAsync(int id)
         {
             return _categoryService.GetAsync(id);
         }
@@ -59,7 +59,7 @@ namespace Yugen.HomeBudget.Server.Controllers
         /// <param name="createCategoryDto"></param>
         /// <returns></returns>
         [HttpPost]
-        public Task<CategoryDto?> CreateAsync(CreateCategoryDto createCategoryDto)
+        public Task<ResponseCategoryDto?> CreateAsync(CreateCategoryDto createCategoryDto)
         {
             return _categoryService.CreateAsync(createCategoryDto);
         }
@@ -72,7 +72,7 @@ namespace Yugen.HomeBudget.Server.Controllers
         /// <param name="updateCategoryDto"></param>
         /// <returns></returns>
         [HttpPut("{id}")]
-        public Task<CategoryDto?> UpdateAsync(int id, UpdateCategoryDto updateCategoryDto)
+        public Task<ResponseCategoryDto?> UpdateAsync(int id, UpdateCategoryDto updateCategoryDto)
         {
             //if (id != updateCategoryDto.Id)
             //{

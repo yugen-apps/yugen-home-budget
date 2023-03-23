@@ -16,13 +16,13 @@ namespace Yugen.HomeBudget.Application.Services
             _expenseRepository = expenseRepository;
         }
 
-        public async Task<IEnumerable<ExpenseDto>> ListAsync()
+        public async Task<IEnumerable<ResponseExpenseDto>> ListAsync()
         {
             var expenses = await _expenseRepository.ListAsync();
             return expenses.Select(e => e.ToDto()).ToList();
         }
 
-        public async Task<PaginatedList<ExpenseDto>> ListAsync(int pageIndex, int pageSize)
+        public async Task<PaginatedList<ResponseExpenseDto>> ListAsync(int pageIndex, int pageSize)
         {
             var totalItemCount = await _expenseRepository.CountAsync();
             var skip = (pageIndex - 1) * pageSize;
@@ -30,16 +30,16 @@ namespace Yugen.HomeBudget.Application.Services
                 .Select(e => e.ToDto())
                 .ToList();
 
-            return new PaginatedList<ExpenseDto>(categoriesDto, totalItemCount, pageIndex, pageSize);
+            return new PaginatedList<ResponseExpenseDto>(categoriesDto, totalItemCount, pageIndex, pageSize);
         }
 
-        public async Task<ExpenseDto> GetAsync(int id)
+        public async Task<ResponseExpenseDto> GetAsync(int id)
         {
             var expense = await _expenseRepository.GetAsync(id);
             return expense.ToDto();
         }
 
-        public async Task<ExpenseDto?> CreateAsync(CreateExpenseDto createExpenseDto)
+        public async Task<ResponseExpenseDto?> CreateAsync(CreateExpenseDto createExpenseDto)
         {
             var expense = new Expense(
                 createExpenseDto.Title,
@@ -53,7 +53,7 @@ namespace Yugen.HomeBudget.Application.Services
             return expenseResult.ToDto();
         }
 
-        public async Task<ExpenseDto?> UpdateAsync(int id, UpdateExpenseDto updateExpenseDto)
+        public async Task<ResponseExpenseDto?> UpdateAsync(int id, UpdateExpenseDto updateExpenseDto)
         {
             var expense = await _expenseRepository.GetAsync(id);
             if (expense == null)

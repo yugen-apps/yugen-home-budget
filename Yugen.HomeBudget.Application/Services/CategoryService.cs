@@ -15,13 +15,13 @@ namespace Yugen.HomeBudget.Application.Services
             _categoryRepository = categoryRepository;
         }
 
-        public async Task<IEnumerable<CategoryDto>> ListAsync()
+        public async Task<IEnumerable<ResponseCategoryDto>> ListAsync()
         {
             var categories = await _categoryRepository.ListAsync();
             return categories.Select(c => c.ToDto()).ToList();
         }
 
-        public async Task<PaginatedList<CategoryDto>> ListAsync(int pageIndex, int pageSize)
+        public async Task<PaginatedList<ResponseCategoryDto>> ListAsync(int pageIndex, int pageSize)
         {
             var totalItemCount = await _categoryRepository.CountAsync();
             var skip = (pageIndex - 1) * pageSize;
@@ -29,16 +29,16 @@ namespace Yugen.HomeBudget.Application.Services
                                 .Select(c => c.ToDto())
                                 .ToList();
             
-            return new PaginatedList<CategoryDto>(categoriesDto, totalItemCount, pageIndex, pageSize);
+            return new PaginatedList<ResponseCategoryDto>(categoriesDto, totalItemCount, pageIndex, pageSize);
         }
 
-        public async Task<CategoryDto> GetAsync(int id)
+        public async Task<ResponseCategoryDto> GetAsync(int id)
         {
             var category = await _categoryRepository.GetAsync(id);
             return category.ToDto();
         }
 
-        public async Task<CategoryDto?> CreateAsync(CreateCategoryDto createCategoryDto)
+        public async Task<ResponseCategoryDto?> CreateAsync(CreateCategoryDto createCategoryDto)
         {
             var exists = await _categoryRepository.ExistsAsync(createCategoryDto.Title);
             if (exists)
@@ -57,7 +57,7 @@ namespace Yugen.HomeBudget.Application.Services
             return categoryResult.ToDto();
         }
 
-        public async Task<CategoryDto?> UpdateAsync(int id, UpdateCategoryDto updateCategoryDto)
+        public async Task<ResponseCategoryDto?> UpdateAsync(int id, UpdateCategoryDto updateCategoryDto)
         {
             var category = await _categoryRepository.GetAsync(id);
             if (category == null)

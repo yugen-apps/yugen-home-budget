@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Authorization;
 using System.Net.Http.Json;
 using Yugen.HomeBudget.Client.Services;
 using Yugen.HomeBudget.Shared.Contants;
@@ -50,7 +49,7 @@ namespace Yugen.HomeBudget.Client.Pages.Category
         /// <summary>
         /// Category entity.
         /// </summary>
-        private CategoryDto? CategoryDto { get; set; }
+        private Yugen.HomeBudget.Client.Models.Category? Category { get; set; }
 
         private string? NewSubCategoryTitle { get; set; }
 
@@ -74,7 +73,7 @@ namespace Yugen.HomeBudget.Client.Pages.Category
                 }
                 else
                 {
-                    CategoryDto = new CategoryDto(0, "", DateTimeOffset.UtcNow, DateTimeOffset.UtcNow, _currentUser?.Id, _currentUser?.Id);
+                    Category = new(0, "");
                 }
             }
             finally
@@ -91,11 +90,12 @@ namespace Yugen.HomeBudget.Client.Pages.Category
         /// <returns>Task</returns>
         private async Task LoadAsync()
         {
-            CategoryDto = null;
+            Category = null;
 
             //try
             //{
-            CategoryDto = await _httpClient.GetFromJsonAsync<CategoryDto>($"{EndpointConstants.Category}/{Id}");
+            var categoryDto = await _httpClient.GetFromJsonAsync<ResponseCategoryDto>($"{EndpointConstants.Category}/{Id}");
+            Category = new(categoryDto.Id, categoryDto.Title, categoryDto.SubCategoriesDto);
             //}
             //catch (AccessTokenNotAvailableException exception)
             //{
@@ -138,13 +138,13 @@ namespace Yugen.HomeBudget.Client.Pages.Category
             {
                 if (Id != null)
                 {
-                    var createCategoryDto = new CreateCategoryDto(CategoryDto.Title, CategoryDto.SubCategoriesDto, _currentUser?.Id, _currentUser?.Id);
+                    var createCategoryDto = new CreateCategoryDto(Category.Title, Category.SubCategoriesDto, _currentUser?.Id, _currentUser?.Id);
                     var response = await _httpClient.PutAsJsonAsync<CreateCategoryDto>($"{EndpointConstants.Category}/{Id}", createCategoryDto);
                     //var c = await response.Content.ReadFromJsonAsync<CategoryDto>();
                 }
                 else
                 {
-                    var updateCategoryDto = new UpdateCategoryDto(CategoryDto.Id, CategoryDto.Title, CategoryDto.SubCategoriesDto, _currentUser?.Id, _currentUser?.Id);
+                    var updateCategoryDto = new UpdateCategoryDto(Category.Id, Category.Title, Category.SubCategoriesDto, _currentUser?.Id, _currentUser?.Id);
                     var response = await _httpClient.PostAsJsonAsync<UpdateCategoryDto>($"{EndpointConstants.Category}", updateCategoryDto);
                 }
 
@@ -164,7 +164,7 @@ namespace Yugen.HomeBudget.Client.Pages.Category
 
         private void DeleteSubCategoryAsync(SubCategoryDto subCategoryDto)
         {
-            CategoryDto?.SubCategoriesDto.Remove(subCategoryDto);
+            Category?.SubCategoriesDto.Remove(subCategoryDto);
         }
 
         private void ShowAddPopup()
@@ -180,7 +180,7 @@ namespace Yugen.HomeBudget.Client.Pages.Category
 
         private void AddSubCategory()
         {
-            CategoryDto?.SubCategoriesDto.Add(new SubCategoryDto(0, NewSubCategoryTitle));
+            Category?.SubCategoriesDto.Add(new SubCategoryDto(0, NewSubCategoryTitle));
             ClosePopup();
         }
     }
