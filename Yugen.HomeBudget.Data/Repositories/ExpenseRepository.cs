@@ -20,11 +20,17 @@ namespace Yugen.HomeBudget.Data.Repositories
                 .ToListAsync();
         }
 
-        public Task<List<Expense>> ListAsync(int skip, int pageSize)
+        public Task<List<Expense>> ListAsync(int year, int month, int skip, int pageSize)
         {
+            var startDate = new DateTimeOffset(new DateTime(year, month, 1));
+            var endDate = startDate.AddMonths(1);
+
             return _context.Expenses
+                .Where(x => x.DateTimeOffset.CompareTo(startDate) > 0 && 
+                            x.DateTimeOffset.CompareTo(endDate) < 1)
                 .Include(e => e.Category)
                 .Include(e => e.SubCategory)
+                .OrderByDescending(x => x.Id)
                 .Skip(skip)
                 .Take(pageSize)
                 .ToListAsync();
@@ -95,9 +101,15 @@ namespace Yugen.HomeBudget.Data.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public Task<int> CountAsync()
+        public Task<int> CountAsync(int year, int month)
         {
-            return _context.Expenses.CountAsync();
+            var startDate = new DateTimeOffset(new DateTime(year, month, 1));
+            var endDate = startDate.AddMonths(1);
+
+            return _context.Expenses
+                .Where(x => x.DateTimeOffset.CompareTo(startDate) > 0 &&
+                            x.DateTimeOffset.CompareTo(endDate) < 1)
+                .CountAsync();
         }
 
         public Task<bool> ExistsAsync(string title)

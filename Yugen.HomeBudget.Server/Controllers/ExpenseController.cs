@@ -36,9 +36,9 @@ namespace Yugen.HomeBudget.Server.Controllers
         }
 
         [HttpGet]
-        public Task<PaginatedList<ResponseExpenseDto>> ListAsync(int pageNumber, int pageSize)
+        public Task<PaginatedList<ResponseExpenseDto>> ListAsync(int year, int month, int pageNumber, int pageSize)
         {
-            return _expenseService.ListAsync(pageNumber, pageSize);
+            return _expenseService.ListAsync(year, month, pageNumber, pageSize);
         }
 
         /// <summary>

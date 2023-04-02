@@ -22,11 +22,11 @@ namespace Yugen.HomeBudget.Application.Services
             return expenses.Select(e => e.ToDto()).ToList();
         }
 
-        public async Task<PaginatedList<ResponseExpenseDto>> ListAsync(int pageIndex, int pageSize)
+        public async Task<PaginatedList<ResponseExpenseDto>> ListAsync(int year, int month, int pageIndex, int pageSize)
         {
-            var totalItemCount = await _expenseRepository.CountAsync();
+            var totalItemCount = await _expenseRepository.CountAsync(year, month);
             var skip = (pageIndex - 1) * pageSize;
-            var categoriesDto = (await _expenseRepository.ListAsync(skip, pageSize))
+            var categoriesDto = (await _expenseRepository.ListAsync(year, month, skip, pageSize))
                 .Select(e => e.ToDto())
                 .ToList();
 

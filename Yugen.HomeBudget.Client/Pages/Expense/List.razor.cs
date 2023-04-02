@@ -11,10 +11,10 @@ namespace Yugen.HomeBudget.Client.Pages.Expense
     public partial class List
     {
         private ICollection<ResponseExpenseDto>? _expenses;
-
         private PaginatedList<ResponseExpenseDto> _paginatedList = new PaginatedList<ResponseExpenseDto>();
-
         private int? _pageNumber = 1;
+        private int _year = DateTimeOffset.UtcNow.Year;
+        private int _month = DateTimeOffset.UtcNow.Month;
 
         [Inject]
         private HttpClient _httpClient { get; set; }
@@ -26,7 +26,8 @@ namespace Yugen.HomeBudget.Client.Pages.Expense
 
         private async void PageIndexChanged(int newPageNumber)
         {
-            if (newPageNumber < 1 || newPageNumber > _paginatedList.TotalPages)
+            if (newPageNumber < 1 || 
+                newPageNumber > _paginatedList.TotalPages)
             {
                 return;
             }
@@ -36,11 +37,17 @@ namespace Yugen.HomeBudget.Client.Pages.Expense
             StateHasChanged();
         }
 
+        private async Task DateChanged()
+        {
+            await GetData();
+            StateHasChanged();
+        }
+
         private async Task GetData()
         {
             //try
             //{
-            _paginatedList = await _httpClient.GetFromJsonAsync<PaginatedList<ResponseExpenseDto>>($"{EndpointConstants.Expense}?pageNumber={_pageNumber}&pageSize={Constants.PageSize}");
+            _paginatedList = await _httpClient.GetFromJsonAsync<PaginatedList<ResponseExpenseDto>>($"{EndpointConstants.Expense}?year={_year}&month={_month}&pageNumber={_pageNumber}&pageSize={Constants.PageSize}");
             _expenses = _paginatedList.Items;
             //}
             //catch (AccessTokenNotAvailableException exception)
