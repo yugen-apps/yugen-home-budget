@@ -22,17 +22,17 @@ namespace Yugen.HomeBudget.Data
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<Category>().HasData(
-                new Category { Id = 1, Title = "Vienna Flat"},
-                new Category { Id = 2, Title = "Vienna Car" },
-                new Category { Id = 3, Title = "Riga Flat" },
-                new Category { Id = 4, Title = "Balozi Flat" },
-                new Category { Id = 5, Title = "Klaus" },
-                new Category { Id = 6, Title = "Food" },
-                new Category { Id = 7, Title = "Clothing" },
-                new Category { Id = 8, Title = "Entertainment" },
-                new Category { Id = 9, Title = "Travel" },
-                new Category { Id = 10, Title = "Education" },
-                new Category { Id = 11, Title = "Health" }
+                new Category { Id = 1, Title = "Vienna Flat", Icon = "" },
+                new Category { Id = 2, Title = "Vienna Car", Icon = "" },
+                new Category { Id = 3, Title = "Riga Flat", Icon = "" },
+                new Category { Id = 4, Title = "Balozi Flat", Icon = "" },
+                new Category { Id = 5, Title = "Klaus", Icon = "" },
+                new Category { Id = 6, Title = "Food", Icon = "" },
+                new Category { Id = 7, Title = "Clothing", Icon = "" },
+                new Category { Id = 8, Title = "Entertainment", Icon = "" },
+                new Category { Id = 9, Title = "Travel", Icon = "" },
+                new Category { Id = 10, Title = "Education", Icon = "" },
+                new Category { Id = 11, Title = "Health", Icon = "" }
                 );
 
             modelBuilder.Entity<SubCategory>().HasData(

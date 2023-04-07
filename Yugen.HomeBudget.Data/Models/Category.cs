@@ -1,4 +1,6 @@
-﻿namespace Yugen.HomeBudget.Data.Models;
+﻿using Microsoft.EntityFrameworkCore.Diagnostics.Internal;
+
+namespace Yugen.HomeBudget.Data.Models;
 
 public class Category : Entity
 {
@@ -16,6 +18,8 @@ public class Category : Entity
     }
 
     public string Title { get; set; }
+
+    public string Icon { get; set; }
 
     public ICollection<SubCategory> SubCategories { get; set; }
 
