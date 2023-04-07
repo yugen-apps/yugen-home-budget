@@ -1,8 +1,8 @@
-﻿using Yugen.HomeBudget.Application.Extensions;
+﻿using Microsoft.EntityFrameworkCore;
+using Yugen.HomeBudget.Application.Extensions;
 using Yugen.HomeBudget.Data.Models;
 using Yugen.HomeBudget.Data.Repositories;
 using Yugen.HomeBudget.Shared.Models;
-using Yugen.HomeBudget.Shared.Models.Category;
 using Yugen.HomeBudget.Shared.Models.Expense;
 
 namespace Yugen.HomeBudget.Application.Services
@@ -31,6 +31,11 @@ namespace Yugen.HomeBudget.Application.Services
                 .ToList();
 
             return new PaginatedList<ResponseExpenseDto>(categoriesDto, totalItemCount, pageIndex, pageSize);
+        }
+
+        public Task<decimal> SumAsync(int year, int month)
+        {
+            return _expenseRepository.SumAsync(year, month);
         }
 
         public async Task<ResponseExpenseDto> GetAsync(int id)

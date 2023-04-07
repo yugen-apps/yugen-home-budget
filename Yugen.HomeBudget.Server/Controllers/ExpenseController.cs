@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Yugen.HomeBudget.Application.Services;
+using Yugen.HomeBudget.Data.Repositories;
 using Yugen.HomeBudget.Shared.Contants;
 using Yugen.HomeBudget.Shared.Models;
 using Yugen.HomeBudget.Shared.Models.Expense;
@@ -24,10 +25,6 @@ namespace Yugen.HomeBudget.Server.Controllers
             _expenseService = expenseService;
         }
 
-        /// <summary>
-        /// GET: Expense
-        /// </summary>
-        /// <returns></returns>
         [HttpGet]
         [Route("all")]
         public Task<IEnumerable<ResponseExpenseDto>> ListAsync()
@@ -35,10 +32,21 @@ namespace Yugen.HomeBudget.Server.Controllers
             return _expenseService.ListAsync();
         }
 
+        /// <summary>
+        /// GET: Expense
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public Task<PaginatedList<ResponseExpenseDto>> ListAsync(int year, int month, int pageNumber, int pageSize)
         {
             return _expenseService.ListAsync(year, month, pageNumber, pageSize);
+        }
+
+        [HttpGet]
+        [Route("sum")]
+        public Task<decimal> SumAsync(int year, int month)
+        {
+            return _expenseService.SumAsync(year, month);
         }
 
         /// <summary>

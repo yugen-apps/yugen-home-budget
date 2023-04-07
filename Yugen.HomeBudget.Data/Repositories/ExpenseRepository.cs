@@ -23,7 +23,7 @@ namespace Yugen.HomeBudget.Data.Repositories
         public Task<List<Expense>> ListAsync(int year, int month, int skip, int pageSize)
         {
             return _context.Expenses
-                .Where(x => x.DateTimeOffset.Month == month && 
+                .Where(x => x.DateTimeOffset.Month == month &&
                             x.DateTimeOffset.Year == year)
                 .Include(e => e.Category)
                 .Include(e => e.SubCategory)
@@ -31,6 +31,14 @@ namespace Yugen.HomeBudget.Data.Repositories
                 .Skip(skip)
                 .Take(pageSize)
                 .ToListAsync();
+        }
+
+        public Task<decimal> SumAsync(int year, int month)
+        {
+            return _context.Expenses
+                .Where(x => x.DateTimeOffset.Month == month &&
+                            x.DateTimeOffset.Year == year)
+                .SumAsync(x => x.Amount);
         }
 
         public async Task<Expense?> GetAsync(int id)
