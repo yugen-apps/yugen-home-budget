@@ -1,4 +1,7 @@
-﻿namespace Yugen.HomeBudget.Data.Models;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace Yugen.HomeBudget.Data.Models;
 
 public class Expense : Entity
 {
@@ -24,6 +27,7 @@ public class Expense : Entity
     
     public string Title { get; set; }
 
+    [Column(TypeName = "decimal(18,2)")]
     public decimal Amount { get; set; }
 
     public DateTimeOffset DateTimeOffset { get; set; }
@@ -32,7 +36,7 @@ public class Expense : Entity
 
     public Category Category { get; set; }
 
-    public int SubCategoryId { get; set; }
+    public int? SubCategoryId { get; set; }
 
     public SubCategory SubCategory { get; set; }
 }
