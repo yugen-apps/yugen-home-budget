@@ -92,15 +92,10 @@ namespace Yugen.HomeBudget.Client.Pages.Category
         {
             Category = null;
 
-            //try
-            //{
             var categoryDto = await _httpClient.GetFromJsonAsync<ResponseCategoryDto>($"{EndpointConstants.Category}/{Id}");
-            Category = new(categoryDto.Id, categoryDto.Title, categoryDto.SubCategoriesDto);
-            //}
             //catch (AccessTokenNotAvailableException exception)
-            //{
-            //    exception.Redirect();
-            //}
+            //exception.Redirect();
+            Category = new(categoryDto.Id, categoryDto.Title, categoryDto.SubCategoriesDto);
         }
 
         /// <summary>

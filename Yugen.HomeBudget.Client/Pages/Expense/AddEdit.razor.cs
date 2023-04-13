@@ -99,15 +99,10 @@ namespace Yugen.HomeBudget.Client.Pages.Expense
         {
             Expense = null;
 
-            //try
-            //{
-                var expenseDto = await _httpClient.GetFromJsonAsync<ResponseExpenseDto>($"{EndpointConstants.Expense}/{Id}");
-                Expense = new(expenseDto.Id, expenseDto.Title, expenseDto.Amount, expenseDto.DateTimeOffset, expenseDto.CategoryDto.Id, expenseDto.SubCategoryDto.Id);
-            //}
+            var expenseDto = await _httpClient.GetFromJsonAsync<ResponseExpenseDto>($"{EndpointConstants.Expense}/{Id}");
             //catch (AccessTokenNotAvailableException exception)
-            //{
-            //    exception.Redirect();
-            //}
+            //exception.Redirect();
+            Expense = new(expenseDto.Id, expenseDto.Title, expenseDto.Amount, expenseDto.DateTimeOffset, expenseDto.CategoryDto.Id, expenseDto.SubCategoryDto.Id);
         }
 
         /// <summary>

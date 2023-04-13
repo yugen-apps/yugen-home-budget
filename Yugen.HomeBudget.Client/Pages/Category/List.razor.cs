@@ -15,7 +15,7 @@ namespace Yugen.HomeBudget.Client.Pages.Category
 
         [Inject]
         private HttpClient _httpClient { get; set; }
-        
+
         protected override async Task OnInitializedAsync()
         {
             await GetData();
@@ -23,7 +23,7 @@ namespace Yugen.HomeBudget.Client.Pages.Category
 
         private async void PageIndexChanged(int newPageNumber)
         {
-            if (newPageNumber < 1 || 
+            if (newPageNumber < 1 ||
                 newPageNumber > _paginatedList.TotalPages)
             {
                 return;
@@ -36,22 +36,17 @@ namespace Yugen.HomeBudget.Client.Pages.Category
 
         private async Task GetData()
         {
-            //try
-            //{
             _paginatedList = await _httpClient.GetFromJsonAsync<PaginatedList<ResponseCategoryDto>>($"{EndpointConstants.Category}?pageNumber={_pageNumber}&pageSize={Constants.PageSize}");
-            _categories = _paginatedList.Items;
-            //}
             //catch (AccessTokenNotAvailableException exception)
-            //{
-            //    exception.Redirect();
-            //}
+            //exception.Redirect();
+            _categories = _paginatedList.Items;
         }
 
         private async Task DeleteAsync(int id)
         {
-            //try
-            //{
             var result = await _httpClient.DeleteAsync($"{EndpointConstants.Category}/{id}");
+            //catch (AccessTokenNotAvailableException exception)
+            //exception.Redirect();
             if (result.IsSuccessStatusCode)
             {
                 var category = _categories?.FirstOrDefault(c => c.Id.Equals(id));
@@ -60,11 +55,6 @@ namespace Yugen.HomeBudget.Client.Pages.Category
                     _categories?.Remove(category);
                 }
             }
-            //}
-            //catch (AccessTokenNotAvailableException exception)
-            //{
-            //    exception.Redirect();
-            //}
         }
     }
 }

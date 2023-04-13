@@ -20,14 +20,9 @@ namespace Yugen.HomeBudget.Client.Pages
 
         private async Task GetData()
         {
-            //try
-            //{
             _total = await _httpClient.GetFromJsonAsync<decimal>($"{EndpointConstants.Expense}/sum?year={_year}&month={_month}");
-            //}
             //catch (AccessTokenNotAvailableException exception)
-            //{
-            //    exception.Redirect();
-            //}
+            //exception.Redirect();
         }
     }
 }

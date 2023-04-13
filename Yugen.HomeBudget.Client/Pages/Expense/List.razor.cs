@@ -26,7 +26,7 @@ namespace Yugen.HomeBudget.Client.Pages.Expense
 
         private async void PageIndexChanged(int newPageNumber)
         {
-            if (newPageNumber < 1 || 
+            if (newPageNumber < 1 ||
                 newPageNumber > _paginatedList.TotalPages)
             {
                 return;
@@ -45,22 +45,17 @@ namespace Yugen.HomeBudget.Client.Pages.Expense
 
         private async Task GetData()
         {
-            //try
-            //{
             _paginatedList = await _httpClient.GetFromJsonAsync<PaginatedList<ResponseExpenseDto>>($"{EndpointConstants.Expense}?year={_year}&month={_month}&pageNumber={_pageNumber}&pageSize={Constants.PageSize}");
-            _expenses = _paginatedList.Items;
-            //}
             //catch (AccessTokenNotAvailableException exception)
-            //{
-            //    exception.Redirect();
-            //}
+            //exception.Redirect();
+            _expenses = _paginatedList.Items;
         }
 
         private async Task DeleteAsync(int id)
         {
-            //try
-            //{
             var result = await _httpClient.DeleteAsync($"{EndpointConstants.Expense}/{id}");
+            //catch (AccessTokenNotAvailableException exception)
+            //exception.Redirect();
             if (result.IsSuccessStatusCode)
             {
                 var expense = _expenses?.FirstOrDefault(c => c.Id.Equals(id));
@@ -69,11 +64,6 @@ namespace Yugen.HomeBudget.Client.Pages.Expense
                     _expenses?.Remove(expense);
                 }
             }
-            //}
-            //catch (AccessTokenNotAvailableException exception)
-            //{
-            //    exception.Redirect();
-            //}
         }
 
         private string GetDate(DateTimeOffset dateTimeOffset)
