@@ -6,7 +6,8 @@ namespace Yugen.HomeBudget.Client.Pages
 {
     public partial class Index
     {
-        private decimal _total;
+        private decimal _previousMonthExpenseTotal;
+        private decimal _currentMonthExpenseTotal;
         private int _year = DateTimeOffset.UtcNow.Year;
         private int _month = DateTimeOffset.UtcNow.Month;
 
@@ -20,7 +21,8 @@ namespace Yugen.HomeBudget.Client.Pages
 
         private async Task GetData()
         {
-            _total = await _httpClient.GetFromJsonAsync<decimal>($"{EndpointConstants.Expense}/sum?year={_year}&month={_month}");
+            _previousMonthExpenseTotal = await _httpClient.GetFromJsonAsync<decimal>($"{EndpointConstants.Expense}/sum?year={_year}&month={_month-1}");
+            _currentMonthExpenseTotal = await _httpClient.GetFromJsonAsync<decimal>($"{EndpointConstants.Expense}/sum?year={_year}&month={_month}");
             //catch (AccessTokenNotAvailableException exception)
             //exception.Redirect();
         }
