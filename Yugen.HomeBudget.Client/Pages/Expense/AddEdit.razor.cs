@@ -30,8 +30,6 @@ namespace Yugen.HomeBudget.Client.Pages.Expense
         /// </summary>
         private string _errorMessage = string.Empty;
 
-        private List<ResponseCategoryDto>? _categories;
-
         /// <summary>
         /// Id of entity to edit
         /// </summary>
@@ -51,6 +49,10 @@ namespace Yugen.HomeBudget.Client.Pages.Expense
         /// Expense entity.
         /// </summary>
         private Yugen.HomeBudget.Client.Models.Expense? Expense { get; set; }
+
+        private List<ResponseCategoryDto>? _categories;
+
+        private ResponseCategoryDto? _currentCategory => _categories?.FirstOrDefault(x => x.Id == Expense.CategoryId);
 
         private CurrentUser? _currentUser { get; set; }
 
@@ -82,6 +84,11 @@ namespace Yugen.HomeBudget.Client.Pages.Expense
             }
 
             await base.OnInitializedAsync();
+        }
+
+        private void CategoryChanged()
+        {
+            Expense.SubCategoryId = _currentCategory.SubCategoriesDto.First().Id;
         }
 
         /// <summary>

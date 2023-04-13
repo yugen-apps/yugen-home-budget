@@ -2,6 +2,7 @@
 @attribute [Route(PageConstants.ExpenseEditUrl)]
 @using Yugen.HomeBudget.Client.Models
 @using Yugen.HomeBudget.Shared.Contants
+@using Yugen.HomeBudget.Shared.Models.Category
 @inject EditSuccess EditSuccessState
 <!-- AllowAnonymous / Authorize -->
 @attribute [Authorize]
@@ -44,10 +45,16 @@
                             <div class="select-style-1">
                                 <label>Category</label>
                                 <div class="select-position">
-                                    <InputSelect @bind-Value="Expense.CategoryId">
-                                        @foreach (var category in _categories)
-                                        {
-                                            <option value="@category.Id">@category.Title</option>
+                                    <InputSelect @bind-Value="Expense.CategoryId"
+                                                 @bind-Value:after="CategoryChanged">
+                                        @{
+                                            if (_currentCategory != null)
+                                            {
+                                                foreach (var category in _categories)
+                                                {
+                                                    <option value="@category.Id">@category.Title</option>
+                                                }
+                                            }
                                         }
                                     </InputSelect>
                                 </div>
@@ -59,10 +66,9 @@
                                 <div class="select-position">
                                     <InputSelect @bind-Value="Expense.SubCategoryId">
                                         @{
-                                            var currentCategory = _categories.FirstOrDefault(x => x.Id == Expense.CategoryId);
-                                            if (currentCategory != null)
+                                            if (_currentCategory != null)
                                             {
-                                                foreach (var subCategory in currentCategory.SubCategoriesDto)
+                                                foreach (var subCategory in _currentCategory.SubCategoriesDto)
                                                 {
                                                     <option value="@subCategory.Id">@subCategory.Title</option>
                                                 }
