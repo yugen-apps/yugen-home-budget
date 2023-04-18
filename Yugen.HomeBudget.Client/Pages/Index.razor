@@ -56,9 +56,9 @@
             </div>
             <div class="content">
                 <h6 class="mb-10">Previous Month</h6>
-                <h3 class="text-bold mb-10">$ @_previousMonthExpenseTotal</h3>
+                <h3 class="text-bold mb-10">$ @_previousMonthTotalExpense?.Current</h3>
                 <p class="text-sm text-success">
-                    <i class="bi bi-arrow-up"></i> {+5.45%}
+                    <i class="bi @_previousMonthTotalExpense?.Icon"></i> @_previousMonthTotalExpense?.Percentage %
                     <span class="text-gray">Expense Total</span>
                 </p>
             </div>
@@ -73,9 +73,9 @@
             </div>
             <div class="content">
                 <h6 class="mb-10">Current Month</h6>
-                <h3 class="text-bold mb-10">$ @_currentMonthExpenseTotal</h3>
+                <h3 class="text-bold mb-10">$ @_currentMonthTotalExpense?.Current</h3>
                 <p class="text-sm text-danger">
-                    <i class="bi bi-arrow-down"></i>{ -2.00%}
+                    <i class="bi @_currentMonthTotalExpense?.Icon"></i> @_currentMonthTotalExpense?.Percentage %
                     <span class="text-gray">Expense Total</span>
                 </p>
             </div>
