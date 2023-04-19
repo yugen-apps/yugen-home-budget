@@ -35,10 +35,27 @@ namespace Yugen.HomeBudget.Data.Repositories
 
         public Task<decimal> SumAsync(int year, int month)
         {
+            if (month == 0)
+            {
+                return _context.Expenses
+                    .Where(x => x.DateTimeOffset.Year == year)
+                    .SumAsync(x => x.Amount);
+            }
+
             return _context.Expenses
                 .Where(x => x.DateTimeOffset.Month == month &&
                             x.DateTimeOffset.Year == year)
                 .SumAsync(x => x.Amount);
+        }
+
+        public Task<List<IGrouping<Category, Expense>>> GroupedByCategoryAsync(int year, int month)
+        {
+            return _context.Expenses
+                .Where(x => x.DateTimeOffset.Month == month &&
+                            x.DateTimeOffset.Year == year)
+                .Include(e => e.Category)
+                .GroupBy(e => e.Category)
+                .ToListAsync();
         }
 
         public async Task<Expense?> GetAsync(int id)

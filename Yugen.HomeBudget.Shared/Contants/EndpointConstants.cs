@@ -8,5 +8,9 @@ public static class EndpointConstants
 
     public const string Expense = $"{Prefix}/expense";
 
+    public const string ExpenseSum = $"{Prefix}/expense/sum";
+
+    public const string GroupedByCategory = $"{Prefix}/expense/groupedbycategory";
+
     public const string Authentication = $"{Prefix}/authentication";
 }

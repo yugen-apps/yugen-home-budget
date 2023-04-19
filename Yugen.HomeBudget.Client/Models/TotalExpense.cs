@@ -3,21 +3,26 @@
 public class TotalExpense
 {
     public TotalExpense(
-        decimal current, 
+        decimal current,
         decimal compareTo)
     {
         Current = current;
         CompareTo = compareTo;
+        Percentage = Percent(current, compareTo);
 
-        if (current == 0)
+        Icon = Percentage switch
         {
-            current = 1;
-        }
-        if (compareTo == 0)
-        {
-            compareTo = 1;
-        }
-        Percentage = ((current - compareTo) / Math.Abs(compareTo)) * 100;
+            > 0 => Constants.ArrowUp,
+            < 0 => Constants.ArrowDown,
+            _ => Constants.ArrowRight
+        };
+    }
+
+    public TotalExpense(decimal current)
+    {
+        Current = current;
+        CompareTo = 0;
+        Percentage = 0;
 
         Icon = Percentage switch
         {
@@ -34,4 +39,17 @@ public class TotalExpense
     public decimal Percentage { get; set; }
 
     public string Icon { get; set; }
+
+    private static decimal Percent(decimal current, decimal compareTo)
+    {
+        if (current == 0)
+        {
+            current = 1;
+        }
+        if (compareTo == 0)
+        {
+            compareTo = 1;
+        }
+        return decimal.Round((current - compareTo) / Math.Abs(compareTo) * 100, 2);
+    }
 }

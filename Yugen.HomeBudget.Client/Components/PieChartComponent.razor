@@ -1,0 +1,42 @@
+﻿<div class="title d-flex flex-wrap align-items-center justify-content-between">
+    <div class="left">
+        <h6 class="text-medium mb-2">Current Month Expenses Chart</h6>
+    </div>
+    <div class="right">
+    </div>
+</div>
+<!-- End Title -->
+<div class="chart">
+    <div id="legend4">
+        <ul class="legend3 d-flex flex-wrap align-items-center mb-30">
+            @if (PieChartData?.Labels != null)
+            {
+                var i = 0;
+                foreach (var label in PieChartData.Labels)
+                {
+                    <li>
+                        <div class="d-flex">
+                            <span class="bg-color chart-@i"> </span>
+                            <div class="text">
+                                <p class="text-sm text-success">
+                                    <span class="text-dark">@label</span>
+                                </p>
+                            </div>
+                        </div>
+                    </li>
+                    i++;
+                }
+            }
+        </ul>
+    </div>
+    <div class="chartjs-size-monitor">
+        <div class="chartjs-size-monitor-expand">
+            <div class=""></div>
+        </div>
+        <div class="chartjs-size-monitor-shrink">
+            <div class=""></div>
+        </div>
+    </div>
+    <canvas id="pieChart" style="width: 100%; height: 350px; display: block;" width="910" height="525" class="chartjs-render-monitor"></canvas>
+</div>
+<!-- End Chart -->
