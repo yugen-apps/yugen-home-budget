@@ -8,7 +8,7 @@ namespace Yugen.HomeBudget.Client.Components
     {
         [Inject]
         private IJSRuntime _jsRuntime { get; set; }
-        
+
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             var module = await _jsRuntime.InvokeAsync<IJSObjectReference>("import", "./Components/BarChartComponent.razor.js");

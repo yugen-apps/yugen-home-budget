@@ -6,18 +6,13 @@ namespace Yugen.HomeBudget.Client.Components
 {
     public partial class PieChartComponent
     {
+        private IJSObjectReference module;
+
         [Parameter]
         public PieChartData? PieChartData { get; set; }
 
         [Inject]
         private IJSRuntime _jsRuntime { get; set; }
-
-        private IJSObjectReference module;
-
-        protected override async Task OnInitializedAsync()
-        {
-            module = await _jsRuntime.InvokeAsync<IJSObjectReference>("import", "./Components/PieChartComponent.razor.js");
-        }
 
         public override async Task SetParametersAsync(ParameterView parameters)
         {
@@ -28,5 +23,12 @@ namespace Yugen.HomeBudget.Client.Components
                 await module.InvokeVoidAsync("newPieChart", "pieChart", PieChartData.Labels, PieChartData.PieChartDataset);
             }
         }
+
+        protected override async Task OnInitializedAsync()
+        {
+            module = await _jsRuntime.InvokeAsync<IJSObjectReference>("import", "./Components/PieChartComponent.razor.js");
+        }
+
+        // https://learn.microsoft.com/en-us/aspnet/core/blazor/performance?view=aspnetcore-7.0
     }
 }

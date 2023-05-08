@@ -10,9 +10,11 @@ public class Category : Entity
 
     public Category(
         string title,
+        string icon,
         int? createdByApplicationUserId)
     {
         Title = title;
+        Icon = icon;
         SubCategories = new List<SubCategory>();
         CreatedByApplicationUserId = createdByApplicationUserId;
     }

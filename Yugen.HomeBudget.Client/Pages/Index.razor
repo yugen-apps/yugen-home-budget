@@ -1,5 +1,7 @@
 ﻿@attribute [Route(PageConstants.HomeUrl)]
 @using Yugen.HomeBudget.Shared.Contants
+@using Yugen.HomeBudget.Client.ViewModels
+@inject IndexViewModel ViewModel
 <!-- AllowAnonymous / Authorize -->
 @attribute [Authorize]
 
@@ -41,9 +43,9 @@
             </div>
             <div class="content">
                 <h6 class="mb-10">Current Year</h6>
-                <h3 class="text-bold mb-10">$ @_currentYearTotalExpense?.Current</h3>
+                <h3 class="text-bold mb-10">$ @ViewModel.CurrentYearTotalExpense?.Current</h3>
                 <p class="text-sm text-success">
-                    <i class="bi bi-arrow-up"></i> @_currentYearTotalExpense?.Percentage %
+                    <i class="bi bi-arrow-up"></i> @ViewModel.CurrentYearTotalExpense?.Percentage %
                     <span class="text-gray">Expense Total</span>
                 </p>
             </div>
@@ -58,9 +60,9 @@
             </div>
             <div class="content">
                 <h6 class="mb-10">Previous Month</h6>
-                <h3 class="text-bold mb-10">$ @_previousMonthTotalExpense?.Current</h3>
+                <h3 class="text-bold mb-10">$ @ViewModel.PreviousMonthTotalExpense?.Current</h3>
                 <p class="text-sm text-success">
-                    <i class="bi @_previousMonthTotalExpense?.Icon"></i> @_previousMonthTotalExpense?.Percentage %
+                    <i class="bi @ViewModel.PreviousMonthTotalExpense?.Icon"></i> @ViewModel.PreviousMonthTotalExpense?.Percentage %
                     <span class="text-gray">Expense Total</span>
                 </p>
             </div>
@@ -75,9 +77,9 @@
             </div>
             <div class="content">
                 <h6 class="mb-10">Current Month</h6>
-                <h3 class="text-bold mb-10">$ @_currentMonthTotalExpense?.Current</h3>
+                <h3 class="text-bold mb-10">$ @ViewModel.CurrentMonthTotalExpense?.Current</h3>
                 <p class="text-sm text-danger">
-                    <i class="bi @_currentMonthTotalExpense?.Icon"></i> @_currentMonthTotalExpense?.Percentage %
+                    <i class="bi @ViewModel.CurrentMonthTotalExpense?.Icon"></i> @ViewModel.CurrentMonthTotalExpense?.Percentage %
                     <span class="text-gray">Expense Total</span>
                 </p>
             </div>
@@ -148,13 +150,13 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @if (_expenses != null)
+                        @if (ViewModel.Expenses != null)
                         {
-                            foreach (var expense in _expenses)
+                            foreach (var expense in ViewModel.Expenses)
                             {
                                 <tr>
                                     <td>
-                                        <p class="text-sm">@GetDate(expense.DateTimeOffset)</p>
+                                        <p class="text-sm">@ViewModel.GetDate(expense.DateTimeOffset)</p>
                                     </td>
                                     <td>
                                         <p class="text-sm">@expense.Title</p>
@@ -175,7 +177,7 @@
                                             </a>
 
                                             <DeleteComponent Id="@expense.Id"
-                                                     DeleteCallback="@DeleteAsync" />
+                                                             DeleteCallback="(id) => ViewModel.DeleteAsync(id)" />
                                         </div>
                                     </td>
                                 </tr>
@@ -190,7 +192,7 @@
     <!-- End Col -->
     <div class="col-lg-5">
         <div class="card-style mb-30">
-            <PieChartComponent PieChartData="@pieChartData" />
+            <PieChartComponent PieChartData="@ViewModel.PieChartData" />
             @* <BarChartComponent />
             <LineChartComponent /> *@
         </div>

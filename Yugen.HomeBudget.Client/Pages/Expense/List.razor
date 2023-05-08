@@ -1,5 +1,7 @@
 ﻿@attribute [Route(PageConstants.ExpenseUrl)]
 @using Yugen.HomeBudget.Shared.Contants
+@using Yugen.HomeBudget.Client.ViewModels.Expense
+@inject ExpenseListViewModel ViewModel
 <!-- AllowAnonymous / Authorize -->
 @attribute [Authorize]
 
@@ -8,7 +10,7 @@
                 Title="@PageConstants.ExpenseTitle"
                 Breadcrumb="@PageConstants.ExpenseTitle" />
 <!-- ========== title-wrapper end ========== -->
-@if (_expenses == null)
+@if (ViewModel.IsLoading)
 {
     <p><em>Loading...</em></p>
 }
@@ -30,8 +32,8 @@ else
                     <h6>Month:</h6>
                     <div class="select-style-1 mb-0 ml-10">
                         <div class="select-position">
-                            <InputSelect @bind-Value="_month"
-                                         @bind-Value:after="DateChanged"
+                            <InputSelect @bind-Value="ViewModel.Month"
+                                     @bind-Value:after="() => ViewModel.DateChanged()"
                                          class="border-0">
                                 <option value="1">1</option>
                                 <option value="2">2</option>
@@ -53,8 +55,8 @@ else
                     <h6>Year:</h6>
                     <div class="select-style-1 mb-0 ml-10">
                         <div class="select-position">
-                            <InputSelect @bind-Value="_year"
-                                         @bind-Value:after="DateChanged"
+                            <InputSelect @bind-Value="ViewModel.Year"
+                                     @bind-Value:after="() => ViewModel.DateChanged()"
                                          class="border-0">
                                 <option value="2023">2023</option>
                                 <option value="2024">2024</option>
@@ -89,11 +91,11 @@ else
                     </tr>
                     </thead>
                     <tbody>
-                    @foreach (var expense in _expenses)
+                        @foreach (var expense in ViewModel.Expenses)
                     {
                         <tr>
                             <td>
-                                <p class="text-sm">@GetDate(expense.DateTimeOffset)</p>
+                                    <p class="text-sm">@ViewModel.GetDate(expense.DateTimeOffset)</p>
                             </td>
                             <td>
                                 <p class="text-sm">@expense.Title</p>
@@ -105,8 +107,8 @@ else
                                 <span class="status-btn close-btn">@expense.CategoryDto.Title > @expense.SubCategoryDto.Title</span>
                             </td>
                             <td>
-                                <p class="text-sm">@GetDate(expense.CreatedOn)</p>
-                                <p class="text-sm">@GetDate(expense.LastModifiedOn)</p>
+                                <p class="text-sm">@ViewModel.GetDate(expense.CreatedOn)</p>
+                                <p class="text-sm">@ViewModel.GetDate(expense.LastModifiedOn)</p>
                                 <p class="text-sm">@expense.CreatedByApplicationUserId</p>
                                 <p class="text-sm">@expense.LastModifiedByApplicationUserId</p>
                             </td>
@@ -120,7 +122,7 @@ else
                                     </a>
 
                                     <DeleteComponent Id="@expense.Id"
-                                                     DeleteCallback="@DeleteAsync" />
+                                                     DeleteCallback="(id) => ViewModel.DeleteAsync(id)" />
                                 </div>
                             </td>
                         </tr>
@@ -133,11 +135,11 @@ else
                 <div class="left">
                     <p class="text-sm text-gray">-</p>
                 </div>
-                <PagerComponent PageIndex=@_paginatedList.PageIndex
-                                TotalPages=@_paginatedList.TotalPages
-                                OnClick="PageIndexChanged"
-                                HasNextPage=@_paginatedList.HasNextPage
-                                HasPreviousPage=@_paginatedList.HasPreviousPage />
+                <PagerComponent PageIndex=@ViewModel.PaginatedList.PageIndex
+                                TotalPages=@ViewModel.PaginatedList.TotalPages
+                                OnClick="(newPageNumber) => ViewModel.PageIndexChanged(newPageNumber)"
+                            HasNextPage=@ViewModel.PaginatedList.HasNextPage
+                            HasPreviousPage=@ViewModel.PaginatedList.HasPreviousPage />
             </div>
         </div>
     </div>

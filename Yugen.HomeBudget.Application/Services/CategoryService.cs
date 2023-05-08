@@ -46,7 +46,7 @@ namespace Yugen.HomeBudget.Application.Services
                 return null;
             }
 
-            var category = new Category(createCategoryDto.Title, createCategoryDto.CreatedByApplicationUserId);
+            var category = new Category(createCategoryDto.Title, "", createCategoryDto.CreatedByApplicationUserId);
 
             foreach (var subCategoryDto in createCategoryDto.SubCategoriesDto)
             {
@@ -66,6 +66,7 @@ namespace Yugen.HomeBudget.Application.Services
             }
 
             category.Title = updateCategoryDto.Title;
+            category.Icon = updateCategoryDto.Icon;
             category.LastModifiedByApplicationUserId = updateCategoryDto.LastModifiedByApplicationUserId;
 
             var existingSubCategoryIds = category.SubCategories.Select(x => x.Id).Distinct();

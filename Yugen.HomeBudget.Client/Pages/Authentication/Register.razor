@@ -1,6 +1,8 @@
 ﻿@attribute [Route(PageConstants.RegisterUrl)]
 @using Microsoft.AspNetCore.Components
+@using Yugen.HomeBudget.Client.ViewModels.Authentication
 @using Yugen.HomeBudget.Shared.Contants
+@inject RegisterViewModel ViewModel
 
 <!-- ========== title-wrapper start ========== -->
 <TitleComponent PageTitle="@PageConstants.Register"
@@ -37,30 +39,30 @@
                     Start creating the best possible user experience for you
                     customers.
                 </p>
-                <EditForm class="form-signin" OnValidSubmit="OnSubmit" Model="registerRequest">
+                <EditForm class="form-signin" OnValidSubmit="() => ViewModel.OnSubmit()" Model="ViewModel.RegisterRequest">
                     <DataAnnotationsValidator />
                     <div class="row">
                         <div class="col-12">
                             <div class="input-style-1">
                                 <label>User Name</label>
-                                <InputText placeholder="Username" autofocus @bind-Value="@registerRequest.UserName" />
-                                <ValidationMessage For="@(() => registerRequest.UserName)" />
+                                <InputText placeholder="Username" autofocus @bind-Value="@ViewModel.RegisterRequest.UserName" />
+                                <ValidationMessage For="@(() => ViewModel.RegisterRequest.UserName)" />
                             </div>
                         </div>
                         <!-- end col -->
                         <div class="col-12">
                             <div class="input-style-1">
                                 <label>Password</label>
-                                <InputText type="password" placeholder="Password" @bind-Value="@registerRequest.Password" />
-                                <ValidationMessage For="@(() => registerRequest.Password)" />
+                                <InputText type="password" placeholder="Password" @bind-Value="@ViewModel.RegisterRequest.Password" />
+                                <ValidationMessage For="@(() => ViewModel.RegisterRequest.Password)" />
                             </div>
                         </div>
                         <!-- end col -->
                         <div class="col-12">
                             <div class="input-style-1">
                                 <label>Password Confirmation</label>
-                                <InputText type="password" placeholder="Password Confirmation" @bind-Value="@registerRequest.PasswordConfirm" />
-                                <ValidationMessage For="@(() => registerRequest.PasswordConfirm)" />
+                                <InputText type="password" placeholder="Password Confirmation" @bind-Value="@ViewModel.RegisterRequest.PasswordConfirm" />
+                                <ValidationMessage For="@(() => ViewModel.RegisterRequest.PasswordConfirm)" />
                             </div>
                         </div>
                         <!-- end col -->
@@ -90,7 +92,7 @@
                     </div>
                     <!-- end row -->
                     <div class="row">
-                        <label class="text-danger">@error</label>
+                        <label class="text-danger">@ViewModel.Error</label>
                     </div>
                 </EditForm>
                 <div class="singup-option pt-40">

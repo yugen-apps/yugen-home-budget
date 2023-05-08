@@ -1,8 +1,8 @@
 ﻿@attribute [Route(PageConstants.CategoryAddUrl)]
 @attribute [Route(PageConstants.CategoryEditUrl)]
-@using Yugen.HomeBudget.Client.Models
+@using Yugen.HomeBudget.Client.ViewModels.Category
 @using Yugen.HomeBudget.Shared.Contants
-@inject EditSuccess EditSuccessState
+@inject CategoryAddEditViewModel ViewModel
 <!-- AllowAnonymous / Authorize -->
 @attribute [Authorize]
 
@@ -11,13 +11,13 @@
                 Title="@PageHelper.AddEditTitle(PageConstants.CategoryTitle, Id)"
                 Breadcrumb="@PageConstants.CategoryTitle" />
 <!-- ========== title-wrapper end ========== -->
-@if (Category != null)
+@if (ViewModel.Category != null)
 {
     <div class="row">
         <div class="col-lg-6">
-            <EditForm Model="@Category"
-                  OnInvalidSubmit="(async () => await SubmitAsync(false))"
-                  OnValidSubmit="(async () => await SubmitAsync(true))">
+            <EditForm Model="@ViewModel.Category"
+                  OnInvalidSubmit="(async () => await ViewModel.SubmitAsync(false))"
+                  OnValidSubmit="(async () => await ViewModel.SubmitAsync(true))">
                 <DataAnnotationsValidator />
                 <ValidationSummary />
                 <div class="card-style settings-card-2 mb-30">
@@ -25,7 +25,7 @@
                         <div class="col-12">
                             <div class="input-style-1">
                                 <label>Title</label>
-                                <InputText @bind-Value="Category.Title" placeholder="Title" />
+                                <InputText @bind-Value="ViewModel.Category.Title" placeholder="Title" />
                             </div>
                         </div>
                     </div>
@@ -34,18 +34,18 @@
                     <div class="title mb-30 d-flex justify-content-between align-items-center">
                         <h6>Sub Categories</h6>
                         <a class="main-btn primary-btn btn-hover btn-sm"
-                           @onclick="ShowAddPopup"
+                           @onclick="() => ViewModel.ShowAddPopup()"
                            title="Add">
                             <i class="bi bi-plus"></i>
                         </a>
                     </div>
                     <div class="row">
-                        @if (Category?.SubCategoriesDto != null)
+                        @if (ViewModel.Category?.SubCategoriesDto != null)
                         {
-                            foreach (var subCategory in Category.SubCategoriesDto)
+                            foreach (var subCategory in ViewModel.Category.SubCategoriesDto)
                             {
                                 <SubCategoryComponent SubCategoryDto="@subCategory"
-                                                    DeleteCallback="@DeleteSubCategoryAsync" />
+                                          DeleteCallback="(subCategoryDto) => ViewModel.DeleteSubCategoryAsync(subCategoryDto)" />
                             }
                         }
                     </div>
@@ -53,14 +53,14 @@
                 <div class="card-style settings-card-2 mb-30">
                     <div class="row">
                         <div class="col-12">
-                            <button disabled="@_busy"
+                            <button disabled="@ViewModel.Busy"
                                 type="submit"
                                 class="main-btn primary-btn btn-hover">
                                 Save
                             </button>
-                            <button disabled="@_busy"
+                            <button disabled="@ViewModel.Busy"
                                 class="main-btn warning-btn btn-hover"
-                                @onclick="CancelAsync">
+                                @onclick="() => ViewModel.CancelAsync()">
                                 Cancel
                             </button>
                         </div>
@@ -72,24 +72,24 @@
         <!-- end col -->
     </div>
 }
-@if (_concurrencyError)
+@if (ViewModel.ConcurrencyError)
 {
     <br />
     <div class="alert alert-danger">
         <p>
-            The contact details have changed since it was last loaded. The updated fields are highlighted in the form.
+            The details have changed since it was last loaded. The updated fields are highlighted in the form.
             Please choose an option:
         </p>
         <p><b>Cancel</b> to lose your changes and keep the database version.</p>
         <p><b>Submit</b> to force an update with your version.</p>
     </div>
 }
-@if (_error)
+@if (ViewModel.Error)
 {
     <br />
-    <div class="alert alert-danger">Failed to update the contact (@_errorMessage).</div>
+    <div class="alert alert-danger">Failed to update (@ViewModel.ErrorMessage).</div>
 }
-@if (_showPopup)
+@if (ViewModel.ShowPopup)
 {
     <div class="modal" tabindex="-1" style="display:block">
         <div class="modal-dialog">
@@ -97,7 +97,7 @@
                 <div class="modal-header">
                     <h3 class="modal-title">Add</h3>
                     <a class="main-btn primary-btn btn-hover btn-sm"
-                       @onclick="ClosePopup"
+                   @onclick="() => ViewModel.ClosePopup()"
                        title="Close">
                         <i class="bi bi-x"></i>
                     </a>
@@ -105,12 +105,12 @@
                 <div class="modal-body">
                     <div class="input-style-1">
                         <label>Title</label>
-                        <InputText @bind-Value="NewSubCategoryTitle" placeholder="Title" />
+                        <InputText @bind-Value="ViewModel.NewSubCategoryTitle" placeholder="Title" />
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button class="main-btn primary-btn btn-hover"
-                            @onclick="AddSubCategory">
+                        @onclick="() => ViewModel.AddSubCategory()">
                         Save
                     </button>
                 </div>
