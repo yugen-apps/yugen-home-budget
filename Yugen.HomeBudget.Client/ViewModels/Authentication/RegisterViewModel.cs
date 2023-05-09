@@ -11,10 +11,10 @@ internal sealed partial class RegisterViewModel : ObservableObject
     private readonly CustomStateProvider _authStateProvider;
 
     [ObservableProperty]
-    private RegisterRequest _registerRequest = new RegisterRequest();
+    private RegisterRequest _registerRequest = new();
 
     [ObservableProperty]
-    private string _error;
+    private string? _error;
 
     public RegisterViewModel(
                 NavigationManager navigationManager,

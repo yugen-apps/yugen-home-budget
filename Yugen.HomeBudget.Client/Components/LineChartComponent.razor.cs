@@ -7,11 +7,11 @@ namespace Yugen.HomeBudget.Client.Components
     public partial class LineChartComponent
     {
         [Inject]
-        private IJSRuntime _jsRuntime { get; set; }
+        private IJSRuntime JsRuntime { get; set; }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
-            var module = await _jsRuntime.InvokeAsync<IJSObjectReference>("import", "./Components/LineChartComponent.razor.js");
+            var module = await JsRuntime.InvokeAsync<IJSObjectReference>("import", "./Components/LineChartComponent.razor.js");
 
             string[] labels = { "Jan", "Fab", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
             LineChartDataset[] lineChartDatasets =

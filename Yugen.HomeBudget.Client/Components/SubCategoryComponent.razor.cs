@@ -11,7 +11,7 @@ namespace Yugen.HomeBudget.Client.Components
         private bool _busy;
 
         [Parameter]
-        public SubCategoryDto SubCategoryDto { get; set; }
+        public SubCategoryDto? SubCategoryDto { get; set; }
 
         [Parameter]
         public EventCallback<SubCategoryDto> DeleteCallback { get; set; }
@@ -36,12 +36,16 @@ namespace Yugen.HomeBudget.Client.Components
         /// <returns>A <see cref="Task"/>.</returns>
         private void ConfirmAsync(bool confirmed)
         {
+            _busy = true;
+
             if (confirmed)
             {
                 DeleteCallback.InvokeAsync(SubCategoryDto);
             }
 
             DeleteConfirmation = false;
+
+            _busy = false;
         }
     }
 }

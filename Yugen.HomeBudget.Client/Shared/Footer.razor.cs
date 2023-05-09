@@ -4,6 +4,6 @@ namespace Yugen.HomeBudget.Client.Shared
 {
     public partial class Footer
     {
-        private string? _version = Assembly.GetExecutingAssembly().GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion;
+        private readonly string? _version = Assembly.GetExecutingAssembly().GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion;
     }
 }

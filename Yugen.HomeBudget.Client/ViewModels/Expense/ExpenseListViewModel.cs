@@ -16,10 +16,7 @@ internal sealed partial class ExpenseListViewModel : ObservableObject
     private bool _isLoading;
 
     [ObservableProperty]
-    private ICollection<ResponseExpenseDto>? _expenses;
-
-    [ObservableProperty]
-    private PaginatedList<ResponseExpenseDto> _paginatedList = new PaginatedList<ResponseExpenseDto>();
+    private PaginatedList<ResponseExpenseDto> _paginatedList = new();
 
     [ObservableProperty]
     private int? _pageNumber = 1;
@@ -35,14 +32,24 @@ internal sealed partial class ExpenseListViewModel : ObservableObject
         _httpClient = httpClient;
     }
 
+    public ICollection<ResponseExpenseDto> Expenses => PaginatedList.Items;
+
+    public static string GetDate(DateTimeOffset dateTimeOffset)
+    {
+        return dateTimeOffset.ToString("d", DateTimeFormatInfo.CurrentInfo);
+    }
+
     public async Task LoadDataAsync()
     {
         IsLoading = true;
 
         try
         {
-            PaginatedList = await _httpClient.GetFromJsonAsync<PaginatedList<ResponseExpenseDto>>($"{EndpointConstants.Expense}?year={_year}&month={_month}&pageNumber={_pageNumber}&pageSize={Constants.PageSize}");
-            Expenses = PaginatedList.Items;
+            var response = await _httpClient.GetFromJsonAsync<PaginatedList<ResponseExpenseDto>>($"{EndpointConstants.Expense}?year={Year}&month={Month}&pageNumber={PageNumber}&pageSize={Constants.PageSize}");
+            if (response != null)
+            {
+                PaginatedList = response;
+            }
         }
         finally
         {
@@ -78,10 +85,5 @@ internal sealed partial class ExpenseListViewModel : ObservableObject
     public async Task DateChanged()
     {
         await LoadDataAsync();
-    }
-
-    public string GetDate(DateTimeOffset dateTimeOffset)
-    {
-        return dateTimeOffset.ToString("d", DateTimeFormatInfo.CurrentInfo);
     }
 }

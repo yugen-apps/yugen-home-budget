@@ -16,10 +16,7 @@ internal sealed partial class IndexViewModel : ObservableObject
     private bool _isLoading;
 
     [ObservableProperty]
-    private ICollection<ResponseExpenseDto>? _expenses;
-
-    [ObservableProperty]
-    private PaginatedList<ResponseExpenseDto> _paginatedList = new PaginatedList<ResponseExpenseDto>();
+    private PaginatedList<ResponseExpenseDto> _paginatedList = new();
 
     [ObservableProperty]
     private int? _pageNumber = 1;
@@ -31,13 +28,13 @@ internal sealed partial class IndexViewModel : ObservableObject
     private int _month = DateTimeOffset.UtcNow.Month;
 
     [ObservableProperty]
-    private TotalExpense _currentYearTotalExpense;
+    private TotalExpense? _currentYearTotalExpense;
 
     [ObservableProperty]
-    private TotalExpense _previousMonthTotalExpense;
+    private TotalExpense? _previousMonthTotalExpense;
 
     [ObservableProperty]
-    private TotalExpense _currentMonthTotalExpense;
+    private TotalExpense? _currentMonthTotalExpense;
 
     [ObservableProperty]
     private PieChartData? _pieChartData;
@@ -47,13 +44,20 @@ internal sealed partial class IndexViewModel : ObservableObject
         _httpClient = httpClient;
     }
 
+    public ICollection<ResponseExpenseDto> Expenses => PaginatedList.Items;
+
+    public static string GetDate(DateTimeOffset dateTimeOffset)
+    {
+        return dateTimeOffset.ToString("d", DateTimeFormatInfo.CurrentInfo);
+    }
+
     public async Task LoadDataAsync()
     {
         IsLoading = true;
 
         try
         {
-            var data = await _httpClient.GetFromJsonAsync<List<ResponseExpenseGroupedByCategoryDto>>($"{EndpointConstants.GroupedByCategory}?year={_year}&month={_month}");
+            var data = await _httpClient.GetFromJsonAsync<List<ResponseExpenseGroupedByCategoryDto>>($"{EndpointConstants.GroupedByCategory}?year={Year}&month={Month}");
             if (data != null)
             {
                 var labels = data.Select(x => x.Category).ToArray();
@@ -62,16 +66,19 @@ internal sealed partial class IndexViewModel : ObservableObject
                 PieChartData = new PieChartData(labels, new PieChartDataset[] { new PieChartDataset(colors, values) });
             }
 
-            var currentYearTotalExpense = await _httpClient.GetFromJsonAsync<decimal>($"{EndpointConstants.ExpenseSum}?year={_year}");
-            var previousMonthExpenseTotal = await _httpClient.GetFromJsonAsync<decimal>($"{EndpointConstants.ExpenseSum}?year={_year}&month={_month - 1}");
-            var currentMonthExpenseTotal = await _httpClient.GetFromJsonAsync<decimal>($"{EndpointConstants.ExpenseSum}?year={_year}&month={_month}");
+            var currentYearTotalExpense = await _httpClient.GetFromJsonAsync<decimal>($"{EndpointConstants.ExpenseSum}?year={Year}");
+            var previousMonthExpenseTotal = await _httpClient.GetFromJsonAsync<decimal>($"{EndpointConstants.ExpenseSum}?year={Year}&month={Month - 1}");
+            var currentMonthExpenseTotal = await _httpClient.GetFromJsonAsync<decimal>($"{EndpointConstants.ExpenseSum}?year={Year}&month={Month}");
 
             CurrentYearTotalExpense = new TotalExpense(currentYearTotalExpense);
             PreviousMonthTotalExpense = new TotalExpense(previousMonthExpenseTotal, previousMonthExpenseTotal);
             CurrentMonthTotalExpense = new TotalExpense(currentMonthExpenseTotal, previousMonthExpenseTotal);
 
-            PaginatedList = await _httpClient.GetFromJsonAsync<PaginatedList<ResponseExpenseDto>>($"{EndpointConstants.Expense}?year={_year}&month={_month}&pageNumber={_pageNumber}&pageSize={Constants.PageSize}");
-            Expenses = PaginatedList.Items;
+            var response = await _httpClient.GetFromJsonAsync<PaginatedList<ResponseExpenseDto>>($"{EndpointConstants.Expense}?year={Year}&month={Month}&pageNumber={PageNumber}&pageSize={Constants.PageSize}");
+            if (response != null)
+            {
+                PaginatedList = response;
+            }
 
             //catch (AccessTokenNotAvailableException exception)
             //exception.Redirect();
@@ -110,10 +117,5 @@ internal sealed partial class IndexViewModel : ObservableObject
     public async Task DateChanged()
     {
         await LoadDataAsync();
-    }
-
-    public string GetDate(DateTimeOffset dateTimeOffset)
-    {
-        return dateTimeOffset.ToString("d", DateTimeFormatInfo.CurrentInfo);
     }
 }

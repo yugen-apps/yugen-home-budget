@@ -15,10 +15,7 @@ internal sealed partial class CategoryListViewModel : ObservableObject
     private bool _isLoading;
 
     [ObservableProperty]
-    private ICollection<ResponseCategoryDto>? _categories;
-
-    [ObservableProperty]
-    private PaginatedList<ResponseCategoryDto> _paginatedList = new PaginatedList<ResponseCategoryDto>();
+    private PaginatedList<ResponseCategoryDto> _paginatedList = new();
 
     [ObservableProperty]
     private int? _pageNumber = 1;
@@ -28,14 +25,19 @@ internal sealed partial class CategoryListViewModel : ObservableObject
         _httpClient = httpClient;
     }
 
+    public ICollection<ResponseCategoryDto> Categories => PaginatedList.Items;
+
     public async Task LoadDataAsync()
     {
         IsLoading = true;
 
         try
         {
-            PaginatedList = await _httpClient.GetFromJsonAsync<PaginatedList<ResponseCategoryDto>>($"{EndpointConstants.Category}?pageNumber={_pageNumber}&pageSize={Constants.PageSize}");
-            Categories = PaginatedList.Items;
+            var response = await _httpClient.GetFromJsonAsync<PaginatedList<ResponseCategoryDto>>($"{EndpointConstants.Category}?pageNumber={PageNumber}&pageSize={Constants.PageSize}");
+            if (response != null)
+            {
+                PaginatedList = response;
+            }
         }
         finally
         {

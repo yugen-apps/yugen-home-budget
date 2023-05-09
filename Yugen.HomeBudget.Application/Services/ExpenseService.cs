@@ -54,10 +54,10 @@ namespace Yugen.HomeBudget.Application.Services
             return groupedList;
         }
 
-        public async Task<ResponseExpenseDto> GetAsync(int id)
+        public async Task<ResponseExpenseDto?> GetAsync(int id)
         {
             var expense = await _expenseRepository.GetAsync(id);
-            return expense.ToDto();
+            return expense?.ToDto();
         }
 
         public async Task<ResponseExpenseDto?> CreateAsync(CreateExpenseDto createExpenseDto)

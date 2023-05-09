@@ -10,17 +10,18 @@ public static class DtoExtensions
     {
         var categoryDto = new ResponseCategoryDto(category.Id, category.Title, category.CreatedOn, category.LastModifiedOn, category.CreatedByApplicationUserId, category.LastModifiedByApplicationUserId);
 
-        if (category.SubCategories != null)
+        if (category?.SubCategories == null)
         {
-            foreach (var subCategory in category.SubCategories)
-            {
-                categoryDto.SubCategoriesDto.Add(subCategory.ToDto());
-            }
-
             return categoryDto;
         }
 
+        foreach (var subCategory in category.SubCategories)
+        {
+            categoryDto.SubCategoriesDto.Add(subCategory.ToDto());
+        }
+
         return categoryDto;
+
     }
 
     public static SubCategoryDto ToDto(this SubCategory subCategory) => new(subCategory.Id, subCategory.Title);

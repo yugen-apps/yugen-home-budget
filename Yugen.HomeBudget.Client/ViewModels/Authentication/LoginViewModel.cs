@@ -11,13 +11,13 @@ internal sealed partial class LoginViewModel : ObservableObject
     private readonly CustomStateProvider _authStateProvider;
 
     [ObservableProperty]
-    private LoginRequest _loginRequest = new LoginRequest();
+    private LoginRequest _loginRequest = new();
 
     [ObservableProperty]
-    private string _error;
+    private string? _error;
 
     public LoginViewModel(
-                NavigationManager navigationManager,
+        NavigationManager navigationManager,
         CustomStateProvider authStateProvider)
     {
         _navigationManager = navigationManager;

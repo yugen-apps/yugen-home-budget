@@ -95,7 +95,7 @@ else
                     {
                         <tr>
                             <td>
-                                    <p class="text-sm">@ViewModel.GetDate(expense.DateTimeOffset)</p>
+                                    <p class="text-sm">@ExpenseListViewModel.GetDate(expense.DateTimeOffset)</p>
                             </td>
                             <td>
                                 <p class="text-sm">@expense.Title</p>
@@ -107,8 +107,8 @@ else
                                 <span class="status-btn close-btn">@expense.CategoryDto.Title > @expense.SubCategoryDto.Title</span>
                             </td>
                             <td>
-                                <p class="text-sm">@ViewModel.GetDate(expense.CreatedOn)</p>
-                                <p class="text-sm">@ViewModel.GetDate(expense.LastModifiedOn)</p>
+                                <p class="text-sm">@ExpenseListViewModel.GetDate(expense.CreatedOn)</p>
+                                <p class="text-sm">@ExpenseListViewModel.GetDate(expense.LastModifiedOn)</p>
                                 <p class="text-sm">@expense.CreatedByApplicationUserId</p>
                                 <p class="text-sm">@expense.LastModifiedByApplicationUserId</p>
                             </td>

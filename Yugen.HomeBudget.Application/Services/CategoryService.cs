@@ -32,10 +32,10 @@ namespace Yugen.HomeBudget.Application.Services
             return new PaginatedList<ResponseCategoryDto>(categoriesDto, totalItemCount, pageIndex, pageSize);
         }
 
-        public async Task<ResponseCategoryDto> GetAsync(int id)
+        public async Task<ResponseCategoryDto?> GetAsync(int id)
         {
             var category = await _categoryRepository.GetAsync(id);
-            return category.ToDto();
+            return category?.ToDto();
         }
 
         public async Task<ResponseCategoryDto?> CreateAsync(CreateCategoryDto createCategoryDto)

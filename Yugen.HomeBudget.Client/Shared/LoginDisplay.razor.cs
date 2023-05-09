@@ -6,15 +6,15 @@ namespace Yugen.HomeBudget.Client.Shared
     public partial class LoginDisplay
     {
         [Inject]
-        private NavigationManager _navigationManager { get; set; }
+        private NavigationManager NavigationManager { get; set; }
 
         [Inject]
-        private CustomStateProvider _authStateProvider { get; set; }
+        private CustomStateProvider AuthStateProvider { get; set; }
 
         private async Task BeginLogOut()
         {
-            await _authStateProvider.Logout();
-            _navigationManager.NavigateTo("/");
+            await AuthStateProvider.Logout();
+            NavigationManager.NavigateTo("/");
         }
     }
 }

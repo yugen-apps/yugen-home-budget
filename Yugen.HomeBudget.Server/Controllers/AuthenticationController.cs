@@ -81,8 +81,11 @@ public class AuthenticationController : ControllerBase
         };
 
         KeyValuePair<string, string>? currentUserIdentifier = currentUser.Claims.FirstOrDefault(c => c.Key.Contains("nameidentifier"));
-        int.TryParse(currentUserIdentifier?.Value, out var currentUserId);
-        currentUser.Id = currentUserId;
+        var success = int.TryParse(currentUserIdentifier?.Value, out var currentUserId);
+        if (success)
+        {
+            currentUser.Id = currentUserId;
+        }
 
         return currentUser;
     }

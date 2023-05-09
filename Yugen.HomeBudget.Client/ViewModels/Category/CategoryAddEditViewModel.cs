@@ -30,10 +30,10 @@ internal sealed partial class CategoryAddEditViewModel : ObservableObject
     private bool _showPopup;
 
     [ObservableProperty]
-    private Yugen.HomeBudget.Client.Models.Category? _category;
+    private Yugen.HomeBudget.Client.Models.Category _category = new();
 
     [ObservableProperty]
-    private string? _newSubCategoryTitle;
+    private string _newSubCategoryTitle = string.Empty;
 
     [ObservableProperty]
     private CurrentUser? _currentUser;
@@ -41,7 +41,7 @@ internal sealed partial class CategoryAddEditViewModel : ObservableObject
     private int? _id;
 
     public CategoryAddEditViewModel(
-            HttpClient httpClient,
+        HttpClient httpClient,
         NavigationManager navigationManager,
         CustomStateProvider authStateProvider)
     {
@@ -63,10 +63,6 @@ internal sealed partial class CategoryAddEditViewModel : ObservableObject
             if (_id != null)
             {
                 await LoadAsync();
-            }
-            else
-            {
-                Category = new(0, "");
             }
         }
         finally
@@ -144,8 +140,11 @@ internal sealed partial class CategoryAddEditViewModel : ObservableObject
 
     private async Task LoadAsync()
     {
-        Category = null;
+        Category = new Models.Category();
         var categoryDto = await _httpClient.GetFromJsonAsync<ResponseCategoryDto>($"{EndpointConstants.Category}/{_id}");
-        Category = new(categoryDto.Id, categoryDto.Title, categoryDto.SubCategoriesDto);
+        if (categoryDto != null)
+        {
+            Category = new Models.Category(categoryDto.Id, categoryDto.Title, categoryDto.SubCategoriesDto);
+        }
     }
 }

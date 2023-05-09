@@ -31,10 +31,10 @@ internal sealed partial class ExpenseAddEditViewModel : ObservableObject
     private bool _showPopup;
 
     [ObservableProperty]
-    private Yugen.HomeBudget.Client.Models.Expense? _expense;
+    private Yugen.HomeBudget.Client.Models.Expense _expense = new();
 
     [ObservableProperty]
-    private List<ResponseCategoryDto>? _categories;
+    private List<ResponseCategoryDto> _categories = new();
 
     [ObservableProperty]
     private CurrentUser? _currentUser;
@@ -42,7 +42,7 @@ internal sealed partial class ExpenseAddEditViewModel : ObservableObject
     private int? _id;
 
     public ExpenseAddEditViewModel(
-            HttpClient httpClient,
+        HttpClient httpClient,
         NavigationManager navigationManager,
         CustomStateProvider authStateProvider)
     {
@@ -51,7 +51,7 @@ internal sealed partial class ExpenseAddEditViewModel : ObservableObject
         _authStateProvider = authStateProvider;
     }
 
-    public ResponseCategoryDto? CurrentCategory => _categories?.FirstOrDefault(x => x.Id == Expense.CategoryId);
+    public ResponseCategoryDto? CurrentCategory => Categories.FirstOrDefault(x => x.Id == Expense.CategoryId);
 
     public async Task OnInitializedAsync(int? id)
     {
@@ -63,14 +63,14 @@ internal sealed partial class ExpenseAddEditViewModel : ObservableObject
 
         try
         {
-            Categories = await _httpClient.GetFromJsonAsync<List<ResponseCategoryDto>>($"{EndpointConstants.Category}/all");
+            Categories = await _httpClient.GetFromJsonAsync<List<ResponseCategoryDto>>($"{EndpointConstants.Category}/all") ?? new List<ResponseCategoryDto>();
             if (_id != null)
             {
                 await LoadAsync();
             }
             else
             {
-                Expense = new(0, "", 0, DateTimeOffset.UtcNow, 1, 1);
+                Expense = new Models.Expense();
             }
         }
         finally
@@ -81,7 +81,10 @@ internal sealed partial class ExpenseAddEditViewModel : ObservableObject
 
     public void CategoryChanged()
     {
-        Expense.SubCategoryId = CurrentCategory.SubCategoriesDto.First().Id;
+        if (CurrentCategory != null)
+        {
+            Expense.SubCategoryId = CurrentCategory.SubCategoriesDto.First().Id;
+        }
     }
 
     public void CancelAsync()
@@ -130,8 +133,11 @@ internal sealed partial class ExpenseAddEditViewModel : ObservableObject
 
     private async Task LoadAsync()
     {
-        Expense = null;
+        Expense = new Models.Expense();
         var expenseDto = await _httpClient.GetFromJsonAsync<ResponseExpenseDto>($"{EndpointConstants.Expense}/{_id}");
-        Expense = new(expenseDto.Id, expenseDto.Title, expenseDto.Amount, expenseDto.DateTimeOffset, expenseDto.CategoryDto.Id, expenseDto.SubCategoryDto.Id);
+        if (expenseDto != null)
+        {
+            Expense = new(expenseDto.Id, expenseDto.Title, expenseDto.Amount, expenseDto.DateTimeOffset, expenseDto.CategoryDto.Id, expenseDto.SubCategoryDto.Id);
+        }
     }
 }

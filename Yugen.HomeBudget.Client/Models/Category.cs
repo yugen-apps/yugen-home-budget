@@ -4,6 +4,10 @@ namespace Yugen.HomeBudget.Client.Models;
 
 public class Category
 {
+    public Category()
+    {
+    }
+
     public Category(
         int id,
         string title)
@@ -22,7 +26,7 @@ public class Category
 
     public int Id { get; set; }
 
-    public string Title { get; set; }
+    public string Title { get; set; } = string.Empty;
 
     public List<SubCategoryDto> SubCategoriesDto { get; set; } = new List<SubCategoryDto>();
 }
