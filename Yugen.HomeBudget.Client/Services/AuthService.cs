@@ -13,7 +13,7 @@ public class AuthService : IAuthService
         _httpClient = httpClient;
     }
 
-    public Task<CurrentUser?> CurrentUserInfo() =>_httpClient.GetFromJsonAsync<CurrentUser>($"{EndpointConstants.Authentication}/currentuserinfo");
+    public Task<CurrentUser?> CurrentUserInfo() => _httpClient.GetFromJsonAsync<CurrentUser>($"{EndpointConstants.Authentication}/currentuserinfo");
 
     public async Task Login(LoginRequest loginRequest)
     {

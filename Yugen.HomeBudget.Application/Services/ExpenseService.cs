@@ -38,10 +38,26 @@ namespace Yugen.HomeBudget.Application.Services
             return _expenseRepository.SumAsync(year, month);
         }
 
-        public async Task<ResponseExpenseDto> GetAsync(int id)
+        public async Task<List<ResponseExpenseGroupedByCategoryDto>> GroupedByCategoryAsync(int year, int month)
+        {
+            var response = await _expenseRepository.GroupedByCategoryAsync(year, month);
+            var groupedList = new List<ResponseExpenseGroupedByCategoryDto>();
+
+            foreach (var item in response)
+            {
+                var title = item.Key.Title;
+                var total = item.Key.Expenses.Sum(e => e.Amount);
+                var index = groupedList.Count;
+                groupedList.Add(new ResponseExpenseGroupedByCategoryDto(title, (int)total, index));
+            }
+
+            return groupedList;
+        }
+
+        public async Task<ResponseExpenseDto?> GetAsync(int id)
         {
             var expense = await _expenseRepository.GetAsync(id);
-            return expense.ToDto();
+            return expense?.ToDto();
         }
 
         public async Task<ResponseExpenseDto?> CreateAsync(CreateExpenseDto createExpenseDto)

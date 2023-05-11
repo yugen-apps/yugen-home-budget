@@ -61,7 +61,7 @@ public class CustomStateProvider : AuthenticationStateProvider
     public async Task<CurrentUser?> GetCurrentUser()
     {
         await GetAuthenticationStateAsync();
-        
+
         return _currentUser;
     }
 }

@@ -11,16 +11,15 @@
         {
             PageIndex = pageIndex;
             TotalPages = (int)Math.Ceiling(count / (double)pageSize);
-
-            this.Items = new List<T>();
-            this.Items.AddRange(items);
+            
+            Items.AddRange(items);
         }
 
         public int PageIndex { get; set; }
 
         public int TotalPages { get; set; }
 
-        public List<T> Items { get; set; }
+        public List<T> Items { get; set; } = new List<T>();
 
         public bool HasPreviousPage => PageIndex > 1;
 

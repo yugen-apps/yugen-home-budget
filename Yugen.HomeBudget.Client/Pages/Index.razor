@@ -1,5 +1,9 @@
 ﻿@attribute [Route(PageConstants.HomeUrl)]
 @using Yugen.HomeBudget.Shared.Contants
+@using Yugen.HomeBudget.Client.ViewModels
+@inject IndexViewModel ViewModel
+<!-- AllowAnonymous / Authorize -->
+@attribute [Authorize]
 
 <PageTitle>Index</PageTitle>
 
@@ -38,11 +42,11 @@
                 <i class="bi bi-cart"></i>
             </div>
             <div class="content">
-                <h6 class="mb-10">{New Orders}</h6>
-                <h3 class="text-bold mb-10">{34567}</h3>
+                <h6 class="mb-10">Current Year</h6>
+                <h3 class="text-bold mb-10">$ @ViewModel.CurrentYearTotalExpense?.Current</h3>
                 <p class="text-sm text-success">
-                    <i class="bi bi-arrow-up"></i> {+2.00%}
-                    <span class="text-gray">(30 days)</span>
+                    <i class="bi bi-arrow-up"></i> @ViewModel.CurrentYearTotalExpense?.Percentage %
+                    <span class="text-gray">Expense Total</span>
                 </p>
             </div>
         </div>
@@ -56,9 +60,9 @@
             </div>
             <div class="content">
                 <h6 class="mb-10">Previous Month</h6>
-                <h3 class="text-bold mb-10">$ @_previousMonthTotalExpense?.Current</h3>
+                <h3 class="text-bold mb-10">$ @ViewModel.PreviousMonthTotalExpense?.Current</h3>
                 <p class="text-sm text-success">
-                    <i class="bi @_previousMonthTotalExpense?.Icon"></i> @_previousMonthTotalExpense?.Percentage %
+                    <i class="bi @ViewModel.PreviousMonthTotalExpense?.Icon"></i> @ViewModel.PreviousMonthTotalExpense?.Percentage %
                     <span class="text-gray">Expense Total</span>
                 </p>
             </div>
@@ -73,9 +77,9 @@
             </div>
             <div class="content">
                 <h6 class="mb-10">Current Month</h6>
-                <h3 class="text-bold mb-10">$ @_currentMonthTotalExpense?.Current</h3>
+                <h3 class="text-bold mb-10">$ @ViewModel.CurrentMonthTotalExpense?.Current</h3>
                 <p class="text-sm text-danger">
-                    <i class="bi @_currentMonthTotalExpense?.Icon"></i> @_currentMonthTotalExpense?.Percentage %
+                    <i class="bi @ViewModel.CurrentMonthTotalExpense?.Icon"></i> @ViewModel.CurrentMonthTotalExpense?.Percentage %
                     <span class="text-gray">Expense Total</span>
                 </p>
             </div>
@@ -103,7 +107,7 @@
 </div>
 <!-- End Row -->
 <div class="row">
-    <div class="col-lg-12">
+    <div class="col-lg-7">
         <div class="card-style mb-30">
             <div class="
                     title
@@ -129,16 +133,16 @@
                     <thead>
                         <tr>
                             <th>
-                                <h6 class="text-sm text-medium">Products</h6>
+                                <h6 class="text-sm text-medium">Date</h6>
+                            </th>
+                            <th class="min-width">
+                                <h6 class="text-sm text-medium">Title</h6>
+                            </th>
+                            <th class="min-width">
+                                <h6 class="text-sm text-medium">Amount</h6>
                             </th>
                             <th class="min-width">
                                 <h6 class="text-sm text-medium">Category</h6>
-                            </th>
-                            <th class="min-width">
-                                <h6 class="text-sm text-medium">Revenue</h6>
-                            </th>
-                            <th class="min-width">
-                                <h6 class="text-sm text-medium">Status</h6>
                             </th>
                             <th>
                                 <h6 class="text-sm text-medium text-end">Actions</h6>
@@ -146,30 +150,39 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>
-                                <p class="text-sm">Bedroom</p>
-                            </td>
-                            <td>
-                                <p class="text-sm">Interior</p>
-                            </td>
-                            <td>
-                                <p class="text-sm">$345</p>
-                            </td>
-                            <td>
-                                <span class="status-btn close-btn">Pending</span>
-                            </td>
-                            <td>
-                                <div class="action justify-content-end">
-                                    <button class="edit">
-                                        <i class="bi bi-pencil"></i>
-                                    </button>
-                                    <button class="text-danger">
-                                        <i class="bi bi-trash"></i>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
+                        @if (ViewModel.Expenses != null)
+                        {
+                            foreach (var expense in ViewModel.Expenses)
+                            {
+                                <tr>
+                                    <td>
+                                        <p class="text-sm">@IndexViewModel.GetDate(expense.DateTimeOffset)</p>
+                                    </td>
+                                    <td>
+                                        <p class="text-sm">@expense.Title</p>
+                                    </td>
+                                    <td>
+                                        <p class="text-sm">$ @expense.Amount</p>
+                                    </td>
+                                    <td>
+                                        <span class="status-btn close-btn">@expense.CategoryDto.Title > @expense.SubCategoryDto.Title</span>
+                                    </td>
+                                    <td>
+                                        <div class="action justify-content-end">
+
+                                            <a href="@PageHelper.EditHref(PageConstants.ExpenseUrl, expense.Id)"
+                                               class="main-btn warning-btn btn-hover btn-sm mr-10"
+                                               title="Edit">
+                                                <i class="bi bi-pencil"></i>
+                                            </a>
+
+                                            <DeleteComponent Id="@expense.Id"
+                                                             DeleteCallback="(id) => ViewModel.DeleteAsync(id)" />
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        }
                     </tbody>
                 </table>
                 <!-- End Table -->
@@ -177,5 +190,12 @@
         </div>
     </div>
     <!-- End Col -->
+    <div class="col-lg-5">
+        <div class="card-style mb-30">
+            <PieChartComponent PieChartData="@ViewModel.PieChartData" />
+            @* <BarChartComponent />
+            <LineChartComponent /> *@
+        </div>
+    </div>
 </div>
 <!-- End Row -->

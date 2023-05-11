@@ -47,7 +47,7 @@ namespace Yugen.HomeBudget.Server.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet("{id}")]
-        public Task<ResponseCategoryDto> GetAsync(int id)
+        public Task<ResponseCategoryDto?> GetAsync(int id)
         {
             return _categoryService.GetAsync(id);
         }

@@ -2228,7 +2228,7 @@ h6,
         display: flex;
         justify-content: flex-end;
     }
-    
+
         .header .header-right .dropdown-menu {
             width: 350px;
             border: 1px solid #efefef;
@@ -5288,4 +5288,53 @@ h6,
 
 .fw-900 {
     font-weight: 900;
+}
+
+/* ======== Chart Colors ========== */
+.chart-0 {
+    background-color: #ff0000;
+}
+
+.chart-1 {
+    background-color: #ff8000;
+}
+
+.chart-2 {
+    background-color: #ffff00;
+}
+
+.chart-3 {
+    background-color: #80ff00;
+}
+
+.chart-4 {
+    background-color: #00ff00;
+}
+
+.chart-5 {
+    background-color: #00ff80;
+}
+
+.chart-6 {
+    background-color: #00ffff;
+}
+
+.chart-7 {
+    background-color: #0080ff;
+}
+
+.chart-8 {
+    background-color: #0000ff;
+}
+
+.chart-9 {
+    background-color: #8000ff;
+}
+
+.chart-9 {
+    background-color: #ff00ff;
+}
+
+.chart-9 {
+    background-color: #ff0080ff;
 }

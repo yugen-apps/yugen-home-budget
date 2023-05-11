@@ -1,74 +1,14 @@
-﻿using Microsoft.AspNetCore.Components;
-using System.Globalization;
-using System.Net.Http.Json;
-using Yugen.HomeBudget.Client.Models;
-using Yugen.HomeBudget.Shared.Contants;
-using Yugen.HomeBudget.Shared.Models;
-using Yugen.HomeBudget.Shared.Models.Expense;
-
-namespace Yugen.HomeBudget.Client.Pages.Expense
+﻿namespace Yugen.HomeBudget.Client.Pages.Expense
 {
     public partial class List
     {
-        private ICollection<ResponseExpenseDto>? _expenses;
-        private PaginatedList<ResponseExpenseDto> _paginatedList = new PaginatedList<ResponseExpenseDto>();
-        private int? _pageNumber = 1;
-        private int _year = DateTimeOffset.UtcNow.Year;
-        private int _month = DateTimeOffset.UtcNow.Month;
-
-        [Inject]
-        private HttpClient _httpClient { get; set; }
-
         protected override async Task OnInitializedAsync()
         {
-            await GetData();
-        }
+            //ViewModel.PropertyChanged += (_, _) => StateHasChanged();
 
-        private async void PageIndexChanged(int newPageNumber)
-        {
-            if (newPageNumber < 1 ||
-                newPageNumber > _paginatedList.TotalPages)
-            {
-                return;
-            }
+            await ViewModel.LoadDataAsync();
 
-            _pageNumber = newPageNumber;
-            await GetData();
-            StateHasChanged();
-        }
-
-        private async Task DateChanged()
-        {
-            await GetData();
-            StateHasChanged();
-        }
-
-        private async Task GetData()
-        {
-            _paginatedList = await _httpClient.GetFromJsonAsync<PaginatedList<ResponseExpenseDto>>($"{EndpointConstants.Expense}?year={_year}&month={_month}&pageNumber={_pageNumber}&pageSize={Constants.PageSize}");
-            //catch (AccessTokenNotAvailableException exception)
-            //exception.Redirect();
-            _expenses = _paginatedList.Items;
-        }
-
-        private async Task DeleteAsync(int id)
-        {
-            var result = await _httpClient.DeleteAsync($"{EndpointConstants.Expense}/{id}");
-            //catch (AccessTokenNotAvailableException exception)
-            //exception.Redirect();
-            if (result.IsSuccessStatusCode)
-            {
-                var expense = _expenses?.FirstOrDefault(c => c.Id.Equals(id));
-                if (expense != null)
-                {
-                    _expenses?.Remove(expense);
-                }
-            }
-        }
-
-        private string GetDate(DateTimeOffset dateTimeOffset)
-        {
-            return dateTimeOffset.ToString("d", DateTimeFormatInfo.CurrentInfo);
+            await base.OnInitializedAsync();
         }
     }
 }

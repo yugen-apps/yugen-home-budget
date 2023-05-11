@@ -1,5 +1,7 @@
 ﻿@attribute [Route(PageConstants.LoginUrl)]
 @using Yugen.HomeBudget.Shared.Contants
+@using Yugen.HomeBudget.Client.ViewModels.Authentication
+@inject LoginViewModel ViewModel
 
 <!-- ========== title-wrapper start ========== -->
 <TitleComponent PageTitle="@PageConstants.Login"
@@ -33,28 +35,28 @@
                 <p class="text-sm mb-25">
                     Start creating the best possible user experience for you customers.
                 </p>
-                <EditForm class="form-signin" OnValidSubmit="OnSubmit" Model="loginRequest">
+                <EditForm class="form-signin" OnValidSubmit="() => ViewModel.OnSubmit()" Model="ViewModel.LoginRequest">
                     <DataAnnotationsValidator />
                     <div class="row">
                         <div class="col-12">
                             <div class="input-style-1">
                                 <label>User Name</label>
-                                <InputText @bind-Value="loginRequest.UserName" autofocus placeholder="Username" />
-                                <ValidationMessage For="@(() => loginRequest.UserName)" />
+                                <InputText @bind-Value="ViewModel.LoginRequest.UserName" autofocus placeholder="Username" />
+                                <ValidationMessage For="@(() => ViewModel.LoginRequest.UserName)" />
                             </div>
                         </div>
                         <!-- end col -->
                         <div class="col-12">
                             <div class="input-style-1">
                                 <label>Password</label>
-                                <InputText type="password" placeholder="Password" @bind-Value="loginRequest.Password" />
-                                <ValidationMessage For="@(() => loginRequest.Password)" />
+                                <InputText type="password" placeholder="Password" @bind-Value="ViewModel.LoginRequest.Password" />
+                                <ValidationMessage For="@(() => ViewModel.LoginRequest.Password)" />
                             </div>
                         </div>
                         <!-- end col -->
                         <div class="col-xxl-6 col-lg-12 col-md-6">
                             <div class="form-check checkbox-style mb-30">
-                                <InputCheckbox class="form-check-input" @bind-Value="@loginRequest.RememberMe" />
+                                <InputCheckbox class="form-check-input" @bind-Value="@ViewModel.LoginRequest.RememberMe" />
                                 <label class="form-check-label">
                                     Remember Me
                                 </label>
@@ -83,7 +85,7 @@
                     </div>
                     <!-- end row -->
                     <div class="row">
-                        <label class="text-danger">@error</label>
+                        <label class="text-danger">@ViewModel.Error</label>
                     </div>
                 </EditForm>
                 <div class="singin-option pt-40">

@@ -1,9 +1,9 @@
 ﻿@attribute [Route(PageConstants.ExpenseAddUrl)]
 @attribute [Route(PageConstants.ExpenseEditUrl)]
 @using Yugen.HomeBudget.Client.Models
+@using Yugen.HomeBudget.Client.ViewModels.Expense
 @using Yugen.HomeBudget.Shared.Contants
-@using Yugen.HomeBudget.Shared.Models.Category
-@inject EditSuccess EditSuccessState
+@inject ExpenseAddEditViewModel ViewModel
 <!-- AllowAnonymous / Authorize -->
 @attribute [Authorize]
 
@@ -12,13 +12,13 @@
                 Title="@PageHelper.AddEditTitle(PageConstants.ExpenseTitle, Id)"
                 Breadcrumb="@PageConstants.ExpenseTitle" />
 <!-- ========== title-wrapper end ========== -->
-@if (Expense != null)
+@if (ViewModel.Expense != null)
 {
     <div class="row">
         <div class="col-lg-6">
-            <EditForm Model="@Expense"
-                  OnInvalidSubmit="(async () => await SubmitAsync(false))"
-                  OnValidSubmit="(async () => await SubmitAsync(true))">
+            <EditForm Model="@ViewModel.Expense"
+                  OnInvalidSubmit="(async () => await ViewModel.SubmitAsync(false))"
+                  OnValidSubmit="(async () => await ViewModel.SubmitAsync(true))">
                 <DataAnnotationsValidator />
                 <ValidationSummary />
                 <div class="card-style settings-card-2 mb-30">
@@ -26,31 +26,31 @@
                         <div class="col-12">
                             <div class="input-style-1">
                                 <label>Title</label>
-                                <InputText @bind-Value="Expense.Title" placeholder="Title" />
+                                <InputText @bind-Value="ViewModel.Expense.Title" placeholder="Title" />
                             </div>
                         </div>
                         <div class="col-12">
                             <div class="input-style-1">
                                 <label>Amount</label>
-                                <InputNumber @bind-Value="Expense.Amount" placeholder="Amount" />
+                                <InputNumber @bind-Value="ViewModel.Expense.Amount" placeholder="Amount" />
                             </div>
                         </div>
                         <div class="col-12">
                             <div class="input-style-1">
                                 <label>Date</label>
-                                <InputDate @bind-Value="Expense.DateTimeOffset" />
+                                <InputDate @bind-Value="ViewModel.Expense.DateTimeOffset" />
                             </div>
                         </div>
                         <div class="col-12">
                             <div class="select-style-1">
                                 <label>Category</label>
                                 <div class="select-position">
-                                    <InputSelect @bind-Value="Expense.CategoryId"
-                                                 @bind-Value:after="CategoryChanged">
+                                    <InputSelect @bind-Value="ViewModel.Expense.CategoryId"
+                                             @bind-Value:after="ViewModel.CategoryChanged">
                                         @{
-                                            if (_currentCategory != null)
+                                            if (ViewModel.CurrentCategory != null)
                                             {
-                                                foreach (var category in _categories)
+                                                foreach (var category in ViewModel.Categories)
                                                 {
                                                     <option value="@category.Id">@category.Title</option>
                                                 }
@@ -64,11 +64,11 @@
                             <div class="select-style-1">
                                 <label>Sub Category</label>
                                 <div class="select-position">
-                                    <InputSelect @bind-Value="Expense.SubCategoryId">
+                                    <InputSelect @bind-Value="ViewModel.Expense.SubCategoryId">
                                         @{
-                                            if (_currentCategory != null)
+                                            if (ViewModel.CurrentCategory != null)
                                             {
-                                                foreach (var subCategory in _currentCategory.SubCategoriesDto)
+                                                foreach (var subCategory in ViewModel.CurrentCategory.SubCategoriesDto)
                                                 {
                                                     <option value="@subCategory.Id">@subCategory.Title</option>
                                                 }
@@ -79,14 +79,14 @@
                             </div>
                         </div>
                         <div class="col-12">
-                            <button disabled="@_busy"
+                            <button disabled="@ViewModel.Busy"
                                     type="submit"
                                     class="main-btn primary-btn btn-hover">
                                 Save
                             </button>
-                            <button disabled="@_busy"
+                            <button disabled="@ViewModel.Busy"
                                     class="main-btn warning-btn btn-hover"
-                                @onclick="CancelAsync">
+                                    @onclick="() => ViewModel.CancelAsync()">
                                 Cancel
                             </button>
                         </div>
@@ -98,20 +98,20 @@
         <!-- end col -->
     </div>
 }
-@if (_concurrencyError)
+@if (ViewModel.ConcurrencyError)
 {
     <br />
     <div class="alert alert-danger">
         <p>
-            The contact details have changed since it was last loaded. The updated fields are highlighted in the form.
+            The details have changed since it was last loaded. The updated fields are highlighted in the form.
             Please choose an option:
         </p>
         <p><b>Cancel</b> to lose your changes and keep the database version.</p>
         <p><b>Submit</b> to force an update with your version.</p>
     </div>
 }
-@if (_error)
+@if (ViewModel.Error)
 {
     <br />
-    <div class="alert alert-danger">Failed to update the contact (@_errorMessage).</div>
+    <div class="alert alert-danger">Failed to update (@ViewModel.ErrorMessage).</div>
 }

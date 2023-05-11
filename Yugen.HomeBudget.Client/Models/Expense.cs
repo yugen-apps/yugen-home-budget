@@ -2,6 +2,10 @@
 
 public class Expense
 {
+    public Expense()
+    {
+    }
+
     public Expense(
         int id,
         string title,
@@ -21,13 +25,13 @@ public class Expense
 
     public int Id { get; set; }
 
-    public string Title { get; set; }
+    public string Title { get; set; } = string.Empty;
 
     public decimal Amount { get; set; }
 
-    public DateTimeOffset DateTimeOffset { get; set; }
+    public DateTimeOffset DateTimeOffset { get; set; } = DateTimeOffset.UtcNow;
 
-    public int CategoryId { get; set; }
+    public int CategoryId { get; set; } = 1;
 
-    public int SubCategoryId { get; set; }
+    public int SubCategoryId { get; set; } = 1;
 }

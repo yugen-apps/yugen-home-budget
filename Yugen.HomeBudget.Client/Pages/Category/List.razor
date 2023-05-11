@@ -1,5 +1,7 @@
 ﻿@attribute [Route(PageConstants.CategoryUrl)]
 @using Yugen.HomeBudget.Shared.Contants
+@using Yugen.HomeBudget.Client.ViewModels.Category
+@inject CategoryListViewModel ViewModel
 <!-- AllowAnonymous / Authorize -->
 @attribute [Authorize]
 
@@ -8,7 +10,7 @@
                 Title="@PageConstants.CategoryTitle"
                 Breadcrumb="@PageConstants.CategoryTitle" />
 <!-- ========== title-wrapper end ========== -->
-@if (_categories == null)
+@if (ViewModel.IsLoading)
 {
     <p><em>Loading...</em></p>
 }
@@ -24,16 +26,16 @@ else
                         <i class="bi bi-plus mr-5"></i> Add
                     </a>
                 </div>
-                <PagerComponent PageIndex=@_paginatedList.PageIndex
-                            TotalPages=@_paginatedList.TotalPages
-                            OnClick="PageIndexChanged"
-                            HasNextPage=@_paginatedList.HasNextPage
-                            HasPreviousPage=@_paginatedList.HasPreviousPage />
+                <PagerComponent PageIndex=@ViewModel.PaginatedList.PageIndex
+                            TotalPages=@ViewModel.PaginatedList.TotalPages
+                            OnClick="(newPageNumber) => ViewModel.PageIndexChanged(newPageNumber)"
+                            HasNextPage=@ViewModel.PaginatedList.HasNextPage
+                            HasPreviousPage=@ViewModel.PaginatedList.HasPreviousPage />
             </div>
         </div>
     </div>
     <div class="row">
-        @foreach (var category in _categories)
+        @foreach (var category in ViewModel.Categories)
         {
             <div class="col-xl-3 col-lg-4 col-sm-6">
                 <div class="card-style-3 mb-30">
@@ -46,11 +48,11 @@ else
                             }
                         </ul>
                         @*
-                <small>@category.CreatedOn</small>
-                <small>@category.LastModifiedOn</small>
-                <small>@category.CreatedByApplicationUserId</small>
-                <small>@category.LastModifiedByApplicationUserId</small>
-                *@
+                        <small>@category.CreatedOn</small>
+                        <small>@category.LastModifiedOn</small>
+                        <small>@category.CreatedByApplicationUserId</small>
+                        <small>@category.LastModifiedByApplicationUserId</small>
+                        *@
 
                         <a href="@PageHelper.EditHref(PageConstants.CategoryUrl, category.Id)"
                            class="main-btn warning-btn btn-hover btn-sm"
@@ -59,7 +61,7 @@ else
                         </a>
 
                         <DeleteComponent Id="@category.Id"
-                                 DeleteCallback="@DeleteAsync" />
+                                         DeleteCallback="(id) => ViewModel.DeleteAsync(id)" />
                     </div>
                 </div>
             </div>

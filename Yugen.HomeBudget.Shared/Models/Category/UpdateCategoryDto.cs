@@ -5,12 +5,14 @@ public class UpdateCategoryDto
     public UpdateCategoryDto(
         int id,
         string title,
+        string icon,
         List<SubCategoryDto> subCategoriesDto,
         int? createdByApplicationUserId,
         int? lastModifiedByApplicationUserId)
     {
         Id = id;
         Title = title;
+        Icon = icon;
         SubCategoriesDto = subCategoriesDto;
         CreatedByApplicationUserId = createdByApplicationUserId;
         LastModifiedByApplicationUserId = lastModifiedByApplicationUserId;
@@ -19,6 +21,8 @@ public class UpdateCategoryDto
     public int Id { get; set; }
 
     public string Title { get; set; }
+
+    public string Icon { get; set; }
 
     public List<SubCategoryDto> SubCategoriesDto { get; set; }
 
