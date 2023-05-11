@@ -18,5 +18,13 @@ namespace Yugen.HomeBudget.Client.Components
 
         [Parameter]
         public EventCallback<int> OnClick { get; set; }
+
+        public bool IsFirstPage => PageIndex == 1;
+
+        public bool IsLastPage => PageIndex == TotalPages;
+
+        public int PreviousPage => PageIndex - 1;
+
+        public int NextPage => PageIndex + 1;
     }
 }
