@@ -1,16 +1,14 @@
-﻿using Yugen.HomeBudget.Shared.Models.Category;
+﻿namespace Yugen.HomeBudget.Shared.Models.Expense;
 
-namespace Yugen.HomeBudget.Shared.Models.Expense;
-
-public class ResponseExpenseDto
+public class ExportExpenseDto
 {
-    public ResponseExpenseDto(
+    public ExportExpenseDto(
         int id,
         string title,
         decimal amount,
         DateTimeOffset dateTimeOffset,
-        ResponseCategoryDto categoryDto,
-        SubCategoryDto subCategoryDto,
+        string category,
+        string subCategory,
         DateTimeOffset createdOn,
         DateTimeOffset lastModifiedOn,
         int? createdByApplicationUserId,
@@ -20,8 +18,8 @@ public class ResponseExpenseDto
         Title = title;
         Amount = amount;
         DateTimeOffset = dateTimeOffset;
-        CategoryDto = categoryDto;
-        SubCategoryDto = subCategoryDto;
+        Category = category;
+        SubCategory = subCategory;
         CreatedOn = createdOn;
         LastModifiedOn = lastModifiedOn;
         CreatedByApplicationUserId = createdByApplicationUserId;
@@ -36,11 +34,9 @@ public class ResponseExpenseDto
 
     public DateTimeOffset DateTimeOffset { get; set; }
 
+    public string Category { get; set; }
 
-    public ResponseCategoryDto CategoryDto { get; set; }
-
-    public SubCategoryDto SubCategoryDto { get; set; }
-
+    public string SubCategory{ get; set; }
 
     public DateTimeOffset CreatedOn { get; set; }
 

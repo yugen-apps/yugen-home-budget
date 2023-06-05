@@ -30,11 +30,7 @@ namespace Yugen.HomeBudget.Server.Controllers
         {
             return _expenseService.ListAsync();
         }
-
-        /// <summary>
-        /// GET: Expense
-        /// </summary>
-        /// <returns></returns>
+        
         [HttpGet]
         public Task<PaginatedList<ResponseExpenseDto>> ListAsync(int year, int month, int pageNumber, int pageSize)
         {
@@ -54,12 +50,7 @@ namespace Yugen.HomeBudget.Server.Controllers
         {
             return _expenseService.GroupedByCategoryAsync(year, month);
         }
-
-        /// <summary>
-        /// GET: Expense/5
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
+        
         [HttpGet("{id}")]
         public Task<ResponseExpenseDto?> GetAsync(int id)
         {
@@ -95,12 +86,7 @@ namespace Yugen.HomeBudget.Server.Controllers
 
             return await _expenseService.UpdateAsync(id, updateExpenseDto);
         }
-
-        /// <summary>
-        /// DELETE: Expense/5
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
+        
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteExpense(int id)
         {
