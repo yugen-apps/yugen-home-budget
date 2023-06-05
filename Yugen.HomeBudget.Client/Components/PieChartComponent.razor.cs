@@ -12,7 +12,7 @@ namespace Yugen.HomeBudget.Client.Components
         public PieChartData? PieChartData { get; set; }
 
         [Inject]
-        private IJSRuntime JsRuntime { get; set; }
+        private IJSRuntime? JsRuntime { get; set; }
 
         public override async Task SetParametersAsync(ParameterView parameters)
         {
@@ -28,7 +28,11 @@ namespace Yugen.HomeBudget.Client.Components
 
         protected override async Task OnInitializedAsync()
         {
-            _module = await JsRuntime.InvokeAsync<IJSObjectReference>("import", "./Components/PieChartComponent.razor.js");
+            if (JsRuntime != null)
+            {
+                _module = await JsRuntime.InvokeAsync<IJSObjectReference>("import",
+                    "./Components/PieChartComponent.razor.js");
+            }
         }
 
         // https://learn.microsoft.com/en-us/aspnet/core/blazor/performance?view=aspnetcore-7.0

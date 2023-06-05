@@ -5,15 +5,11 @@ namespace Yugen.HomeBudget.Client.Shared;
 
 public class RedirectToLogin : ComponentBase
 {
-    private readonly NavigationManager _navigationManager;
-
-    public RedirectToLogin(NavigationManager navigationManager)
-    {
-        _navigationManager = navigationManager;
-    }
+    [Inject]
+    private NavigationManager? NavigationManager { get; set; }
 
     protected override void OnInitialized()
     {
-        _navigationManager.NavigateTo(PageConstants.LoginUrl);
+        NavigationManager?.NavigateTo(PageConstants.LoginUrl);
     }
 }
