@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Yugen.HomeBudget.Application.Extensions;
+﻿using Yugen.HomeBudget.Application.Extensions;
 using Yugen.HomeBudget.Data.Models;
 using Yugen.HomeBudget.Data.Repositories;
 using Yugen.HomeBudget.Shared.Models;
@@ -20,6 +19,18 @@ namespace Yugen.HomeBudget.Application.Services
         {
             var expenses = await _expenseRepository.ListAsync();
             return expenses.Select(e => e.ToDto()).ToList();
+        }
+
+        public async Task<IEnumerable<ResponseExpenseDto>> ListAsync(int year, int month)
+        {
+            var expenses = await _expenseRepository.ListAsync(year, month);
+            return expenses.Select(e => e.ToDto()).ToList();
+        }
+
+        public async Task<IEnumerable<ExportExpenseDto>> ExportAsync(int year, int month)
+        {
+            var expenses = await _expenseRepository.ListAsync(year, month);
+            return expenses.Select(e => e.ToExportExpenseDto()).ToList();
         }
 
         public async Task<PaginatedList<ResponseExpenseDto>> ListAsync(int year, int month, int pageIndex, int pageSize)

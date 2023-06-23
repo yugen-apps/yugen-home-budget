@@ -23,9 +23,14 @@ else
             <div class="title d-flex flex-wrap align-items-center justify-content-between">
                 <div class="d-flex align-items-center">
                     <a href="@PageConstants.ExpenseAddUrl"
-                       class="main-btn primary-btn btn-hover btn-sm"
+                       class="main-btn primary-btn btn-hover btn-sm mr-5"
                        title="Add">
                         <i class="bi bi-plus mr-5"></i> Add
+                    </a>
+                    <a href="@EndpointConstants.Export/@ViewModel.Year/@ViewModel.Month"
+                       class="main-btn primary-btn btn-hover btn-sm"
+                       title="Add">
+                        <i class="bi bi-cloud-download mr-5"></i> Export
                     </a>
                 </div>
                 <div class="d-flex align-items-center">

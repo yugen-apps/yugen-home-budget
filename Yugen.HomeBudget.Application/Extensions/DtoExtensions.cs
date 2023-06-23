@@ -31,4 +31,10 @@ public static class DtoExtensions
         var expenseDto = new ResponseExpenseDto(expense.Id, expense.Title, expense.Amount, expense.DateTimeOffset, expense.Category.ToDto(), expense.SubCategory.ToDto(), expense.CreatedOn, expense.LastModifiedOn, expense.CreatedByApplicationUserId, expense.LastModifiedByApplicationUserId);
         return expenseDto;
     }
+
+    public static ExportExpenseDto ToExportExpenseDto(this Expense expense)
+    {
+        var expenseDto = new ExportExpenseDto(expense.Id, expense.Title, expense.Amount, expense.DateTimeOffset, expense.Category.Title, expense.SubCategory.Title, expense.CreatedOn, expense.LastModifiedOn, expense.CreatedByApplicationUserId, expense.LastModifiedByApplicationUserId);
+        return expenseDto;
+    }
 }

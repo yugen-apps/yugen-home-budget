@@ -13,4 +13,6 @@ public static class EndpointConstants
     public const string GroupedByCategory = $"{Prefix}/expense/groupedbycategory";
 
     public const string Authentication = $"{Prefix}/authentication";
+
+    public const string Export = $"{Prefix}/export";
 }

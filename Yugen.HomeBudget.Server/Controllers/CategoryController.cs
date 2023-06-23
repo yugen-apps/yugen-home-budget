@@ -23,11 +23,7 @@ namespace Yugen.HomeBudget.Server.Controllers
             _logger = logger;
             _categoryService = categoryService;
         }
-
-        /// <summary>
-        /// GET: Category
-        /// </summary>
-        /// <returns></returns>
+        
         [HttpGet]
         [Route("all")]
         public Task<IEnumerable<ResponseCategoryDto>> ListAsync()
@@ -40,12 +36,7 @@ namespace Yugen.HomeBudget.Server.Controllers
         {
             return _categoryService.ListAsync(pageNumber, pageSize);
         }
-
-        /// <summary>
-        /// GET: Category/5
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
+        
         [HttpGet("{id}")]
         public Task<ResponseCategoryDto?> GetAsync(int id)
         {
@@ -81,12 +72,7 @@ namespace Yugen.HomeBudget.Server.Controllers
 
             return _categoryService.UpdateAsync(id, updateCategoryDto);
         }
-
-        /// <summary>
-        /// DELETE: Category/5
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
+        
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCategory(int id)
         {
