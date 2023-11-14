@@ -11,7 +11,7 @@
 # 2. Create a secret in your repository named AZURE_WEBAPP_PUBLISH_PROFILE, paste the publish profile contents as the value of the secret.
 #    For instructions on obtaining the publish profile see: https://docs.microsoft.com/azure/app-service/deploy-github-actions#configure-the-github-secret
 #
-# 3. Change the value for the AZURE_WEBAPP_NAME. Optionally, change the AZURE_WEBAPP_PACKAGE_PATH and DOTNET_VERSION environment variables below.
+# 3. Change the value for the AZURE_WEBAPP_NAME. Optionally, change the AZURE_WEBAPP_PACKAGE and DOTNET_VERSION environment variables below.
 #
 # For more information on GitHub Actions for Azure: https://github.com/Azure/Actions
 # For more information on the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
@@ -21,10 +21,12 @@ name: Build and deploy ASP.Net Core app to an Azure Web App
 
 env:
   AZURE_WEBAPP_NAME: yugen-homebudget-app    # set this to the name of your Azure Web App
-  AZURE_WEBAPP_PACKAGE_PATH: '.'             # set this to the path to your web app project, defaults to the repository root
-  DOTNET_VERSION: '7.0.x'                    # set this to the .NET Core version to use
+  AZURE_WEBAPP_PACKAGE: 'myapp'              # set this to the path to your web app project, defaults to the repository root
+  DOTNET_VERSION: '8.0.x'                    # set this to the .NET Core version to use
   CLIENT_PROJECT_NAME: Yugen.HomeBudget.Client
   SERVER_PROJECT_NAME: Yugen.HomeBudget.Server
+  DATA_PROJECT_NAME: Yugen.HomeBudget.Data
+  EF_BUNDLE: 'efbundle'
 
 on:
   push:
@@ -80,16 +82,28 @@ jobs:
             ${{ runner.os }}-nuget-
 
       - name: Build with dotnet
-        run: dotnet build ${{ github.workspace }}/${{ env.SERVER_PROJECT_NAME }}/${{ env.SERVER_PROJECT_NAME }}.csproj --configuration Release
+        run: dotnet build ${{ env.SERVER_PROJECT_NAME }} --configuration Release
 
-      - name: dotnet publish
-        run: dotnet publish ${{ github.workspace }}/${{ env.SERVER_PROJECT_NAME }}/${{ env.SERVER_PROJECT_NAME }}.csproj -c Release -o ${{env.DOTNET_ROOT}}/myapp
+      - name: Install EF Tool
+        run: dotnet tool install --global dotnet-ef
+            
+      - name: Generate EF migration script
+        run: dotnet ef migrations bundle --startup-project ${{ env.SERVER_PROJECT_NAME }} --project ${{ env.DATA_PROJECT_NAME }} --self-contained --verbose
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v3
         with:
-          name: .net-app
-          path: ${{env.DOTNET_ROOT}}/myapp
+          name: ${{ env.EF_BUNDLE }}
+          path: ${{ env.EF_BUNDLE }}
+
+      - name: dotnet publish
+        run: dotnet publish ${{ env.SERVER_PROJECT_NAME }} -c Release -o ${{env.DOTNET_ROOT}}/${{ env.AZURE_WEBAPP_PACKAGE }}
+
+      - name: Upload artifact for deployment job
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ env.AZURE_WEBAPP_PACKAGE }}
+          path: ${{env.DOTNET_ROOT}}/${{ env.AZURE_WEBAPP_PACKAGE }}/
 
   deploy:
     permissions:
@@ -104,7 +118,22 @@ jobs:
       - name: Download artifact from build job
         uses: actions/download-artifact@v3
         with:
-          name: .net-app
+          name: ${{ env.EF_BUNDLE }}
+          path: ${{ env.EF_BUNDLE }}
+
+      - name: Download artifact from build job
+        uses: actions/download-artifact@v3
+        with:
+          name: ${{ env.AZURE_WEBAPP_PACKAGE }}
+          path: ${{ env.AZURE_WEBAPP_PACKAGE }}
+
+      - name: Display structure of downloaded files
+        run: ls -R
+
+      - name: Apply EF migration script
+        run: |
+          sudo chmod +x ./${{ env.EF_BUNDLE }}/${{ env.EF_BUNDLE }}
+          ./${{ env.EF_BUNDLE }}/${{ env.EF_BUNDLE }} --connection "${{ secrets.CONNECTION_STRING }}"
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
@@ -112,4 +141,4 @@ jobs:
         with:
           app-name: ${{ env.AZURE_WEBAPP_NAME }}
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-          package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+          package: ./${{ env.AZURE_WEBAPP_PACKAGE }}

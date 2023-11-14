@@ -17,7 +17,8 @@ var connection = string.Empty;
 //    connection = Environment.GetEnvironmentVariable("AZURE_SQL_CONNECTIONSTRING");
 //}
 
-builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connection));
+builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connection,
+	b => b.MigrationsAssembly("Yugen.HomeBudget.Data")));
 
 builder.Services.AddIdentity<ApplicationUser, IdentityRole<int>>().AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.ConfigureApplicationCookie(options =>
