@@ -8,7 +8,14 @@ public static class DtoExtensions
 {
     public static ResponseCategoryDto ToDto(this Category category)
     {
-        var categoryDto = new ResponseCategoryDto(category.Id, category.Title, category.CreatedOn, category.LastModifiedOn, category.CreatedByApplicationUserId, category.LastModifiedByApplicationUserId);
+        var categoryDto = new ResponseCategoryDto(
+            category.Id, 
+            category.Title, 
+            category.Icon,
+            category.CreatedOn, 
+            category.LastModifiedOn, 
+            category.CreatedByApplicationUserId, 
+            category.LastModifiedByApplicationUserId);
 
         if (category?.SubCategories == null)
         {
