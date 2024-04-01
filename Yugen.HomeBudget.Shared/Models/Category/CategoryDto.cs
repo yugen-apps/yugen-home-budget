@@ -2,27 +2,31 @@
 
 public class ResponseCategoryDto
 {
-    public ResponseCategoryDto(
-        int id, 
-        string title, 
-        DateTimeOffset createdOn, 
-        DateTimeOffset lastModifiedOn, 
-        int? createdByApplicationUserId, 
-        int? lastModifiedByApplicationUserId)
-    {
-        Id = id;
-        Title = title;
-        CreatedOn = createdOn;
-        LastModifiedOn = lastModifiedOn;
-        CreatedByApplicationUserId = createdByApplicationUserId;
-        LastModifiedByApplicationUserId = lastModifiedByApplicationUserId;
-    }
+	public ResponseCategoryDto(
+		int id,
+		string title,
+		string icon,
+		DateTimeOffset createdOn,
+		DateTimeOffset lastModifiedOn,
+		int? createdByApplicationUserId,
+		int? lastModifiedByApplicationUserId)
+	{
+		Id = id;
+		Title = title;
+		Icon = string.IsNullOrEmpty(icon) ? "bootstrap" : icon;
+		CreatedOn = createdOn;
+		LastModifiedOn = lastModifiedOn;
+		CreatedByApplicationUserId = createdByApplicationUserId;
+		LastModifiedByApplicationUserId = lastModifiedByApplicationUserId;
+	}
 
-    public int Id { get; set; }
+	public int Id { get; set; }
 
     public string Title { get; set; }
 
-    public List<SubCategoryDto> SubCategoriesDto { get; set; } = new List<SubCategoryDto>();
+    public string Icon { get; set; }
+
+	public List<SubCategoryDto> SubCategoriesDto { get; set; } = new List<SubCategoryDto>();
 
 
     public DateTimeOffset CreatedOn { get; set; }

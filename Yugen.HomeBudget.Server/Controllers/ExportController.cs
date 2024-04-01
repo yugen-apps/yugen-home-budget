@@ -23,10 +23,10 @@ namespace Yugen.HomeBudget.Server.Controllers
             _expenseService = expenseService;
         }
 
-        [HttpGet("{year}/{month}")]
-        public async Task<IActionResult> OnGet(int year, int month)
+        [HttpGet("{year}")]
+        public async Task<IActionResult> OnGet(int year)
         {
-            var list = await _expenseService.ExportAsync(year, month);
+            var list = await _expenseService.ExportAsync(year);
             //ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 
             using var package = new ExcelPackage();
@@ -35,7 +35,7 @@ namespace Yugen.HomeBudget.Server.Controllers
 
             var excelData = await package.GetAsByteArrayAsync();
             const string contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-            var fileName = $"{year}{month}-Expenses.xlsx";
+            var fileName = $"{year}-Expenses.xlsx";
             return File(excelData, contentType, fileName);
         }
     }

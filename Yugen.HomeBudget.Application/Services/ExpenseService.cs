@@ -27,9 +27,9 @@ namespace Yugen.HomeBudget.Application.Services
             return expenses.Select(e => e.ToDto()).ToList();
         }
 
-        public async Task<IEnumerable<ExportExpenseDto>> ExportAsync(int year, int month)
+        public async Task<IEnumerable<ExportExpenseDto>> ExportAsync(int year)
         {
-            var expenses = await _expenseRepository.ListAsync(year, month);
+            var expenses = await _expenseRepository.ListAsync(year);
             return expenses.Select(e => e.ToExportExpenseDto()).ToList();
         }
 

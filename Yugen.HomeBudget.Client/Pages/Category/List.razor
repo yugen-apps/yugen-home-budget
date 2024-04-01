@@ -40,13 +40,21 @@ else
             <div class="col-xl-3 col-lg-4 col-sm-6">
                 <div class="card-style-3 mb-30">
                     <div class="card-content">
-                        <h4>@category.Title</h4>
+                        <div class="left">
+                            <a href="@PageConstants.CategoryAddUrl"
+                               class="btn active btn-sm"
+                               title="Add">
+                                <i class="bi bi-@category.Icon mr-5"></i> @category.Title
+                            </a>
+                        </div>
+
                         <ul class="text-sm">
                             @foreach (var subCategory in category.SubCategoriesDto)
                             {
                                 <li class="bi bi-chevron-right">@subCategory.Title</li>
                             }
                         </ul>
+
                         @*
                         <small>@category.CreatedOn</small>
                         <small>@category.LastModifiedOn</small>

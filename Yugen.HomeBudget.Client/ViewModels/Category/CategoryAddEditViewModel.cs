@@ -10,141 +10,185 @@ namespace Yugen.HomeBudget.Client.ViewModels.Category;
 
 internal sealed partial class CategoryAddEditViewModel : ObservableObject
 {
-    private readonly HttpClient _httpClient;
-    private readonly NavigationManager _navigationManager;
-    private readonly CustomStateProvider _authStateProvider;
+	private readonly HttpClient _httpClient;
+	private readonly NavigationManager _navigationManager;
+	private readonly CustomStateProvider _authStateProvider;
 
-    [ObservableProperty]
-    private bool _busy;
+	[ObservableProperty]
+	private bool _busy;
 
-    [ObservableProperty]
-    private bool _error;
+	[ObservableProperty]
+	private bool _error;
 
-    [ObservableProperty]
-    private bool _concurrencyError;
+	[ObservableProperty]
+	private bool _concurrencyError;
 
-    [ObservableProperty]
-    private string _errorMessage = string.Empty;
+	[ObservableProperty]
+	private string _errorMessage = string.Empty;
 
-    [ObservableProperty]
-    private bool _showPopup;
+	[ObservableProperty]
+	private bool _showAddSubCategoryPopup;
 
-    [ObservableProperty]
-    private Yugen.HomeBudget.Client.Models.Category _category = new();
+	[ObservableProperty]
+	private bool _showIconsPopup;
 
-    [ObservableProperty]
-    private string _newSubCategoryTitle = string.Empty;
+	[ObservableProperty]
+	private Models.Category _category = new();
 
-    [ObservableProperty]
-    private CurrentUser? _currentUser;
+	[ObservableProperty]
+	private string _newSubCategoryTitle = string.Empty;
 
-    private int? _id;
+	[ObservableProperty]
+	private string _newIcon = string.Empty;
 
-    public CategoryAddEditViewModel(
-        HttpClient httpClient,
-        NavigationManager navigationManager,
-        CustomStateProvider authStateProvider)
-    {
-        _httpClient = httpClient;
-        _navigationManager = navigationManager;
-        _authStateProvider = authStateProvider;
-    }
+	[ObservableProperty]
+	private CurrentUser? _currentUser;
 
-    public async Task OnInitializedAsync(int? id)
-    {
-        _id = id;
+	[ObservableProperty]
+	private List<string> _iconList = new List<string>();
 
-        Busy = true;
+	private int? _id;
 
-        CurrentUser = await _authStateProvider.GetCurrentUser();
+	public CategoryAddEditViewModel(
+		HttpClient httpClient,
+		NavigationManager navigationManager,
+		CustomStateProvider authStateProvider)
+	{
+		_httpClient = httpClient;
+		_navigationManager = navigationManager;
+		_authStateProvider = authStateProvider;
+	}
 
-        try
-        {
-            if (_id != null)
-            {
-                await LoadAsync();
-            }
-        }
-        finally
-        {
-            Busy = false;
-        }
-    }
+	public async Task OnInitializedAsync(int? id)
+	{
+		_id = id;
 
-    public void CancelAsync()
-    {
-        Busy = true;
-        _navigationManager.NavigateTo(PageConstants.CategoryUrl);
-    }
+		Busy = true;
 
-    public async Task SubmitAsync(bool isValid)
-    {
-        if (Busy)
-        {
-            return;
-        }
+		CurrentUser = await _authStateProvider.GetCurrentUser();
 
-        if (!isValid)
-        {
-            Error = false;
-            ConcurrencyError = false;
-            return;
-        }
+		var iconDictionary = await _httpClient.GetFromJsonAsync<Dictionary<string, int>>("assets/css/bootstrap-icons/bootstrap-icons.json");
+		if (iconDictionary != null)
+		{
+			IconList.AddRange((iconDictionary.Keys)
+					.Where(icon => icon.EndsWith("fill", StringComparison.InvariantCultureIgnoreCase)));
+		}
 
-        Busy = true;
-        try
-        {
-            if (_id != null)
-            {
-                var createCategoryDto = new CreateCategoryDto(Category.Title, "", Category.SubCategoriesDto, CurrentUser?.Id, CurrentUser?.Id);
-                var response = await _httpClient.PutAsJsonAsync<CreateCategoryDto>($"{EndpointConstants.Category}/{_id}", createCategoryDto);
-                //var c = await response.Content.ReadFromJsonAsync<CategoryDto>();
-            }
-            else
-            {
-                var updateCategoryDto = new UpdateCategoryDto(Category.Id, Category.Title, "", Category.SubCategoriesDto, CurrentUser?.Id, CurrentUser?.Id);
-                var response = await _httpClient.PostAsJsonAsync<UpdateCategoryDto>($"{EndpointConstants.Category}", updateCategoryDto);
+		try
+		{
+			if (_id != null)
+			{
+				await LoadAsync();
             }
 
-            _navigationManager.NavigateTo(PageConstants.CategoryUrl);
+            Category.Icon = string.IsNullOrEmpty(Category.Icon) ? "bootstrap" : Category.Icon;
         }
-        catch (Exception ex)
-        {
-            Error = true;
-            ErrorMessage = ex.Message;
-            Busy = false;
-        }
-    }
+		finally
+		{
+			Busy = false;
+		}
+	}
 
-    public void DeleteSubCategoryAsync(SubCategoryDto subCategoryDto)
-    {
-        Category?.SubCategoriesDto.Remove(subCategoryDto);
-    }
+	public void CancelAsync()
+	{
+		Busy = true;
+		_navigationManager.NavigateTo(PageConstants.CategoryUrl);
+	}
 
-    public void ShowAddPopup()
-    {
-        NewSubCategoryTitle = string.Empty;
-        ShowPopup = true;
-    }
+	public async Task SubmitAsync(bool isValid)
+	{
+		if (Busy)
+		{
+			return;
+		}
 
-    public void ClosePopup()
-    {
-        ShowPopup = false;
-    }
+		if (!isValid)
+		{
+			Error = false;
+			ConcurrencyError = false;
+			return;
+		}
 
-    public void AddSubCategory()
-    {
-        Category?.SubCategoriesDto.Add(new SubCategoryDto(0, NewSubCategoryTitle));
-        ClosePopup();
-    }
+		Busy = true;
+		try
+		{
+			if (_id != null)
+			{
+				var createCategoryDto = new CreateCategoryDto(Category.Title, Category.Icon, Category.SubCategoriesDto, CurrentUser?.Id, CurrentUser?.Id);
+				var response = await _httpClient.PutAsJsonAsync<CreateCategoryDto>($"{EndpointConstants.Category}/{_id}", createCategoryDto);
+				//var c = await response.Content.ReadFromJsonAsync<CategoryDto>();
+			}
+			else
+			{
+				var updateCategoryDto = new UpdateCategoryDto(Category.Id, Category.Title, Category.Icon, Category.SubCategoriesDto, CurrentUser?.Id, CurrentUser?.Id);
+				var response = await _httpClient.PostAsJsonAsync<UpdateCategoryDto>($"{EndpointConstants.Category}", updateCategoryDto);
+			}
 
-    private async Task LoadAsync()
-    {
-        Category = new Models.Category();
-        var categoryDto = await _httpClient.GetFromJsonAsync<ResponseCategoryDto>($"{EndpointConstants.Category}/{_id}");
-        if (categoryDto != null)
-        {
-            Category = new Models.Category(categoryDto.Id, categoryDto.Title, categoryDto.SubCategoriesDto);
-        }
-    }
+			_navigationManager.NavigateTo(PageConstants.CategoryUrl);
+		}
+		catch (Exception ex)
+		{
+			Error = true;
+			ErrorMessage = ex.Message;
+			Busy = false;
+		}
+	}
+
+	public void DeleteSubCategoryAsync(SubCategoryDto subCategoryDto)
+	{
+		Category?.SubCategoriesDto.Remove(subCategoryDto);
+	}
+
+	public void OpenAddSubCategoryPopup()
+	{
+		NewSubCategoryTitle = string.Empty;
+		ShowAddSubCategoryPopup = true;
+	}
+
+	public void CloseAddSubCategoryPopup()
+	{
+		ShowAddSubCategoryPopup = false;
+	}
+
+	public void AddSubCategory()
+	{
+		Category.SubCategoriesDto.Add(new SubCategoryDto(0, NewSubCategoryTitle));
+		CloseAddSubCategoryPopup();
+	}
+
+	public void OpenIconsPopup()
+	{
+		NewIcon = string.Empty;
+		ShowIconsPopup = true;
+	}
+
+	public void CloseIconsPopup()
+	{
+		ShowIconsPopup = false;
+	}
+
+	public void AddIcon(string icon)
+	{
+		NewIcon = icon;
+	}
+
+	public void SaveIcon()
+	{
+		Category.Icon = NewIcon;
+		CloseIconsPopup();
+	}
+
+	public string IsActive(string icon)
+	{
+		return NewIcon == icon ? "active" : "";
+	}
+
+	private async Task LoadAsync()
+	{
+		var categoryDto = await _httpClient.GetFromJsonAsync<ResponseCategoryDto>($"{EndpointConstants.Category}/{_id}");
+		if (categoryDto != null)
+		{
+			Category = new Models.Category(categoryDto.Id, categoryDto.Title, categoryDto.Icon, categoryDto.SubCategoriesDto);
+		}
+	}
 }
