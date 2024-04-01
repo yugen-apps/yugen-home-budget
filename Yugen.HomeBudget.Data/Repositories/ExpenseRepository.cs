@@ -20,6 +20,16 @@ namespace Yugen.HomeBudget.Data.Repositories
                 .ToListAsync();
         }
 
+        public Task<List<Expense>> ListAsync(int year)
+        {
+            return _context.Expenses
+                .Where(x => x.DateTimeOffset.Year == year)
+                .Include(e => e.Category)
+                .Include(e => e.SubCategory)
+                .OrderByDescending(x => x.DateTimeOffset)
+                .ToListAsync();
+        }
+
         public Task<List<Expense>> ListAsync(int year, int month)
         {
             return _context.Expenses
