@@ -31,5 +31,7 @@
         public const string LoginUrl = $"{Authentication}/login";
 
         public const string RegisterUrl = $"{Authentication}/register";
-    }
+
+		public const string Info = "info";
+	}
 }

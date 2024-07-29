@@ -15,4 +15,6 @@ public static class EndpointConstants
     public const string Authentication = $"{Prefix}/authentication";
 
     public const string Export = $"{Prefix}/export";
+
+    public const string Info = $"{Prefix}/info";
 }
