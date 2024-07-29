@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Yugen.HomeBudget.Application.Services;
 using Yugen.HomeBudget.Data;
@@ -16,6 +17,10 @@ var connection = string.Empty;
 //{
 //    connection = Environment.GetEnvironmentVariable("AZURE_SQL_CONNECTIONSTRING");
 //}
+
+var azureSqlTokenProvider = new AzureCredentialSqlAuthenticationProvider();
+SqlAuthenticationProvider.SetProvider(SqlAuthenticationMethod.ActiveDirectoryManagedIdentity, azureSqlTokenProvider);
+SqlAuthenticationProvider.SetProvider(SqlAuthenticationMethod.ActiveDirectoryMSI, azureSqlTokenProvider);
 
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connection,
 	b => b.MigrationsAssembly("Yugen.HomeBudget.Data")));

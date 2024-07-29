@@ -7,6 +7,7 @@ using Yugen.HomeBudget.Client.ViewModels;
 using Yugen.HomeBudget.Client.ViewModels.Authentication;
 using Yugen.HomeBudget.Client.ViewModels.Category;
 using Yugen.HomeBudget.Client.ViewModels.Expense;
+using Yugen.HomeBudget.Client.ViewModels.Info;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
@@ -30,5 +31,6 @@ builder.Services.AddScoped<CategoryAddEditViewModel>();
 builder.Services.AddScoped<CategoryListViewModel>();
 builder.Services.AddScoped<ExpenseAddEditViewModel>();
 builder.Services.AddScoped<ExpenseListViewModel>();
+builder.Services.AddScoped<InfoIndexViewodel>();
 
 await builder.Build().RunAsync();
