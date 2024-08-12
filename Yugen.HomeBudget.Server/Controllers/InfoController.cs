@@ -26,10 +26,10 @@ public class InfoController : ControllerBase
 
     [HttpGet]
     public Dictionary<string, string> Get()
-    {
+    {        
         var List = new Dictionary<string, string>
 		{
-			{ "Version", Assembly.GetExecutingAssembly().GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion ?? string.Empty },
+			{ "Version", Assembly.GetExecutingAssembly().GetCustomAttribute<AssemblyFileVersionAttribute>()?.Version ?? string.Empty },
 			{ "Environment", _configuration?["ASPNETCORE_ENVIRONMENT"] ?? string.Empty },
 			{ "ConfigurationConnectionString", _configuration?.GetConnectionString("AZURE_SQL_CONNECTIONSTRING") ?? string.Empty }, // ApplicationDbContext
 			{ "EnvConnectionString", Environment.GetEnvironmentVariable("SQLAZURECONNSTR_AZURE_SQL_CONNECTIONSTRING") ?? string.Empty },

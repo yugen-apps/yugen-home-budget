@@ -1,6 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore.Diagnostics.Internal;
-
-namespace Yugen.HomeBudget.Data.Models;
+﻿namespace Yugen.HomeBudget.Data.Models;
 
 public class Category : Entity
 {
@@ -15,15 +13,15 @@ public class Category : Entity
     {
         Title = title;
         Icon = icon;
-        SubCategories = new List<SubCategory>();
+        SubCategories = [];
         CreatedByApplicationUserId = createdByApplicationUserId;
     }
 
-    public string Title { get; set; }
+    public string Title { get; set; } = string.Empty;
 
-    public string Icon { get; set; }
+    public string Icon { get; set; } = string.Empty;
 
-    public ICollection<SubCategory> SubCategories { get; set; }
+    public ICollection<SubCategory> SubCategories { get; set; } = [];
 
-    public ICollection<Expense> Expenses { get; set; }
+    public ICollection<Expense> Expenses { get; set; } = [];
 }

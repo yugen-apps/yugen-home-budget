@@ -4,22 +4,19 @@
 @using Yugen.HomeBudget.Shared.Contants
 @inject InfoIndexViewodel ViewModel
 <!-- AllowAnonymous / Authorize -->
-@attribute [Authorize]
+@* @attribute [Authorize] *@
 
 <!-- ========== title-wrapper start ========== -->
-<TitleComponent PageTitle="@PageConstants.Info"
-				Title="@PageConstants.Info"
+<TitleComponent PageTitle="@PageConstants.Info" 
+				Title="@PageConstants.Info" 
 				Breadcrumb="@PageConstants.Info" />
 <!-- ========== title-wrapper end ========== -->
 <div class="row">
-	<div class="col-lg-6">
-		<ul class="text-sm">
-			@foreach (var item in ViewModel.List)
-			{
-				<li class="bi bi-chevron-right">@($"{item.Key}: {item.Value}")</li>
-			}
-		</ul>
-		<!-- end card -->
-	</div>
-	<!-- end col -->
+	<ul class="text-sm">
+		@foreach (var item in ViewModel.List)
+		{
+			<li class="bi bi-chevron-right">@($"{item.Key}: {item.Value}")</li>
+		}
+	</ul>
+	<!-- end card -->
 </div>

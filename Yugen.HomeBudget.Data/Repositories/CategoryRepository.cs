@@ -15,7 +15,7 @@ namespace Yugen.HomeBudget.Data.Repositories
         public Task<List<Category>> ListAsync()
         {
             return _context.Categories
-                .Include(category => category.SubCategories.OrderBy(subcatgory => subcatgory.Title))
+                .Include(category => category.SubCategories.OrderBy(subcategory => subcategory.Title))
                 .OrderBy(category => category.Title)
                 .ToListAsync();
         }
@@ -23,7 +23,7 @@ namespace Yugen.HomeBudget.Data.Repositories
         public Task<List<Category>> ListAsync(int skip, int pageSize)
         {
             return _context.Categories
-                .Include(category => category.SubCategories.OrderBy(subcatgory => subcatgory.Title))
+                .Include(category => category.SubCategories.OrderBy(subcategory => subcategory.Title))
                 .OrderBy(category => category.Title)
                 .Skip(skip)
                 .Take(pageSize)

@@ -25,7 +25,7 @@ public class Expense : Entity
         CreatedByApplicationUserId = createdByApplicationUserId;
     }
     
-    public string Title { get; set; }
+    public string Title { get; set; } = string.Empty;
 
     [Column(TypeName = "decimal(18,2)")]
     public decimal Amount { get; set; }
@@ -34,9 +34,9 @@ public class Expense : Entity
 
     public int CategoryId { get; set; }
 
-    public Category Category { get; set; }
+    public Category Category { get; set; } = new();
 
     public int? SubCategoryId { get; set; }
 
-    public SubCategory SubCategory { get; set; }
+    public SubCategory SubCategory { get; set; } = new();
 }

@@ -45,7 +45,7 @@ internal sealed partial class CategoryAddEditViewModel : ObservableObject
 	private CurrentUser? _currentUser;
 
 	[ObservableProperty]
-	private List<string> _iconList = new List<string>();
+	private List<string> _iconList = [];
 
 	private int? _id;
 
@@ -79,9 +79,13 @@ internal sealed partial class CategoryAddEditViewModel : ObservableObject
 			if (_id != null)
 			{
 				await LoadAsync();
-            }
+			}
+			else
+			{
+				Category = new Models.Category();
+			}
 
-            Category.Icon = string.IsNullOrEmpty(Category.Icon) ? "bootstrap" : Category.Icon;
+			Category.Icon = string.IsNullOrEmpty(Category.Icon) ? "bootstrap" : Category.Icon;
         }
 		finally
 		{

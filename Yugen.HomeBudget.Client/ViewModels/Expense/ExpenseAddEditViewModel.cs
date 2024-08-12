@@ -34,7 +34,7 @@ internal sealed partial class ExpenseAddEditViewModel : ObservableObject
     private Yugen.HomeBudget.Client.Models.Expense _expense = new();
 
     [ObservableProperty]
-    private List<ResponseCategoryDto> _categories = new();
+    private List<ResponseCategoryDto> _categories = [];
 
     [ObservableProperty]
     private CurrentUser? _currentUser;
@@ -63,7 +63,7 @@ internal sealed partial class ExpenseAddEditViewModel : ObservableObject
 
         try
         {
-            Categories = await _httpClient.GetFromJsonAsync<List<ResponseCategoryDto>>($"{EndpointConstants.Category}/all") ?? new List<ResponseCategoryDto>();
+            Categories = await _httpClient.GetFromJsonAsync<List<ResponseCategoryDto>>($"{EndpointConstants.Category}/all") ?? [];
             if (_id != null)
             {
                 await LoadAsync();
