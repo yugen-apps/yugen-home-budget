@@ -13,13 +13,12 @@ public class Category : Entity
     {
         Title = title;
         Icon = icon;
-        SubCategories = [];
         CreatedByApplicationUserId = createdByApplicationUserId;
     }
 
-    public string Title { get; set; } = string.Empty;
+    public string? Title { get; set; }
 
-    public string Icon { get; set; } = string.Empty;
+    public string? Icon { get; set; }
 
     public ICollection<SubCategory> SubCategories { get; set; } = [];
 

@@ -11,7 +11,7 @@ public class SubCategory : Entity
         Title = title;
     }
     
-    public string Title { get; set; } = string.Empty;
+    public string? Title { get; set; }
 
     public int CategoryId { get; set; }
 

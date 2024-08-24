@@ -46,7 +46,7 @@ namespace Yugen.HomeBudget.Application.Services
                 return null;
             }
 
-            var category = new Category(createCategoryDto.Title, "", createCategoryDto.CreatedByApplicationUserId);
+            var category = new Category(createCategoryDto.Title, createCategoryDto.Icon, createCategoryDto.CreatedByApplicationUserId);
 
             foreach (var subCategoryDto in createCategoryDto.SubCategoriesDto)
             {

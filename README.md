@@ -44,14 +44,14 @@ https://www.domstamand.com/using-managed-identities-with-sql-azure-database-usin
 
 - Add Login to SQL Server
 
-CREATE LOGIN [PandaSharp-Apps-fb367263-c9a5-4f73-b7d3-731c457e4b07] FROM EXTERNAL PROVIDER
+CREATE LOGIN [azdevops-appint-azsub-pandasharp-apps] FROM EXTERNAL PROVIDER
 
 - Add User to Database
 
-CREATE USER [PandaSharp-Apps-fb367263-c9a5-4f73-b7d3-731c457e4b07] FOR LOGIN [PandaSharp-Apps-fb367263-c9a5-4f73-b7d3-731c457e4b07]
-ALTER ROLE db_datareader ADD MEMBER [PandaSharp-Apps-fb367263-c9a5-4f73-b7d3-731c457e4b07];
-ALTER ROLE db_datawriter ADD MEMBER [PandaSharp-Apps-fb367263-c9a5-4f73-b7d3-731c457e4b07];
-ALTER ROLE db_ddladmin ADD MEMBER [PandaSharp-Apps-fb367263-c9a5-4f73-b7d3-731c457e4b07];
+CREATE USER [azdevops-appint-azsub-pandasharp-apps] FOR LOGIN [azdevops-appint-azsub-pandasharp-apps]
+ALTER ROLE db_datareader ADD MEMBER [azdevops-appint-azsub-pandasharp-apps];
+ALTER ROLE db_datawriter ADD MEMBER [azdevops-appint-azsub-pandasharp-apps];
+ALTER ROLE db_ddladmin ADD MEMBER [azdevops-appint-azsub-pandasharp-apps];
 GO
 
 ### For Web App

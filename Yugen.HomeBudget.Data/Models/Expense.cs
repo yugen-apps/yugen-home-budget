@@ -33,15 +33,15 @@ public class Expense : Entity
     [Column(TypeName = "decimal(18,2)")]
     public decimal Amount { get; set; }
 
-    public Category Category { get; set; } = new();
+    public Category? Category { get; set; }
 
     public int CategoryId { get; set; }
 
     public DateTimeOffset DateTimeOffset { get; set; }
 
-    public SubCategory SubCategory { get; set; } = new();
+    public SubCategory? SubCategory { get; set; }
 
     public int? SubCategoryId { get; set; }
 
-    public string Title { get; set; } = string.Empty;
+    public string? Title { get; set; }
 }
