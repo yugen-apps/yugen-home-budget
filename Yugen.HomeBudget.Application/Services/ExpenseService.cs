@@ -79,6 +79,7 @@ namespace Yugen.HomeBudget.Application.Services
                 createExpenseDto.DateTimeOffset,
                 createExpenseDto.CategoryId,
                 createExpenseDto.SubCategoryId,
+                createExpenseDto.Accrued,
                 createExpenseDto.CreatedByApplicationUserId);
 
             var expenseResult = await _expenseRepository.CreateAsync(expense);
