@@ -69,6 +69,21 @@ namespace Yugen.HomeBudget.Data.Repositories
                 .SumAsync(x => x.Amount);
         }
 
+        public Task<decimal> SumAccruedAsync(int year, int month)
+        {
+            if (month == 0)
+            {
+                return _context.Expenses
+                    .Where(x => x.DateTimeOffset.Year == year)
+                    .SumAsync(x => x.Accrued);
+            }
+
+            return _context.Expenses
+                .Where(x => x.DateTimeOffset.Month == month &&
+                            x.DateTimeOffset.Year == year)
+                .SumAsync(x => x.Accrued);
+        }
+
         public Task<List<IGrouping<Category, Expense>>> GroupedByCategoryAsync(int year, int month)
         {
             return _context.Expenses

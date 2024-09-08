@@ -15,6 +15,7 @@ public class Expense : Entity
         DateTimeOffset dateTimeOffset,
         int categoryId,
         int subCategoryId,
+        decimal accrued,
         int? createdByApplicationUserId)
     {
         Title = title;
@@ -22,21 +23,25 @@ public class Expense : Entity
         DateTimeOffset = dateTimeOffset;
         CategoryId = categoryId;
         SubCategoryId = subCategoryId;
+        Accrued = accrued;
         CreatedByApplicationUserId = createdByApplicationUserId;
     }
-    
-    public string Title { get; set; }
+
+    [Column(TypeName = "decimal(18,2)")]
+    public decimal Accrued { get; set; }
 
     [Column(TypeName = "decimal(18,2)")]
     public decimal Amount { get; set; }
 
-    public DateTimeOffset DateTimeOffset { get; set; }
+    public Category? Category { get; set; }
 
     public int CategoryId { get; set; }
 
-    public Category Category { get; set; }
+    public DateTimeOffset DateTimeOffset { get; set; }
+
+    public SubCategory? SubCategory { get; set; }
 
     public int? SubCategoryId { get; set; }
 
-    public SubCategory SubCategory { get; set; }
+    public string? Title { get; set; }
 }

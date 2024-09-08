@@ -10,6 +10,8 @@ public static class EndpointConstants
 
     public const string ExpenseSum = $"{Prefix}/expense/sum";
 
+    public const string AccruedSum = $"{Prefix}/expense/sumaccrued";
+
     public const string GroupedByCategory = $"{Prefix}/expense/groupedbycategory";
 
     public const string Authentication = $"{Prefix}/authentication";

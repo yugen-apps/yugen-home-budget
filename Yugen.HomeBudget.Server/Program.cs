@@ -5,20 +5,13 @@ using Yugen.HomeBudget.Application.Services;
 using Yugen.HomeBudget.Data;
 using Yugen.HomeBudget.Data.Models;
 using Yugen.HomeBudget.Data.Repositories;
+using Yugen.HomeBudget.Server.AuthenticationProviders;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var connection = string.Empty;
-//if (builder.Environment.IsDevelopment())
-//{
-    connection = builder.Configuration.GetConnectionString("AZURE_SQL_CONNECTIONSTRING");
-//}
-//else
-//{
-//    connection = Environment.GetEnvironmentVariable("AZURE_SQL_CONNECTIONSTRING");
-//}
+var connection = builder.Configuration.GetConnectionString("AZURE_SQL_CONNECTIONSTRING");
 
-var azureSqlTokenProvider = new AzureCredentialSqlAuthenticationProvider();
+var azureSqlTokenProvider = new AzureCredentialSqlAuthenticationProvider(builder.Environment.IsDevelopment());
 SqlAuthenticationProvider.SetProvider(SqlAuthenticationMethod.ActiveDirectoryManagedIdentity, azureSqlTokenProvider);
 SqlAuthenticationProvider.SetProvider(SqlAuthenticationMethod.ActiveDirectoryMSI, azureSqlTokenProvider);
 
@@ -47,13 +40,13 @@ builder.Services.AddRazorPages();
 
 var app = builder.Build();
 
-//using (var scope = app.Services.CreateScope())
-//{
+// using (var scope = app.Services.CreateScope())
+// {
 //    var services = scope.ServiceProvider;
 
 //    var context = services.GetRequiredService<ApplicationDbContext>();
 //    context.Database.EnsureCreated();
-//}
+// }
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

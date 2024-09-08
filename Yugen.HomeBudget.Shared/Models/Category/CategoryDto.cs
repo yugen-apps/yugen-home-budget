@@ -26,7 +26,7 @@ public class ResponseCategoryDto
 
     public string Icon { get; set; }
 
-	public List<SubCategoryDto> SubCategoriesDto { get; set; } = new List<SubCategoryDto>();
+	public List<SubCategoryDto> SubCategoriesDto { get; set; } = [];
 
 
     public DateTimeOffset CreatedOn { get; set; }

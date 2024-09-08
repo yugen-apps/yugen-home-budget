@@ -47,6 +47,11 @@ namespace Yugen.HomeBudget.Application.Services
         public Task<decimal> SumAsync(int year, int month)
         {
             return _expenseRepository.SumAsync(year, month);
+        }     
+        
+        public Task<decimal> SumAccruedAsync(int year, int month)
+        {
+            return _expenseRepository.SumAccruedAsync(year, month);
         }
 
         public async Task<List<ResponseExpenseGroupedByCategoryDto>> GroupedByCategoryAsync(int year, int month)
@@ -79,6 +84,7 @@ namespace Yugen.HomeBudget.Application.Services
                 createExpenseDto.DateTimeOffset,
                 createExpenseDto.CategoryId,
                 createExpenseDto.SubCategoryId,
+                createExpenseDto.Accrued,
                 createExpenseDto.CreatedByApplicationUserId);
 
             var expenseResult = await _expenseRepository.CreateAsync(expense);

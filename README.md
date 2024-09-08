@@ -36,21 +36,31 @@ https://techcommunity.microsoft.com/t5/azure-database-support-blog/using-managed
 https://techcommunity.microsoft.com/t5/apps-on-azure-blog/connect-app-service-with-azure-sql-database-with-managed/ba-p/3288300
 https://www.domstamand.com/using-managed-identities-with-sql-azure-database-using-asp-net-core/
 
-# Grant database access to Microsoft Entra Managed Identity System-assigned
+# Azure SQL Server
 
-## For Migration via Pipelines
+## Grant database access to Microsoft Entra Managed Identity System-assigned
 
-CREATE LOGIN [PandaSharp-Apps-fb367263-c9a5-4f73-b7d3-731c457e4b07] FROM EXTERNAL PROVIDER
+### For Migration via Pipelines
 
-CREATE USER [PandaSharp-Apps-fb367263-c9a5-4f73-b7d3-731c457e4b07] FOR LOGIN [PandaSharp-Apps-fb367263-c9a5-4f73-b7d3-731c457e4b07]
-ALTER ROLE db_datareader ADD MEMBER [PandaSharp-Apps-fb367263-c9a5-4f73-b7d3-731c457e4b07];
-ALTER ROLE db_datawriter ADD MEMBER [PandaSharp-Apps-fb367263-c9a5-4f73-b7d3-731c457e4b07];
-ALTER ROLE db_ddladmin ADD MEMBER [PandaSharp-Apps-fb367263-c9a5-4f73-b7d3-731c457e4b07];
+- Add Login to SQL Server
+
+CREATE LOGIN [azdevops-appint-azsub-pandasharp-apps] FROM EXTERNAL PROVIDER
+
+- Add User to Database
+
+CREATE USER [azdevops-appint-azsub-pandasharp-apps] FOR LOGIN [azdevops-appint-azsub-pandasharp-apps]
+ALTER ROLE db_datareader ADD MEMBER [azdevops-appint-azsub-pandasharp-apps];
+ALTER ROLE db_datawriter ADD MEMBER [azdevops-appint-azsub-pandasharp-apps];
+ALTER ROLE db_ddladmin ADD MEMBER [azdevops-appint-azsub-pandasharp-apps];
 GO
 
-## For Web App
+### For Web App
+
+- Add Login to SQL Server
 
 CREATE LOGIN [yugen-homebudget-app] FROM EXTERNAL PROVIDER
+
+- Add User to Database
 
 CREATE USER [yugen-homebudget-app] FOR LOGIN [yugen-homebudget-app]
 ALTER ROLE db_datareader ADD MEMBER [yugen-homebudget-app];

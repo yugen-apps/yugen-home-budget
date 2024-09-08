@@ -9,6 +9,7 @@ public class ExportExpenseDto
         DateTimeOffset dateTimeOffset,
         string category,
         string subCategory,
+        decimal accrued,
         DateTimeOffset createdOn,
         DateTimeOffset lastModifiedOn,
         int? createdByApplicationUserId,
@@ -24,25 +25,28 @@ public class ExportExpenseDto
         LastModifiedOn = lastModifiedOn;
         CreatedByApplicationUserId = createdByApplicationUserId;
         LastModifiedByApplicationUserId = lastModifiedByApplicationUserId;
+        Accrued = accrued;
     }
 
-    public int Id { get; set; }
-
-    public string Title { get; set; }
+    public decimal Accrued { get; set; }
 
     public decimal Amount { get; set; }
 
-    public DateTimeOffset DateTimeOffset { get; set; }
-
     public string Category { get; set; }
-
-    public string SubCategory{ get; set; }
-
-    public DateTimeOffset CreatedOn { get; set; }
-
-    public DateTimeOffset LastModifiedOn { get; set; }
 
     public int? CreatedByApplicationUserId { get; set; }
 
+    public DateTimeOffset CreatedOn { get; set; }
+
+    public DateTimeOffset DateTimeOffset { get; set; }
+
+    public int Id { get; set; }
+
     public int? LastModifiedByApplicationUserId { get; set; }
+
+    public DateTimeOffset LastModifiedOn { get; set; }
+
+    public string SubCategory { get; set; }
+
+    public string Title { get; set; }
 }

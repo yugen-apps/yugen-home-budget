@@ -12,8 +12,8 @@ public class Expense
         decimal amount,
         DateTimeOffset dateTimeOffset,
         int categoryId,
-        int subCategoryId
-        )
+        int subCategoryId,
+        decimal accrued)
     {
         Id = id;
         Title = title;
@@ -21,17 +21,20 @@ public class Expense
         DateTimeOffset = dateTimeOffset;
         CategoryId = categoryId;
         SubCategoryId = subCategoryId;
+        Accrued = accrued;
     }
 
-    public int Id { get; set; }
-
-    public string Title { get; set; } = string.Empty;
+    public decimal Accrued { get; set; }
 
     public decimal Amount { get; set; }
 
-    public DateTimeOffset DateTimeOffset { get; set; } = DateTimeOffset.UtcNow;
-
     public int CategoryId { get; set; } = 1;
 
+    public DateTimeOffset DateTimeOffset { get; set; } = DateTimeOffset.UtcNow;
+
+    public int Id { get; set; }
+
     public int SubCategoryId { get; set; } = 1;
+
+    public string Title { get; set; } = string.Empty;
 }

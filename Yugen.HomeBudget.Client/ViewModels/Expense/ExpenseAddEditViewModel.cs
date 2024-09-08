@@ -34,7 +34,7 @@ internal sealed partial class ExpenseAddEditViewModel : ObservableObject
     private Yugen.HomeBudget.Client.Models.Expense _expense = new();
 
     [ObservableProperty]
-    private List<ResponseCategoryDto> _categories = new();
+    private List<ResponseCategoryDto> _categories = [];
 
     [ObservableProperty]
     private CurrentUser? _currentUser;
@@ -63,7 +63,7 @@ internal sealed partial class ExpenseAddEditViewModel : ObservableObject
 
         try
         {
-            Categories = await _httpClient.GetFromJsonAsync<List<ResponseCategoryDto>>($"{EndpointConstants.Category}/all") ?? new List<ResponseCategoryDto>();
+            Categories = await _httpClient.GetFromJsonAsync<List<ResponseCategoryDto>>($"{EndpointConstants.Category}/all") ?? [];
             if (_id != null)
             {
                 await LoadAsync();
@@ -112,12 +112,12 @@ internal sealed partial class ExpenseAddEditViewModel : ObservableObject
         {
             if (_id != null)
             {
-                var createExpenseDto = new CreateExpenseDto(Expense.Title, Expense.Amount, Expense.DateTimeOffset, Expense.CategoryId, Expense.SubCategoryId, CurrentUser?.Id, CurrentUser?.Id);
+                var createExpenseDto = new CreateExpenseDto(Expense.Title, Expense.Amount, Expense.DateTimeOffset, Expense.CategoryId, Expense.SubCategoryId, Expense.Accrued, CurrentUser?.Id, CurrentUser?.Id);
                 var response = await _httpClient.PutAsJsonAsync<CreateExpenseDto>($"{EndpointConstants.Expense}/{_id}", createExpenseDto);
             }
             else
             {
-                var updateExpenseDto = new UpdateExpenseDto(Expense.Id, Expense.Title, Expense.Amount, Expense.DateTimeOffset, Expense.CategoryId, Expense.SubCategoryId, CurrentUser?.Id, CurrentUser?.Id);
+                var updateExpenseDto = new UpdateExpenseDto(Expense.Id, Expense.Title, Expense.Amount, Expense.DateTimeOffset, Expense.CategoryId, Expense.SubCategoryId, Expense.Accrued, CurrentUser?.Id, CurrentUser?.Id);
                 var response = await _httpClient.PostAsJsonAsync<UpdateExpenseDto>($"{EndpointConstants.Expense}", updateExpenseDto);
             }
 
@@ -137,7 +137,7 @@ internal sealed partial class ExpenseAddEditViewModel : ObservableObject
         var expenseDto = await _httpClient.GetFromJsonAsync<ResponseExpenseDto>($"{EndpointConstants.Expense}/{_id}");
         if (expenseDto != null)
         {
-            Expense = new(expenseDto.Id, expenseDto.Title, expenseDto.Amount, expenseDto.DateTimeOffset, expenseDto.CategoryDto.Id, expenseDto.SubCategoryDto.Id);
+            Expense = new(expenseDto.Id, expenseDto.Title, expenseDto.Amount, expenseDto.DateTimeOffset, expenseDto.CategoryDto.Id, expenseDto.SubCategoryDto.Id, expenseDto.Accrued);
         }
     }
 }
