@@ -37,6 +37,9 @@ internal sealed partial class IndexViewModel : ObservableObject
     private TotalExpense? _currentMonthTotalExpense;
 
     [ObservableProperty]
+    private TotalAccrued? _currentYearTotalAccrued;
+
+    [ObservableProperty]
     private PieChartData? _pieChartData;
 
     public IndexViewModel(HttpClient httpClient)
@@ -60,19 +63,29 @@ internal sealed partial class IndexViewModel : ObservableObject
             var data = await _httpClient.GetFromJsonAsync<List<ResponseExpenseGroupedByCategoryDto>>($"{EndpointConstants.GroupedByCategory}?year={Year}&month={Month}");
             if (data != null)
             {
-                var labels = data.Select(x => x.Category).ToArray();
-                var values = data.Select(x => x.Total).ToArray();
-                var colors = data.Select(x => Models.Constants.ChartColors[x.Index]).ToArray();
-                PieChartData = new PieChartData(labels, new PieChartDataset[] { new PieChartDataset(colors, values) });
+                var labels = data.Select(x => x.Category).ToList();
+                var values = data.Select(x => x.Total).ToList();
+                var colors = data.Select(x => Constants.ChartColors[x.Index]).ToList();
+
+                var currentMonthAccruedTotal = await _httpClient.GetFromJsonAsync<decimal>($"{EndpointConstants.AccruedSum}?year={Year}&month={Month}");
+                labels.Add("Accrued");
+                values.Add((int)currentMonthAccruedTotal);
+                colors.Add(Constants.ChartColors[colors.Count]);
+
+                PieChartData = new PieChartData(labels, new List<PieChartDataset> { new PieChartDataset(colors, values) });
             }
 
             var currentYearTotalExpense = await _httpClient.GetFromJsonAsync<decimal>($"{EndpointConstants.ExpenseSum}?year={Year}");
             var previousMonthExpenseTotal = await _httpClient.GetFromJsonAsync<decimal>($"{EndpointConstants.ExpenseSum}?year={Year}&month={Month - 1}");
             var currentMonthExpenseTotal = await _httpClient.GetFromJsonAsync<decimal>($"{EndpointConstants.ExpenseSum}?year={Year}&month={Month}");
 
+            var currentYearTotalAccrued = await _httpClient.GetFromJsonAsync<decimal>($"{EndpointConstants.AccruedSum}?year={Year}");
+
             CurrentYearTotalExpense = new TotalExpense(currentYearTotalExpense);
             PreviousMonthTotalExpense = new TotalExpense(previousMonthExpenseTotal, previousMonthExpenseTotal);
             CurrentMonthTotalExpense = new TotalExpense(currentMonthExpenseTotal, previousMonthExpenseTotal);
+
+            CurrentYearTotalAccrued = new TotalAccrued(currentYearTotalAccrued);            
 
             var response = await _httpClient.GetFromJsonAsync<PaginatedList<ResponseExpenseDto>>($"{EndpointConstants.Expense}?year={Year}&month={Month}&pageNumber={PageNumber}&pageSize={Constants.PageSize}");
             if (response != null)

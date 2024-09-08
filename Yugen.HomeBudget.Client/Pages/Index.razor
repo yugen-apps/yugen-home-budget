@@ -90,14 +90,14 @@
     <div class="col-xl-3 col-lg-4 col-sm-6">
         <div class="icon-card mb-30">
             <div class="icon orange">
-                <i class="bi bi-person"></i>
+                <i class="bi bi-piggy-bank"></i>
             </div>
             <div class="content">
-                <h6 class="mb-10">{New User}</h6>
-                <h3 class="text-bold mb-10">{34567}</h3>
+                <h6 class="mb-10">Current Year</h6>
+                <h3 class="text-bold mb-10">$ @ViewModel.CurrentYearTotalAccrued?.Current</h3>
                 <p class="text-sm text-danger">
-                    <i class="bi bi-arrow-down"></i> {-25.00%}
-                    <span class="text-gray"> {Earning}</span>
+                    <i class="bi @ViewModel.CurrentYearTotalAccrued?.Icon"></i> @ViewModel.CurrentYearTotalAccrued?.Percentage %
+                    <span class="text-gray">Accrued Total</span>
                 </p>
             </div>
         </div>
@@ -142,6 +142,9 @@
                                 <h6 class="text-sm text-medium">Amount</h6>
                             </th>
                             <th class="min-width">
+                                <h6 class="text-sm text-medium">Accrued</h6>
+                            </th>
+                            <th class="min-width">
                                 <h6 class="text-sm text-medium">Category</h6>
                             </th>
                             <th>
@@ -163,6 +166,9 @@
                                     </td>
                                     <td>
                                         <p class="text-sm">$ @expense.Amount</p>
+                                    </td>
+                                    <td>
+                                        <p class="text-sm">$ @expense.Accrued</p>
                                     </td>
                                     <td>
                                         <span class="status-btn close-btn">@expense.CategoryDto.Title > @expense.SubCategoryDto.Title</span>

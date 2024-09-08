@@ -3,14 +3,14 @@
 public class PieChartDataset
 {
     public PieChartDataset(
-        string[] backgroundColor,
-        int[] data)
+        List<string> backgroundColor,
+        List<int> data)
     {
         BackgroundColor = backgroundColor;
         Data = data;
     }
 
-    public string[] BackgroundColor { get; set; }
+    public List<string> BackgroundColor { get; set; } = [];
 
-    public int[] Data { get; set; }
+    public List<int> Data { get; set; } = [];
 }

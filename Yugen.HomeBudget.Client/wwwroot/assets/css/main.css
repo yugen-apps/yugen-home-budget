@@ -5296,45 +5296,45 @@ h6,
 }
 
 .chart-1 {
-    background-color: #ff8000;
-}
-
-.chart-2 {
-    background-color: #ffff00;
-}
-
-.chart-3 {
     background-color: #80ff00;
 }
 
-.chart-4 {
-    background-color: #00ff00;
-}
-
-.chart-5 {
-    background-color: #00ff80;
-}
-
-.chart-6 {
+.chart-2 {
     background-color: #00ffff;
 }
 
-.chart-7 {
-    background-color: #0080ff;
-}
-
-.chart-8 {
-    background-color: #0000ff;
-}
-
-.chart-9 {
+.chart-3 {
     background-color: #8000ff;
 }
 
-.chart-9 {
+.chart-4 {
+    background-color: #ff8000;
+}
+
+.chart-5 {
+    background-color: #00ff00;
+}
+
+.chart-6 {
+    background-color: #0080ff;
+}
+
+.chart-7 {
     background-color: #ff00ff;
 }
 
+.chart-8 {
+    background-color: #ffff00;
+}
+
 .chart-9 {
-    background-color: #ff0080ff;
+    background-color: #00ff80;
+}
+
+.chart-10 {
+    background-color: #0000ff;
+}
+
+.chart-11 {
+    background-color: #ff0080;
 }

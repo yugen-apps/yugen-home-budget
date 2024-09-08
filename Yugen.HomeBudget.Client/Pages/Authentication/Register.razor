@@ -3,6 +3,8 @@
 @using Yugen.HomeBudget.Client.ViewModels.Authentication
 @using Yugen.HomeBudget.Shared.Contants
 @inject RegisterViewModel ViewModel
+<!-- AllowAnonymous / Authorize -->
+@attribute [Authorize]
 
 <!-- ========== title-wrapper start ========== -->
 <TitleComponent PageTitle="@PageConstants.Register"

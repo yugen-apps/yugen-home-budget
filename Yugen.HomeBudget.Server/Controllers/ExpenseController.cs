@@ -42,6 +42,13 @@ namespace Yugen.HomeBudget.Server.Controllers
         public Task<decimal> SumAsync(int year, int month)
         {
             return _expenseService.SumAsync(year, month);
+        }     
+        
+        [HttpGet]
+        [Route("sumaccrued")]
+        public Task<decimal> SumAccruedAsync(int year, int month)
+        {
+            return _expenseService.SumAccruedAsync(year, month);
         }
 
         [HttpGet]

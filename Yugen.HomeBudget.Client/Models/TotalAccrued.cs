@@ -1,8 +1,8 @@
 ﻿namespace Yugen.HomeBudget.Client.Models;
 
-public class TotalExpense
+public class TotalAccrued
 {
-    public TotalExpense(
+    public TotalAccrued(
         decimal current,
         decimal compareTo)
     {
@@ -18,7 +18,7 @@ public class TotalExpense
         };
     }
 
-    public TotalExpense(decimal current)
+    public TotalAccrued(decimal current)
     {
         Current = current;
         CompareTo = 0;
