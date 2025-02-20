@@ -19,6 +19,7 @@ using Yugen.HomeBudget.Server.AuthenticationProviders;
 using Yugen.HomeBudget.Server.Components;
 
 var builder = WebApplication.CreateBuilder(args);
+var baseAddress = builder.Configuration.GetValue<string>("BaseUrl");
 
 var connection = builder.Configuration.GetConnectionString("AZURE_SQL_CONNECTIONSTRING");
 
@@ -27,7 +28,7 @@ SqlAuthenticationProvider.SetProvider(SqlAuthenticationMethod.ActiveDirectoryMan
 SqlAuthenticationProvider.SetProvider(SqlAuthenticationMethod.ActiveDirectoryMSI, azureSqlTokenProvider);
 
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connection,
-	b => b.MigrationsAssembly("Yugen.HomeBudget.Data")));
+															b => b.MigrationsAssembly("Yugen.HomeBudget.Data")));
 
 builder.Services.AddIdentity<ApplicationUser, IdentityRole<int>>().AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.ConfigureApplicationCookie(options =>
@@ -50,9 +51,10 @@ builder.Services.AddScoped<CustomStateProvider>();
 builder.Services.AddScoped<AuthenticationStateProvider>(s => s.GetRequiredService<CustomStateProvider>());
 builder.Services.AddScoped<IAuthService, AuthService>();
 
-builder.Services.AddHttpClient("Yugen.HomeBudget.ServerAPI", client => client.BaseAddress = new Uri("https://localhost:7287/"));
+builder.Services.AddHttpClient("Yugen.HomeBudget.ServerAPI", client => client.BaseAddress = new Uri(baseAddress));
 // Supply HttpClient instances that include access tokens when making requests to the server project
-builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient("Yugen.HomeBudget.ServerAPI"));
+builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>()
+								   .CreateClient("Yugen.HomeBudget.ServerAPI"));
 
 builder.Services.AddScoped<IndexViewModel>();
 builder.Services.AddScoped<LoginViewModel>();
