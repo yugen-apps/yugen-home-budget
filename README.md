@@ -2,6 +2,8 @@
 
 https://github.com/PlainAdmin/plain-free-bootstrap-admin-template
 
+https://blazestack.blazorforest.com/
+
 AZURE_SQL_CONNECTIONSTRING
 
 Server=yugen-homebudget-sql-server.database.windows.net,1433;Database=yugen-homebudget-sql-db;User ID=pandasharp;Password={pwd};
