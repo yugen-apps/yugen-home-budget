@@ -1,22 +1,27 @@
 ﻿@using Blazorise.Localization
 
-<Bar @bind-Visible="@topbarVisible" Breakpoint="Breakpoint.Desktop" Background="Background.Primary" ThemeContrast="ThemeContrast.Light">
+<Bar Breakpoint="Breakpoint.Desktop" 
+     Background="Background.Primary"
+     CollapseMode="BarCollapseMode.Hide"
+     Mode="BarMode.Horizontal"
+     NavigationBreakpoint="Breakpoint.Tablet"
+     ThemeContrast="ThemeContrast.Light">
+    <BarToggler Bar="@TargetForwardRef.Current" />
     <BarBrand>
         <BarItem>
             <BarLink To="">
-                <BarIcon Margin="Margin.Is2.FromEnd" IconName="IconName.Dashboard" />
+                <BarIcon Margin="Margin.Is2.FromEnd" 
+                         IconName="IconName.Dashboard" />
                 Yugen.HomeBudget
             </BarLink>
         </BarItem>
     </BarBrand>
     <BarToggler />
     <BarMenu>
-        <BarStart>
+        <BarEnd>
             <BarItem>
                 <LoginDisplay />
             </BarItem>
-        </BarStart>
-        <BarEnd>
             <BarItem>
                 <BarDropdown RightAligned>
                     <BarDropdownToggle><Icon Name="IconName.Language" /></BarDropdownToggle>

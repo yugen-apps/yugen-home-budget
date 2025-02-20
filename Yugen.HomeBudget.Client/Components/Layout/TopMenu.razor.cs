@@ -1,11 +1,13 @@
 ﻿using Blazorise.Localization;
 using Microsoft.AspNetCore.Components;
+using Yugen.HomeBudget.Client.Models;
 
 namespace Yugen.HomeBudget.Client.Components.Layout
 {
     public partial class TopMenu
     {
-        private bool topbarVisible = false;
+        [Parameter]
+        public ForwardRef TargetForwardRef { get; set; }
 
         [Parameter] public EventCallback<string> ThemeColorChanged { get; set; }
 

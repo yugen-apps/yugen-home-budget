@@ -8,7 +8,7 @@
 <Layout Sider>
     <LayoutSider>
         <LayoutSiderContent>
-            <SideMenu />
+            <SideMenu TargetForwardRef="@barForwardRef" />
         </LayoutSiderContent>
     </LayoutSider>
     <Layout>
@@ -16,7 +16,8 @@
             <TopMenu ThemeEnabledChanged="@OnThemeEnabledChanged"
                      ThemeGradientChanged="@OnThemeGradientChanged"
                      ThemeRoundedChanged="@OnThemeRoundedChanged"
-                     ThemeColorChanged="@OnThemeColorChanged" />
+                     ThemeColorChanged="@OnThemeColorChanged" 
+                     TargetForwardRef="@barForwardRef" />
         </LayoutHeader>
         <LayoutContent Padding="Padding.Is2">
             <AuthorizeView>

@@ -1,10 +1,10 @@
 ﻿@using Yugen.HomeBudget.Shared.Contants
-<Bar Breakpoint="Breakpoint.Desktop"
-     NavigationBreakpoint="Breakpoint.Tablet"
-     ThemeContrast="ThemeContrast.Dark"
+<Bar @ref="@TargetForwardRef.Current"
+     Breakpoint="Breakpoint.Desktop"
+     CollapseMode="BarCollapseMode.Hide"
      Mode="BarMode.VerticalInline"
-     CollapseMode="BarCollapseMode.Small">
-    <BarToggler />
+     NavigationBreakpoint="Breakpoint.Tablet"
+     ThemeContrast="ThemeContrast.Dark">
     <BarBrand>
         <BarItem>
             <BarLink To="/">

@@ -1,11 +1,14 @@
 ﻿using Blazorise.Localization;
 
 using Microsoft.AspNetCore.Components;
+using Yugen.HomeBudget.Client.Models;
 
 namespace Yugen.HomeBudget.Client.Components.Layout
 {
     public partial class MainLayout
     {
+        ForwardRef barForwardRef = new ForwardRef();
+
         [Inject]
         protected ITextLocalizerService? LocalizationService { get; set; }
 
