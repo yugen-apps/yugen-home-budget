@@ -1,0 +1,40 @@
+﻿@using Blazorise.LoadingIndicator
+@using Microsoft.AspNetCore.Components.Authorization
+@using Yugen.HomeBudget.Client.Components.Layout
+@using Yugen.HomeBudget.Client.Components.Pages.Authentication
+
+@inherits LayoutComponentBase
+
+<Layout Sider>
+    <LayoutSider>
+        <LayoutSiderContent>
+            <SideMenu />
+        </LayoutSiderContent>
+    </LayoutSider>
+    <Layout>
+        <LayoutHeader Fixed>
+            <TopMenu ThemeEnabledChanged="@OnThemeEnabledChanged"
+                     ThemeGradientChanged="@OnThemeGradientChanged"
+                     ThemeRoundedChanged="@OnThemeRoundedChanged"
+                     ThemeColorChanged="@OnThemeColorChanged" />
+        </LayoutHeader>
+        <LayoutContent Padding="Padding.Is2">
+            <AuthorizeView>
+                <Authorized>
+                    @Body
+                </Authorized>
+                <Authorizing>
+                    <LoadingIndicator Visible
+                                      IndicatorVerticalPlacement="LoadingIndicatorPlacement.Middle">
+                    </LoadingIndicator>
+                </Authorizing>
+                <NotAuthorized>
+                    <Login />
+                </NotAuthorized>
+            </AuthorizeView>
+        </LayoutContent>
+        <LayoutFooter Fixed>
+            <FooterMenu />
+        </LayoutFooter>
+    </Layout>
+</Layout>

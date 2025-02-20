@@ -1,0 +1,73 @@
+﻿@using Blazorise.Localization
+
+<Bar @bind-Visible="@topbarVisible" Breakpoint="Breakpoint.Desktop" Background="Background.Primary" ThemeContrast="ThemeContrast.Light">
+    <BarBrand>
+        <BarItem>
+            <BarLink To="">
+                <BarIcon Margin="Margin.Is2.FromEnd" IconName="IconName.Dashboard" />
+                Yugen.HomeBudget
+            </BarLink>
+        </BarItem>
+    </BarBrand>
+    <BarToggler />
+    <BarMenu>
+        <BarStart>
+            <BarItem>
+                <LoginDisplay />
+            </BarItem>
+        </BarStart>
+        <BarEnd>
+            <BarItem>
+                <BarDropdown RightAligned>
+                    <BarDropdownToggle><Icon Name="IconName.Language" /></BarDropdownToggle>
+                    <BarDropdownMenu>
+                        @foreach ( var cultureInfo in LocalizationService!.AvailableCultures )
+                        {
+                            <BarDropdownItem @key="@cultureInfo.Name" Clicked="@(()=>SelectCulture(cultureInfo.Name))">
+                                @if ( cultureInfo.IsNeutralCulture )
+                                {
+                                    @cultureInfo.EnglishName
+                                }
+                                else
+                                {
+                                    @cultureInfo.Parent.EnglishName
+                                }
+                            </BarDropdownItem>
+                        }
+                    </BarDropdownMenu>
+                </BarDropdown>
+            </BarItem>
+            <BarItem>
+                <BarDropdown RightAligned>
+                    <BarDropdownToggle><Icon Name="IconName.Tint" /> Theme</BarDropdownToggle>
+                    <BarDropdownMenu Style="padding: 15px; min-width:550px;">
+                        <Row>
+                            <Column Margin="Margin.Is2.FromBottom">
+                                <Field>
+                                    <Switch TValue="bool" Checked="@(Theme?.Enabled == true)" CheckedChanged="@ThemeEnabledChanged">Theme enabled</Switch>
+                                </Field>
+                            </Column>
+                        </Row>
+                        <Row>
+                            <Column Margin="Margin.Is2.FromBottom">
+                                <Field>
+                                    <Check TValue="bool" Checked="@(Theme?.IsGradient == true)" CheckedChanged="@ThemeGradientChanged">Gradient colors</Check>
+                                </Field>
+                                <Field>
+                                    <Check TValue="bool" Checked="@(Theme?.IsRounded == true)" CheckedChanged="@ThemeRoundedChanged">Rounded elements</Check>
+                                </Field>
+                            </Column>
+                        </Row>
+                        <Row>
+                            <Column>
+                                <Container Fluid>
+                                    <ThemeColorSelector Value="@(Theme?.ColorOptions?.Primary)" ValueChanged="@ThemeColorChanged"></ThemeColorSelector>
+                                </Container>
+                            </Column>
+                        </Row>
+                    </BarDropdownMenu>
+                </BarDropdown>
+            </BarItem>
+        </BarEnd>
+    </BarMenu>
+</Bar>

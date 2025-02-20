@@ -1,0 +1,90 @@
+﻿@attribute [Route(PageConstants.LoginUrl)]
+@using Yugen.HomeBudget.Client.Components
+@using Yugen.HomeBudget.Client.Components.Shared
+@using Yugen.HomeBudget.Shared.Contants
+@using Yugen.HomeBudget.Client.ViewModels.Authentication
+@inject LoginViewModel ViewModel
+
+<TitleComponent PageTitle="@PageConstants.Login"
+                Title="@PageConstants.Login"
+                Breadcrumb="@PageConstants.Login" />
+
+<Row>
+
+    <Column ColumnSize="ColumnSize.Is6.OnDesktop">
+        <Card Margin="Margin.Is4.FromBottom"
+              Shadow="Shadow.Default">
+            <CardHeader>
+                <CardTitle>
+                    Sign In Form
+                </CardTitle>
+            </CardHeader>
+            <CardBody>
+                <CardText>
+                    Start creating the best possible user experience for you customers.
+                </CardText>
+            </CardBody>
+            <CardBody>
+                <Validations @ref="ViewModel.validations" Mode="ValidationMode.Auto" ValidateOnLoad="false">
+					@* <Blazorise.ValidationSummary Label="Following error occurs..." /> *@
+                    <Validation Validator="ValidationRule.IsNotEmpty">
+                        <Field>
+                            <FieldLabel RequiredIndicator>UserName</FieldLabel>
+                            <TextEdit Autofocus
+                                      Placeholder="UserName"
+                                      @bind-Text="@ViewModel.LoginRequest.UserName" />
+                        </Field>
+                    </Validation>
+                    <Validation Validator="ValidationRule.IsNotEmpty">
+                        <Field>
+                            <FieldLabel RequiredIndicator>Password</FieldLabel>
+                            <TextEdit Role="TextRole.Password"
+                                      Placeholder="Password"
+                                      @bind-Text="@ViewModel.LoginRequest.Password" />
+                        </Field>
+                    </Validation>
+                    <Field>
+                        <Check TValue="bool" @bind-Value="@ViewModel.LoginRequest.RememberMe">Remember Me</Check>
+                    </Field>
+					@* <a href="#0" class="hover-underline">Forgot Password?</a> *@
+                    <Button Color="Color.Primary" Clicked="@ViewModel.OnSubmit" Block>Sign In</Button>
+                </Validations>
+            </CardBody>
+            <CardBody>
+                <CardText>
+                    <Alert Color="Color.Danger" @bind-Visible="@ViewModel.IsAlertVisible">
+                        <AlertDescription>
+                            @ViewModel.Error
+                        </AlertDescription>
+                        <CloseButton />
+                    </Alert>
+                    <Alert Color="Color.Info" Visible>
+                        <AlertDescription>
+                            Don’t have any account yet?
+                            <Link href="@PageConstants.RegisterUrl">Create an account</Link>
+                        </AlertDescription>
+                    </Alert>
+                </CardText>
+            </CardBody>
+        </Card>
+    </Column>
+
+    <Column ColumnSize="ColumnSize.Is6.OnDesktop">
+        <Card Margin="Margin.Is4.FromBottom"
+              Shadow="Shadow.Default">
+            <CardHeader>
+                <CardTitle>
+                    Welcome Back
+                </CardTitle>
+            </CardHeader>
+            <CardImage Source="assets/images/auth/signin-image.svg" Alt="Placeholder image" />
+			@* <CardImage Source="assets/images/auth/shape.svg" Alt="Placeholder image" /> *@
+            <CardBody>
+                <CardText>
+                    Sign in to your Existing account to continue
+                </CardText>
+            </CardBody>
+        </Card>
+    </Column>
+
+</Row>

@@ -1,0 +1,104 @@
+﻿@attribute [Route(PageConstants.ExpenseAddUrl)]
+@attribute [Route(PageConstants.ExpenseEditUrl)]
+@using Blazorise.Components
+@using Microsoft.AspNetCore.Authorization
+@using Yugen.HomeBudget.Client.Components
+@using Yugen.HomeBudget.Client.Components.Shared
+@using Yugen.HomeBudget.Client.Models
+@using Yugen.HomeBudget.Client.ViewModels.Expense
+@using Yugen.HomeBudget.Shared.Contants
+@using Yugen.HomeBudget.Shared.Helpers
+@using Yugen.HomeBudget.Shared.Models.Category
+@inject ExpenseAddEditViewModel ViewModel
+
+<TitleComponent PageTitle="@PageConstants.ExpenseTitle"
+                Title="@PageHelper.AddEditTitle(PageConstants.ExpenseTitle, Id)"
+                Breadcrumb="@PageConstants.ExpenseTitle" />
+
+<Row>
+    <Column ColumnSize="ColumnSize.Is12">
+        @if (ViewModel.Expense != null)
+        {
+            <Card Margin="Margin.Is4.FromBottom"
+                  Shadow="Shadow.Default">
+                <CardHeader>
+                    *
+                </CardHeader>
+
+                <CardBody>
+                    <Validations @ref="ViewModel.validations" Mode="ValidationMode.Auto" ValidateOnLoad="false">
+                        @* <Blazorise.ValidationSummary Label="Following error occurs..." /> *@
+                        <Validation Validator="ValidationRule.IsNotEmpty">
+                            <Field>
+                                <FieldLabel RequiredIndicator>Title</FieldLabel>
+                                <TextEdit Autofocus
+                                          Placeholder="Title"
+                                          @bind-Text="@ViewModel.Expense.Title" />
+                            </Field>
+                        </Validation>
+                        <Validation Validator="ValidationRule.None">
+                            <Field>
+                                <FieldLabel RequiredIndicator>Amount</FieldLabel>
+                                <NumericEdit Placeholder="0"
+                                             TValue="decimal"
+                                             @bind-Value="@ViewModel.Expense.Amount" />
+                            </Field>
+                        </Validation>
+                        <Validation Validator="ValidationRule.None">
+                            <Field>
+                                <FieldLabel RequiredIndicator>Date</FieldLabel>
+                                <DatePicker Placeholder="0"
+                                            TValue="DateTimeOffset"
+                                            @bind-Date="@ViewModel.Expense.DateTimeOffset" />
+                            </Field>
+                        </Validation>
+                        <Validation Validator="ValidationRule.None">
+                            <Field>
+                                <FieldLabel>Accrued</FieldLabel>
+                                <NumericEdit Placeholder="0"
+                                             TValue="decimal"
+                                             @bind-Value="@ViewModel.Expense.Accrued" />
+                            </Field>
+                        </Validation>
+                        <Field>
+                            <SelectList TItem="ResponseCategoryDto"
+                                        TValue="int"
+                                        Data="@ViewModel.Categories"
+                                        TextField="@((item)=>item.Title)"
+                                        ValueField="@((item)=>item.Id)"
+                                        SelectedValue="ViewModel.Expense.CategoryId"
+                                        SelectedValueChanged="ViewModel.CategoryChanged" />
+                        </Field>
+                        <Field>
+                            <SelectList TItem="SubCategoryDto"
+                                        TValue="int"
+                                        Data="@ViewModel.CurrentCategory?.SubCategoriesDto"
+                                        TextField="@((item)=>item.Title)"
+                                        ValueField="@((item)=>item.Id)"
+                                        @bind-SelectedValue="ViewModel.Expense.SubCategoryId" />
+                        </Field>
+                    </Validations>
+                </CardBody>
+
+                <CardFooter>
+                    <Button Color="Color.Primary"
+                            Clicked="@ViewModel.OnSubmit">
+                        Save
+                    </Button>
+                    <Button Color="Color.Warning"
+                            Clicked="@ViewModel.CancelAsync">
+                        Cancel
+                    </Button>
+                    <CardText>
+                        <Alert Color="Color.Danger" @bind-Visible="@ViewModel.IsAlertVisible">
+                            <AlertDescription>
+                                @ViewModel.Error
+                            </AlertDescription>
+                            <CloseButton />
+                        </Alert>
+                    </CardText>
+                </CardFooter>
+            </Card>
+        }
+    </Column>
+</Row>

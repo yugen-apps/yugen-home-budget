@@ -1,0 +1,28 @@
+﻿<Card Shadow="Shadow.Default">
+    <CardHeader>
+        @Header
+    </CardHeader>
+    <CardBody>
+        <Media>
+            <MediaLeft>
+                <Icon Border="Border.RoundedCircle"
+                      Background="Background.Primary" 
+                      Name="@IconName"
+                      IconSize="IconSize.x3"
+                      Padding="Padding.Is3"/>
+            </MediaLeft>
+            <MediaBody>
+                <Paragraph>
+                    $ @Current
+                </Paragraph>
+                <Paragraph>
+                    <Icon Name="@Icon" />
+                    @Percentage  %
+                </Paragraph>
+            </MediaBody>
+        </Media>
+    </CardBody>
+    <CardFooter>
+        @Footer
+    </CardFooter>
+</Card>

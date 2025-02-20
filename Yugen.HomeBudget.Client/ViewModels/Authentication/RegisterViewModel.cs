@@ -5,8 +5,10 @@ using Yugen.HomeBudget.Shared.Models.Authentication;
 
 namespace Yugen.HomeBudget.Client.ViewModels.Authentication;
 
-internal sealed partial class RegisterViewModel : ObservableObject
+public sealed partial class RegisterViewModel : ObservableObject
 {
+    public bool IsAlertVisible;
+    public Validations validations;
     private readonly NavigationManager _navigationManager;
     private readonly CustomStateProvider _authStateProvider;
 
@@ -17,7 +19,7 @@ internal sealed partial class RegisterViewModel : ObservableObject
     private string? _error;
 
     public RegisterViewModel(
-                NavigationManager navigationManager,
+        NavigationManager navigationManager,
         CustomStateProvider authStateProvider)
     {
         _navigationManager = navigationManager;
@@ -27,14 +29,19 @@ internal sealed partial class RegisterViewModel : ObservableObject
     public async Task OnSubmit()
     {
         Error = null;
-        try
+        if (await validations.ValidateAll())
         {
-            await _authStateProvider.Register(RegisterRequest);
-            _navigationManager.NavigateTo("");
+            try
+            {
+                await validations.ClearAll();
+                await _authStateProvider.Register(RegisterRequest);
+                _navigationManager.NavigateTo("");
+            }
+            catch (Exception ex)
+            {
+                Error = ex.Message;
+            }
         }
-        catch (Exception ex)
-        {
-            Error = ex.Message;
-        }
+        IsAlertVisible = !string.IsNullOrWhiteSpace(Error);
     }
 }

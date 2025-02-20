@@ -1,5 +1,5 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
-using System.Globalization;
+﻿using Blazorise;
+using CommunityToolkit.Mvvm.ComponentModel;
 using System.Net.Http.Json;
 using Yugen.HomeBudget.Client.Models;
 using Yugen.HomeBudget.Shared.Contants;
@@ -8,9 +8,10 @@ using Yugen.HomeBudget.Shared.Models.Expense;
 
 namespace Yugen.HomeBudget.Client.ViewModels.Expense;
 
-internal sealed partial class ExpenseListViewModel : ObservableObject
+public sealed partial class ExpenseListViewModel : ObservableObject
 {
     private readonly HttpClient _httpClient;
+    private readonly IMessageService _messageService;
 
     [ObservableProperty]
     private bool _isLoading;
@@ -22,22 +23,22 @@ internal sealed partial class ExpenseListViewModel : ObservableObject
     private int? _pageNumber = 1;
 
     [ObservableProperty]
-    private int _year = DateTimeOffset.UtcNow.Year;
+    private int _selectedYear = DateTimeOffset.UtcNow.Year;
 
     [ObservableProperty]
-    private int _month = DateTimeOffset.UtcNow.Month;
+    private int _selectedMonth = DateTimeOffset.UtcNow.Month;
 
-    public ExpenseListViewModel(HttpClient httpClient)
+    public ExpenseListViewModel(
+        HttpClient httpClient, 
+        IMessageService messageService)
     {
         _httpClient = httpClient;
+        _messageService = messageService;
     }
 
-    public ICollection<ResponseExpenseDto> Expenses => PaginatedList.Items;
+    public int[] Months = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 };
 
-    public static string GetDate(DateTimeOffset dateTimeOffset)
-    {
-        return dateTimeOffset.ToString("d", DateTimeFormatInfo.CurrentInfo);
-    }
+    public int[] Years = { 2023, 2024, 2025 };
 
     public async Task LoadDataAsync()
     {
@@ -45,7 +46,7 @@ internal sealed partial class ExpenseListViewModel : ObservableObject
 
         try
         {
-            var response = await _httpClient.GetFromJsonAsync<PaginatedList<ResponseExpenseDto>>($"{EndpointConstants.Expense}?year={Year}&month={Month}&pageNumber={PageNumber}&pageSize={Constants.PageSize}");
+            var response = await _httpClient.GetFromJsonAsync<PaginatedList<ResponseExpenseDto>>($"{EndpointConstants.Expense}?year={SelectedYear}&month={SelectedMonth}&pageNumber={PageNumber}&pageSize={Constants.PageSize}");
             if (response != null)
             {
                 PaginatedList = response;
@@ -57,33 +58,35 @@ internal sealed partial class ExpenseListViewModel : ObservableObject
         }
     }
 
-    public async Task PageIndexChanged(int newPageNumber)
+    public async Task OnRowRemoving(CancellableRowChange<ResponseExpenseDto> e)
     {
-        if (newPageNumber < 1 ||
-            newPageNumber > PaginatedList.TotalPages)
-        {
-            return;
-        }
+        e.Cancel = await ShowDeleteConfirmMessage(e.OldItem.Id);
+    }   
 
-        PageNumber = newPageNumber;
-        await LoadDataAsync();
+    public async Task<bool> ShowDeleteConfirmMessage(int id)
+    {
+        var confirmed = await _messageService.Confirm("Are you sure you want to delete?", "Confirmation");
+        if (confirmed)
+        {
+            return await DeleteAsync(id);
+        }
+        return true;
     }
 
-    public async Task DeleteAsync(int id)
+    private async Task<bool> DeleteAsync(int id)
     {
         var result = await _httpClient.DeleteAsync($"{EndpointConstants.Expense}/{id}");
         if (result.IsSuccessStatusCode)
         {
-            var category = Expenses?.FirstOrDefault(c => c.Id.Equals(id));
-            if (category != null)
-            {
-                Expenses?.Remove(category);
-            }
+            return false;
         }
+        return true;
     }
 
-    public async Task DateChanged()
+    public async Task DateChanged(int? month, int? year)
     {
+        SelectedMonth = month ?? SelectedMonth;
+        SelectedYear = year ?? SelectedYear;
         await LoadDataAsync();
     }
 }

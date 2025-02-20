@@ -4,7 +4,7 @@ using Yugen.HomeBudget.Shared.Contants;
 
 namespace Yugen.HomeBudget.Client.ViewModels.Info
 {
-    internal sealed partial class InfoIndexViewodel : ObservableObject
+    public sealed partial class InfoIndexViewodel : ObservableObject
     {
         private readonly HttpClient _httpClient;
 

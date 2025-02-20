@@ -1,4 +1,5 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using Blazorise;
+using CommunityToolkit.Mvvm.ComponentModel;
 using System.Net.Http.Json;
 using Yugen.HomeBudget.Client.Models;
 using Yugen.HomeBudget.Shared.Contants;
@@ -7,9 +8,10 @@ using Yugen.HomeBudget.Shared.Models.Category;
 
 namespace Yugen.HomeBudget.Client.ViewModels.Category;
 
-internal sealed partial class CategoryListViewModel : ObservableObject
+public sealed partial class CategoryListViewModel : ObservableObject
 {
     private readonly HttpClient _httpClient;
+    private readonly IMessageService _messageService;
 
     [ObservableProperty]
     private bool _isLoading;
@@ -20,9 +22,12 @@ internal sealed partial class CategoryListViewModel : ObservableObject
     [ObservableProperty]
     private int? _pageNumber = 1;
 
-    public CategoryListViewModel(HttpClient httpClient)
+    public CategoryListViewModel(
+        HttpClient httpClient, 
+        IMessageService messageService)
     {
         _httpClient = httpClient;
+        _messageService = messageService;
     }
 
     public ICollection<ResponseCategoryDto> Categories => PaginatedList.Items;
@@ -55,6 +60,16 @@ internal sealed partial class CategoryListViewModel : ObservableObject
 
         PageNumber = newPageNumber;
         await LoadDataAsync();
+    }
+
+
+    public async Task ShowDeleteConfirmMessage(int id)
+    {
+        var confirmed = await _messageService.Confirm("Are you sure you want to delete?", "Confirmation");
+        if (confirmed)
+        {
+            await DeleteAsync(id);
+        }
     }
 
     public async Task DeleteAsync(int id)

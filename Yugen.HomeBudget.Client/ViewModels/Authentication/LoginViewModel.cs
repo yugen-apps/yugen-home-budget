@@ -5,16 +5,18 @@ using Yugen.HomeBudget.Shared.Models.Authentication;
 
 namespace Yugen.HomeBudget.Client.ViewModels.Authentication;
 
-internal sealed partial class LoginViewModel : ObservableObject
+public sealed partial class LoginViewModel : ObservableObject
 {
-    private readonly NavigationManager _navigationManager;
+    public bool IsAlertVisible;
+    public Validations validations;
     private readonly CustomStateProvider _authStateProvider;
-
-    [ObservableProperty]
-    private LoginRequest _loginRequest = new();
+    private readonly NavigationManager _navigationManager;
 
     [ObservableProperty]
     private string? _error;
+
+    [ObservableProperty]
+    private LoginRequest _loginRequest = new();
 
     public LoginViewModel(
         NavigationManager navigationManager,
@@ -27,14 +29,19 @@ internal sealed partial class LoginViewModel : ObservableObject
     public async Task OnSubmit()
     {
         Error = null;
-        try
+        if (await validations.ValidateAll())
         {
-            await _authStateProvider.Login(LoginRequest);
-            _navigationManager.NavigateTo("");
+            try
+            {
+                await validations.ClearAll();
+                await _authStateProvider.Login(LoginRequest);
+                _navigationManager.NavigateTo("", true);
+            }
+            catch (Exception ex)
+            {
+                Error = ex.Message;
+            }
         }
-        catch (Exception ex)
-        {
-            Error = ex.Message;
-        }
+        IsAlertVisible = !string.IsNullOrWhiteSpace(Error);
     }
 }

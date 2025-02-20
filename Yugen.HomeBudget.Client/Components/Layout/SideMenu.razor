@@ -1,0 +1,63 @@
+﻿@using Yugen.HomeBudget.Shared.Contants
+<Bar Breakpoint="Breakpoint.Desktop"
+     NavigationBreakpoint="Breakpoint.Tablet"
+     ThemeContrast="ThemeContrast.Dark"
+     Mode="BarMode.VerticalInline"
+     CollapseMode="BarCollapseMode.Small">
+    <BarToggler />
+    <BarBrand>
+        <BarItem>
+            <BarLink To="/">
+                <BarIcon IconName="customIcon" />
+                <Text TextSize="TextSize.Small">
+                    Yugen.HomeBudget
+                </Text>
+            </BarLink>
+        </BarItem>
+    </BarBrand>
+    <BarMenu>
+        <BarStart>
+            <BarItem>
+                <BarLink To="/">
+                    <BarIcon IconName="IconName.Dashboard" />
+                    Dashboard
+                </BarLink>
+            </BarItem>
+            <BarItem>
+                <BarLink To="@PageConstants.CategoryUrl">
+                    <BarIcon IconName="IconName.List" />
+                    @PageConstants.CategoryTitle
+                </BarLink>
+            </BarItem>
+            <BarItem>
+                <BarLink To="@PageConstants.ExpenseUrl">
+                    <BarIcon IconName="IconName.DollarSign" />
+                    @PageConstants.ExpenseTitle
+                </BarLink>
+            </BarItem>
+        </BarStart>
+        <BarEnd>
+            <BarItem>
+                <BarDropdown>
+                    <BarDropdownToggle>
+                        <BarIcon IconName="IconName.Smartphone" />
+                        Debug
+                    </BarDropdownToggle>
+                    <BarDropdownMenu>
+                        <BarDropdownItem To="@PageConstants.Info">
+                            @PageConstants.Info
+                        </BarDropdownItem>
+                        <BarDropdownItem To="https://blazorise.com/docs"
+                                         Target="Target.Blank">
+                            Docs
+                        </BarDropdownItem>
+                        <BarDropdownItem To="https://bootstrapdemo.blazorise.com/"
+                                         Target="Target.Blank">
+                            Demo
+                        </BarDropdownItem>
+                    </BarDropdownMenu>
+                </BarDropdown>
+            </BarItem>
+        </BarEnd>
+    </BarMenu>
+</Bar>

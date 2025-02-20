@@ -1,0 +1,81 @@
+﻿@attribute [Route(PageConstants.CategoryUrl)]
+@using Blazorise.LoadingIndicator
+@using Microsoft.AspNetCore.Authorization
+@using Yugen.HomeBudget.Client.Components
+@using Yugen.HomeBudget.Client.Components.Shared
+@using Yugen.HomeBudget.Client.Helpers
+@using Yugen.HomeBudget.Client.ViewModels.Category
+@using Yugen.HomeBudget.Shared.Contants
+@using Yugen.HomeBudget.Shared.Helpers
+@using Yugen.HomeBudget.Shared.Models.Category
+@inject CategoryListViewModel ViewModel
+
+<TitleComponent PageTitle="@PageConstants.CategoryTitle"
+                Title="@PageConstants.CategoryTitle"
+                Breadcrumb="@PageConstants.CategoryTitle" />
+
+<LoadingIndicator @bind-Visible="@ViewModel.IsLoading">
+    <Row>
+        <Column ColumnSize="ColumnSize.Is12">
+            <Card Margin="Margin.Is4.FromBottom"
+                  Shadow="Shadow.Default">
+                <CardBody>
+                    <Media>
+                        <MediaLeft>
+                            <Button Color="Color.Light"
+                                    Type="ButtonType.Link"
+                                    To="@PageConstants.CategoryAddUrl">
+                                <Icon Name="IconName.PlusSquare" />
+                                Add
+                            </Button>
+                        </MediaLeft>
+                        <MediaBody></MediaBody>
+                        <MediaRight>
+                            <PagerComponent CurrentPage=@ViewModel.PaginatedList.PageIndex.ToString()
+                                            PageItems=@ViewModel.PaginatedList.TotalPages
+                                            OnClick="(newPageNumber) => ViewModel.PageIndexChanged(newPageNumber)" />
+
+                        </MediaRight>
+                    </Media>
+                </CardBody>
+            </Card>
+        </Column>
+
+        @foreach (var category in ViewModel.Categories)
+        {
+            <Column ColumnSize="ColumnSize.Is3"
+                    Margin="Margin.Is4.FromBottom">
+                <Card Shadow="Shadow.Default"
+                      Height="Height.Is100">
+                    <CardHeader>
+                        <Icon IconSize="IconSize.Large"
+                              Margin="Margin.Is1.FromEnd"
+                              Name="@IconHelper.GetIconName(category.Icon)" />
+                        @category.Title
+                    </CardHeader>
+                    <CardBody>
+                        <CardText>
+                            <DataGrid TItem="SubCategoryDto"
+                                      Data="@category.SubCategoriesDto"
+                                      Responsive>
+                                <DataGridColumn Field="@nameof(SubCategoryDto.Title)" Caption="Sub Categories" />
+                            </DataGrid>
+                        </CardText>
+                    </CardBody>
+                    <CardFooter>
+                        <Button Color="Color.Warning"
+                                Type="ButtonType.Link"
+                                To="@PageHelper.EditHref(PageConstants.CategoryUrl, category.Id)">
+                            <Icon Name="IconName.Edit" />
+                        </Button>
+                        <Button Color="Color.Danger"
+                                Clicked="() => ViewModel.ShowDeleteConfirmMessage(category.Id)">
+                            <Icon Name="IconName.Delete" />
+                        </Button>
+                    </CardFooter>
+                </Card>
+            </Column>
+        }
+
+    </Row>
+</LoadingIndicator>
