@@ -7,12 +7,15 @@
 			@if (_identityName != null)
 			{
 				<Figure Size="FigureSize.Is48x48">
-					<FigureImage Source="@_image" AlternateText="Avatar" Rounded />
+					<FigureImage Source="@_image" 
+								 AlternateText="Avatar" 
+								 Rounded />
 				</Figure>
 
 				<Text> Hello @_identityName! </Text>
 
-				<Button Color="Color.Danger" @onclick="BeginLogOut">
+				<Button Color="Color.Danger"
+					    Clicked="BeginLogOut">
 					<Icon Name="IconName.ArrowDown" />
 					Sign out
 				</Button>
