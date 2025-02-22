@@ -34,6 +34,11 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <EmbeddedResource Remove="wwwroot\service-worker.js" />
+	  <EmbeddedResource Remove="wwwroot\service-worker.published.js" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<ServiceWorker Include="wwwroot\service-worker.js" PublishedContent="wwwroot\service-worker.published.js" />
 	</ItemGroup>
 
