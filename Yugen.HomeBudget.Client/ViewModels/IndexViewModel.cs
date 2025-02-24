@@ -11,7 +11,7 @@ namespace Yugen.HomeBudget.Client.ViewModels;
 
 public sealed partial class IndexViewModel : ObservableObject
 {
-    public PieChart<double> PieChart;
+    public PieChart<double>? PieChart;
     private readonly HttpClient _httpClient;
     private readonly IMessageService _messageService;
 
@@ -164,6 +164,11 @@ public sealed partial class IndexViewModel : ObservableObject
 
     private async Task HandleRedraw(string[] labels, PieChartDataset<double> pieChartDataset)
     {
+        if (PieChart == null)
+        {
+            return;
+        }
+
         await PieChart.Clear();
 
         await PieChart.AddLabelsDatasetsAndUpdate(labels, pieChartDataset);

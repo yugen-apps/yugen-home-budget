@@ -23,30 +23,37 @@
                 <CardHeader>
                     <Fields>
                         <Field>
-                            <Button Color="Color.Light"
+                            <Button Color="Color.Secondary"
+                                    Margin="Margin.Is2.FromStart"
                                     Type="ButtonType.Link"
                                     To="@($"{EndpointConstants.Export}/{ViewModel.SelectedYear}")">
                                 <Icon Name="IconName.FileDownload" />
                                 Export
                             </Button>
                         </Field>
-                        <Field>
-                            <SelectList TItem="int"
-                                        TValue="int"
-                                        Data="@ViewModel.Months"
-                                        TextField="@((item)=>item.ToString())"
-                                        ValueField="@((item)=>item)"
-                                        SelectedValue="@ViewModel.SelectedMonth"
-                                        SelectedValueChanged="(month) => ViewModel.DateChanged(month, null)" />
+                        <Field ColumnSize="ColumnSize.Is2.OnDesktop">
+                            <FieldLabel>Month</FieldLabel>
+                            <FieldBody>
+                                <SelectList TItem="int"
+                                            TValue="int"
+                                            Data="@ViewModel.Months"
+                                            TextField="@((item)=>item.ToString())"
+                                            ValueField="@((item)=>item)"
+                                            SelectedValue="@ViewModel.SelectedMonth"
+                                            SelectedValueChanged="(month) => ViewModel.DateChanged(month, null)" />
+                            </FieldBody>
                         </Field>
-                        <Field>
-                            <SelectList TItem="int"
-                                        TValue="int"
-                                        Data="@ViewModel.Years"
-                                        TextField="@((item)=>item.ToString())"
-                                        ValueField="@((item)=>item)"
-                                        SelectedValue="@ViewModel.SelectedYear"
-                                        SelectedValueChanged="(year) => ViewModel.DateChanged(null, year)" />
+                        <Field ColumnSize="ColumnSize.Is2.OnDesktop">
+                            <FieldLabel>Year</FieldLabel>
+                            <FieldBody>
+                                <SelectList TItem="int"
+                                            TValue="int"
+                                            Data="@ViewModel.Years"
+                                            TextField="@((item)=>item.ToString())"
+                                            ValueField="@((item)=>item)"
+                                            SelectedValue="@ViewModel.SelectedYear"
+                                            SelectedValueChanged="(year) => ViewModel.DateChanged(null, year)" />
+                            </FieldBody>
                         </Field>
                     </Fields>
                 </CardHeader>

@@ -36,30 +36,27 @@
                                           @bind-Text="@ViewModel.Expense.Title" />
                             </Field>
                         </Validation>
-                        <Validation Validator="ValidationRule.None">
-                            <Field>
-                                <FieldLabel RequiredIndicator>Amount</FieldLabel>
-                                <NumericEdit Placeholder="0"
-                                             TValue="decimal"
-                                             @bind-Value="@ViewModel.Expense.Amount" />
-                            </Field>
-                        </Validation>
-                        <Validation Validator="ValidationRule.None">
-                            <Field>
-                                <FieldLabel RequiredIndicator>Date</FieldLabel>
-                                <DatePicker Placeholder="0"
+                        <Field>
+                            <FieldLabel RequiredIndicator>Amount</FieldLabel>
+                            <NumericEdit Placeholder="0"
+                                         TValue="decimal"
+                                         @bind-Value="@ViewModel.Expense.Amount" />
+                        </Field>
+                        <Field>
+                            <FieldLabel RequiredIndicator>Date</FieldLabel>
+                            <FieldBody>
+                                <DatePicker Placeholder="DD/MM/YYYY"
+                                            StaticPicker="false"
                                             TValue="DateTimeOffset"
                                             @bind-Date="@ViewModel.Expense.DateTimeOffset" />
-                            </Field>
-                        </Validation>
-                        <Validation Validator="ValidationRule.None">
-                            <Field>
-                                <FieldLabel>Accrued</FieldLabel>
-                                <NumericEdit Placeholder="0"
-                                             TValue="decimal"
-                                             @bind-Value="@ViewModel.Expense.Accrued" />
-                            </Field>
-                        </Validation>
+                            </FieldBody>
+                        </Field>
+                        <Field>
+                            <FieldLabel>Accrued</FieldLabel>
+                            <NumericEdit Placeholder="0"
+                                         TValue="decimal"
+                                         @bind-Value="@ViewModel.Expense.Accrued" />
+                        </Field>
                         <Field>
                             <SelectList TItem="ResponseCategoryDto"
                                         TValue="int"

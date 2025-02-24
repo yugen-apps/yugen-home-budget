@@ -11,7 +11,7 @@ namespace Yugen.HomeBudget.Client.ViewModels.Category;
 public sealed partial class CategoryAddEditViewModel : ObservableObject
 {
     public bool IsAlertVisible;
-    public Validations validations;
+    public Validations validations = new();
     private readonly HttpClient _httpClient;
     private readonly NavigationManager _navigationManager;
     private readonly CustomStateProvider _authStateProvider;

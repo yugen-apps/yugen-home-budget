@@ -13,7 +13,7 @@ namespace Yugen.HomeBudget.Client.Components.Layout
 
         [CascadingParameter] protected Theme? Theme { get; set; }
 
-        [Parameter] public ForwardRef TargetForwardRef { get; set; }
+        [Parameter] public ForwardRef TargetForwardRef { get; set; } = new ForwardRef();
 
         [Parameter] public EventCallback<string> ThemeColorChanged { get; set; }
 
@@ -61,7 +61,7 @@ namespace Yugen.HomeBudget.Client.Components.Layout
             NavigationManager?.NavigateTo("/");
         }
 
-        private async Task NavigateTo(string url)
+        private void NavigateTo(string url)
         {
             NavigationManager?.NavigateTo(url);
         }

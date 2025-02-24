@@ -6,7 +6,7 @@ namespace Yugen.HomeBudget.Client.Components.Layout
     public partial class SideMenu
     {
         [Parameter]
-        public ForwardRef TargetForwardRef { get; set; }
+        public ForwardRef TargetForwardRef { get; set; } = new ForwardRef();
 
         private string logoImg = "<img src = \"assets/images/logo.png\" style=\"width:32px; height: 32px\" />";
 

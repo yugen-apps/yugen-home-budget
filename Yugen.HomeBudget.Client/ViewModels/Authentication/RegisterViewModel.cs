@@ -8,7 +8,7 @@ namespace Yugen.HomeBudget.Client.ViewModels.Authentication;
 public sealed partial class RegisterViewModel : ObservableObject
 {
     public bool IsAlertVisible;
-    public Validations validations;
+    public Validations validations = new();
     private readonly NavigationManager _navigationManager;
     private readonly CustomStateProvider _authStateProvider;
 

@@ -12,7 +12,7 @@ namespace Yugen.HomeBudget.Client.ViewModels.Expense;
 public sealed partial class ExpenseAddEditViewModel : ObservableObject
 {
     public bool IsAlertVisible;
-    public Validations validations;
+    public Validations validations = new();
     private readonly HttpClient _httpClient;
     private readonly NavigationManager _navigationManager;
     private readonly CustomStateProvider _authStateProvider;
