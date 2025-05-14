@@ -1,0 +1,112 @@
+﻿@using Blazorise.Localization
+@using Microsoft.AspNetCore.Components.Authorization
+@using Yugen.HomeBudget.Shared.Contants
+
+<Bar Background="Background.Primary"
+     ThemeContrast="ThemeContrast.Light">
+    <BarToggler Bar="@TargetForwardRef.Current"
+                Margin="Margin.Is2.FromStart"/>
+    <BarBrand>
+        <BarEnd>
+            <BarItem>
+                <BarDropdown RightAligned>
+                    <BarDropdownToggle>
+                        <AuthorizeView>
+                            <Authorized>
+                                <Figure Size="FigureSize.Is32x32">
+                                    <FigureImage Source="@_image"
+                                                 AlternateText="Avatar"
+                                                 Background="Background.Light"
+                                                 Rounded />
+                                </Figure>
+                                <Text> Hello @_identityName! </Text>
+                            </Authorized>
+                            <NotAuthorized>
+                                Settings
+                            </NotAuthorized>
+                        </AuthorizeView>
+                    </BarDropdownToggle>
+                    <BarDropdownMenu>
+
+                        <BarDropdown>
+                            <BarDropdownToggle>
+                                <Icon Name="IconName.Language" /> Language
+                            </BarDropdownToggle>
+                            <BarDropdownMenu>
+                                @foreach (var cultureInfo in LocalizationService!.AvailableCultures)
+                                {
+                                    <BarDropdownItem @key="@cultureInfo.Name"
+                                                     Clicked="@(()=>SelectCulture(cultureInfo.Name))">
+                                        @if (cultureInfo.IsNeutralCulture)
+                                        {
+                                            @cultureInfo.EnglishName
+                                        }
+                                        else
+                                        {
+                                            @cultureInfo.Parent.EnglishName
+                                        }
+                                    </BarDropdownItem>
+                                }
+                            </BarDropdownMenu>
+                        </BarDropdown>
+
+                        <BarDropdownDivider />
+                        <BarDropdown>
+                            <BarDropdownToggle>
+                                <Icon Name="IconName.Tint" /> Theme
+                            </BarDropdownToggle>
+                            <BarDropdownMenu Style="padding: 15px; min-width:550px;">
+                                <Row>
+                                    <Column Margin="Margin.Is2.FromBottom">
+                                        <Field>
+                                            <Switch TValue="bool" Checked="@(Theme?.Enabled == true)" CheckedChanged="@ThemeEnabledChanged">Theme enabled</Switch>
+                                        </Field>
+                                    </Column>
+                                </Row>
+                                <Row>
+                                    <Column Margin="Margin.Is2.FromBottom">
+                                        <Field>
+                                            <Check TValue="bool" Checked="@(Theme?.IsGradient == true)" CheckedChanged="@ThemeGradientChanged">Gradient colors</Check>
+                                        </Field>
+                                        <Field>
+                                            <Check TValue="bool" Checked="@(Theme?.IsRounded == true)" CheckedChanged="@ThemeRoundedChanged">Rounded elements</Check>
+                                        </Field>
+                                    </Column>
+                                </Row>
+                                <Row>
+                                    <Column>
+                                        <Container Fluid>
+                                            <ThemeColorSelector Value="@(Theme?.ColorOptions?.Primary)" ValueChanged="@ThemeColorChanged"></ThemeColorSelector>
+                                        </Container>
+                                    </Column>
+                                </Row>
+                            </BarDropdownMenu>
+                        </BarDropdown>
+
+                        <BarDropdownDivider />
+                        <AuthorizeView>
+                            <Authorized>
+                                <BarDropdownItem Clicked="BeginLogOut">
+                                    <Icon Name="IconName.ArrowDown" />
+                                    Sign out
+                                </BarDropdownItem>
+                            </Authorized>
+                            <NotAuthorized>
+                                <BarDropdownItem Clicked="()=>NavigateTo(PageConstants.LoginUrl)">
+                                    <Icon Name="IconName.ArrowUp" />
+                                    Log in
+                                </BarDropdownItem>
+                                <BarDropdownDivider />
+                                <BarDropdownItem Clicked="()=>NavigateTo(PageConstants.RegisterUrl)">
+                                    <Icon Name="IconName.PlusSquare" />
+                                    Register
+                                </BarDropdownItem>
+                            </NotAuthorized>
+                        </AuthorizeView>
+
+                    </BarDropdownMenu>
+                </BarDropdown>
+            </BarItem>
+        </BarEnd>
+    </BarBrand>
+</Bar>

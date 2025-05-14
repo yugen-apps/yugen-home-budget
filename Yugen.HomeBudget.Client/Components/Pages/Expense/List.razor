@@ -1,0 +1,109 @@
+﻿@attribute [Route(PageConstants.ExpenseUrl)]
+@using Blazorise.Components
+@using Blazorise.LoadingIndicator
+@using Microsoft.AspNetCore.Authorization
+@using Yugen.HomeBudget.Client.Components
+@using Yugen.HomeBudget.Client.Components.Shared
+@using Yugen.HomeBudget.Client.Models
+@using Yugen.HomeBudget.Shared.Contants
+@using Yugen.HomeBudget.Client.ViewModels.Expense
+@using Yugen.HomeBudget.Shared.Helpers
+@using Yugen.HomeBudget.Shared.Models.Expense
+@inject ExpenseListViewModel ViewModel
+
+<TitleComponent PageTitle="@PageConstants.ExpenseTitle"
+                Title="@PageConstants.ExpenseTitle"
+                Breadcrumb="@PageConstants.ExpenseTitle" />
+
+<LoadingIndicator @bind-Visible="@ViewModel.IsLoading">
+    <Row>
+        <Column ColumnSize="ColumnSize.Is12">
+            <Card Margin="Margin.Is4.FromBottom"
+                  Shadow="Shadow.Default">
+                <CardHeader>
+                    <Fields>
+                        <Field>
+                            <Button Color="Color.Secondary"
+                                    Margin="Margin.Is2.FromStart"
+                                    Type="ButtonType.Link"
+                                    To="@($"{EndpointConstants.Export}/{ViewModel.SelectedYear}")">
+                                <Icon Name="IconName.FileDownload" />
+                                Export
+                            </Button>
+                        </Field>
+                        <Field ColumnSize="ColumnSize.Is2.OnDesktop">
+                            <FieldLabel>Month</FieldLabel>
+                            <FieldBody>
+                                <SelectList TItem="int"
+                                            TValue="int"
+                                            Data="@ViewModel.Months"
+                                            TextField="@((item)=>item.ToString())"
+                                            ValueField="@((item)=>item)"
+                                            SelectedValue="@ViewModel.SelectedMonth"
+                                            SelectedValueChanged="(month) => ViewModel.DateChanged(month, null)" />
+                            </FieldBody>
+                        </Field>
+                        <Field ColumnSize="ColumnSize.Is2.OnDesktop">
+                            <FieldLabel>Year</FieldLabel>
+                            <FieldBody>
+                                <SelectList TItem="int"
+                                            TValue="int"
+                                            Data="@ViewModel.Years"
+                                            TextField="@((item)=>item.ToString())"
+                                            ValueField="@((item)=>item)"
+                                            SelectedValue="@ViewModel.SelectedYear"
+                                            SelectedValueChanged="(year) => ViewModel.DateChanged(null, year)" />
+                            </FieldBody>
+                        </Field>
+                    </Fields>
+                </CardHeader>
+
+                <CardBody>
+                    <DataGrid TItem="ResponseExpenseDto"
+                              Data="@ViewModel.PaginatedList.Items"
+                              TotalItems="@ViewModel.PaginatedList.TotalItems"
+                              PageSize="@Constants.PageSizeSmall"
+                              RowRemoving="@ViewModel.OnRowRemoving"
+                              Editable
+                              ShowPager
+                              Responsive>
+                        <DataGridCommandColumn DeleteCommandAllowed="true">
+                            <NewCommandTemplate>
+                                <Button Color="Color.Primary"
+                                        Clicked="@context.Clicked"
+                                        Type="ButtonType.Link"
+                                        To="@PageConstants.ExpenseAddUrl">
+                                    <Icon Name="IconName.Add" />
+                                </Button>
+                            </NewCommandTemplate>
+                            <EditCommandTemplate>
+                                <Button Color="Color.Warning"
+                                        Clicked="@context.Clicked"
+                                        Type="ButtonType.Link"
+                                        To="@PageHelper.EditHref(PageConstants.ExpenseUrl, context.Item.Id)">
+                                    <Icon Name="IconName.Edit" />
+                                </Button>
+                            </EditCommandTemplate>
+                            <DeleteCommandTemplate>
+                                <Button Color="Color.Danger"
+                                        Clicked="@context.Clicked">
+                                    <Icon Name="IconName.Delete" />
+                                </Button>
+                            </DeleteCommandTemplate>
+                        </DataGridCommandColumn>
+                        <DataGridDateColumn Field="@nameof(ResponseExpenseDto.DateTimeOffset)" Caption="@nameof(ResponseExpenseDto.DateTimeOffset)" DisplayFormat="{0:d}" />
+                        <DataGridColumn Field="@nameof(ResponseExpenseDto.Title)" Caption="@nameof(ResponseExpenseDto.Title)" />
+                        <DataGridColumn Field="@nameof(ResponseExpenseDto.Amount)" Caption="@nameof(ResponseExpenseDto.Amount)" />
+                        <DataGridColumn Field="@nameof(ResponseExpenseDto.Accrued)" Caption="@nameof(ResponseExpenseDto.Accrued)" />
+                        <DataGridColumn Field="CategoryDto.Title" Caption="Category" />
+                        <DataGridColumn Field="SubCategoryDto.Title" Caption="SubCategory" />
+                        <DataGridDateColumn Field="@nameof(ResponseExpenseDto.CreatedOn)" Caption="@nameof(ResponseExpenseDto.CreatedOn)" DisplayFormat="{0:d}" />
+                        <DataGridDateColumn Field="@nameof(ResponseExpenseDto.LastModifiedOn)" Caption="@nameof(ResponseExpenseDto.LastModifiedOn)" DisplayFormat="{0:d}" />
+                        @* <DataGridColumn Field="@nameof(ResponseExpenseDto.CreatedByApplicationUserId)" Caption="@nameof(ResponseExpenseDto.CreatedByApplicationUserId)" /> *@
+                        @* <DataGridColumn Field="@nameof(ResponseExpenseDto.LastModifiedByApplicationUserId)" Caption="@nameof(ResponseExpenseDto.LastModifiedByApplicationUserId)" /> *@
+                    </DataGrid>
+                </CardBody>
+            </Card>
+        </Column>
+    </Row>
+</LoadingIndicator>

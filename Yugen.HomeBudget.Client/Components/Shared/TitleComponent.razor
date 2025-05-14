@@ -1,0 +1,18 @@
+﻿<PageTitle>@PageTitle</PageTitle>
+@* TODO: https://github.com/Megabit/Blazorise/blob/master/Documentation/Blazorise.Docs/Components/DocsPageTitle.razor *@
+<Row>
+    <Column ColumnSize="ColumnSize.Is12">
+        <Card Margin="Margin.Is4.FromBottom"
+              Shadow="Shadow.Default">
+            <Breadcrumb Margin="Margin.Is3.FromStart.Is3.FromTop">
+                <BreadcrumbItem>
+                    <BreadcrumbLink To="/">Dashboard</BreadcrumbLink>
+                </BreadcrumbItem>
+                <BreadcrumbItem Active>
+                    <BreadcrumbLink To="#">@Breadcrumb</BreadcrumbLink>
+                    @* @Title *@
+                </BreadcrumbItem>
+            </Breadcrumb>
+        </Card>
+    </Column>
+</Row>

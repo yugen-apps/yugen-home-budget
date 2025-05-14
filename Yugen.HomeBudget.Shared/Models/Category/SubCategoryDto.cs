@@ -8,6 +8,12 @@ public class SubCategoryDto
         Title = title;
     }
 
+    public SubCategoryDto()
+    {
+        Id = 0;
+        Title = string.Empty;
+    }
+
     public int Id { get; set; }
 
     public string Title { get; set; }

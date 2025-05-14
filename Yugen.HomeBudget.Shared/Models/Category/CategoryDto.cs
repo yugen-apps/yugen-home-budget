@@ -13,7 +13,7 @@ public class ResponseCategoryDto
 	{
 		Id = id;
 		Title = title;
-		Icon = string.IsNullOrEmpty(icon) ? "bootstrap" : icon;
+		Icon = icon;
 		CreatedOn = createdOn;
 		LastModifiedOn = lastModifiedOn;
 		CreatedByApplicationUserId = createdByApplicationUserId;
