@@ -1,26 +1,26 @@
-﻿namespace Yugen.HomeBudget.Client.Models
+﻿using Blazorise.Charts;
+
+namespace Yugen.HomeBudget.Client.Models
 {
     public static class Constants
     {
         public const int PageSize = 100;
-        public const string ArrowUp = "bi-arrow-up";
-        public const string ArrowDown = "bi-arrow-down";
-        public const string ArrowRight = "bi-arrow-right";
+        public const int PageSizeSmall = 25;
 
         public static readonly string[] ChartColors =
         {
-            "#ff0000",
-            "#80ff00",
-            "#00ffff",
-            "#8000ff",
-            "#ff8000",
-            "#00ff00",
-            "#0080ff",
-            "#ff00ff",
-            "#ffff00",
-            "#00ff80",
-            "#0000ff",
-            "#ff0080"
+            ChartColor.FromHtmlColorCode("#ff0000"),
+            ChartColor.FromHtmlColorCode("#80ff00"),
+            ChartColor.FromHtmlColorCode("#00ffff"),
+            ChartColor.FromHtmlColorCode("#8000ff"),
+            ChartColor.FromHtmlColorCode("#ff8000"),
+            ChartColor.FromHtmlColorCode("#00ff00"),
+            ChartColor.FromHtmlColorCode("#0080ff"),
+            ChartColor.FromHtmlColorCode("#ff00ff"),
+            ChartColor.FromHtmlColorCode("#ffff00"),
+            ChartColor.FromHtmlColorCode("#00ff80"),
+            ChartColor.FromHtmlColorCode("#0000ff"),
+            ChartColor.FromHtmlColorCode("#ff0080")
         };
     }
 }

@@ -1,0 +1,82 @@
+on:
+  workflow_call:
+    inputs:
+      environment_name:
+        required: true
+        type: string
+      # set this to the name of your Azure Web App
+      azure_webapp_name:
+        required: true
+        type: string
+      server_name:
+        required: true
+        type: string
+      database:
+        required: true
+        type: string
+      user_id:
+        required: true
+        type: string
+
+jobs:
+  deploy_web_app:
+    runs-on: ubuntu-latest
+    environment:
+      name: ${{ inputs.environment_name }}
+      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+
+    env:
+      AZURE_WEBAPP_PACKAGE: "myapp" # set this to the path to your web app project, defaults to the repository root
+
+    steps:          
+      - name: Download webapp artifact from build job
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ env.AZURE_WEBAPP_PACKAGE }}
+          path: ${{ env.AZURE_WEBAPP_PACKAGE }}
+
+      - name: Debug downloaded artifact directory
+        shell: bash
+        run: ls -R
+
+      - uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          enable-AzPSSession: true
+
+      - uses: azure/appservice-settings@v1
+        id: settings
+        with:
+          app-name: ${{ inputs.azure_webapp_name }}
+          app-settings-json: >
+            [
+              {
+                "name": "BaseUrl",
+                "value": "https://${{ inputs.azure_webapp_name }}.azurewebsites.net/",
+                "slotSetting": false
+              }
+            ]
+          connection-strings-json: >
+            [
+              {
+                "name": "AZURE_SQL_CONNECTIONSTRING",
+                "value": "Server=tcp:${{ inputs.server_name }};Database=${{ inputs.database }};Encrypt=True;User ID=${{ inputs.user_id }};Connection Timeout=10;Authentication=Active Directory Managed Identity;",
+                "type": "SQLAzure",
+                "slotSetting": false
+              }
+            ]
+
+      - name: Debug Url
+        shell: bash
+        run: echo "The webapp-url is ${{ steps.settings.outputs.webapp-url }}"
+
+      - name: Deploy to Azure Web App
+        id: deploy-to-webapp
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: ${{ inputs.azure_webapp_name }}
+          package: ./${{ env.AZURE_WEBAPP_PACKAGE }}
+          clean: true
+          restart: true

@@ -1,0 +1,25 @@
+﻿@attribute [Route(PageConstants.Info)]
+@using Microsoft.AspNetCore.Authorization
+@using Yugen.HomeBudget.Client.Components
+@using Yugen.HomeBudget.Client.Components.Shared
+@using Yugen.HomeBudget.Client.Models
+@using Yugen.HomeBudget.Client.ViewModels.Info
+@using Yugen.HomeBudget.Shared.Contants
+@inject InfoIndexViewodel ViewModel
+
+<TitleComponent PageTitle="@PageConstants.Info"
+                Title="@PageConstants.Info"
+                Breadcrumb="@PageConstants.Info" />
+
+<Row>
+    <Column ColumnSize="ColumnSize.Is12">
+        <ListGroup>
+            @foreach (var item in ViewModel.List)
+            {
+                <ListGroupItem>
+                    @($"{item.Key}: {item.Value}")
+                </ListGroupItem>
+            }
+        </ListGroup>
+    </Column>
+</Row>

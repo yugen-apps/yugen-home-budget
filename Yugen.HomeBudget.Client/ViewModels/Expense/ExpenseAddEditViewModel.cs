@@ -9,8 +9,10 @@ using Yugen.HomeBudget.Shared.Models.Expense;
 
 namespace Yugen.HomeBudget.Client.ViewModels.Expense;
 
-internal sealed partial class ExpenseAddEditViewModel : ObservableObject
+public sealed partial class ExpenseAddEditViewModel : ObservableObject
 {
+    public bool IsAlertVisible;
+    public Validations validations = new();
     private readonly HttpClient _httpClient;
     private readonly NavigationManager _navigationManager;
     private readonly CustomStateProvider _authStateProvider;
@@ -19,10 +21,7 @@ internal sealed partial class ExpenseAddEditViewModel : ObservableObject
     private bool _busy;
 
     [ObservableProperty]
-    private bool _error;
-
-    [ObservableProperty]
-    private bool _concurrencyError;
+    private string? _error;
 
     [ObservableProperty]
     private string _errorMessage = string.Empty;
@@ -31,7 +30,7 @@ internal sealed partial class ExpenseAddEditViewModel : ObservableObject
     private bool _showPopup;
 
     [ObservableProperty]
-    private Yugen.HomeBudget.Client.Models.Expense _expense = new();
+    private Models.Expense _expense = new();
 
     [ObservableProperty]
     private List<ResponseCategoryDto> _categories = [];
@@ -79,8 +78,9 @@ internal sealed partial class ExpenseAddEditViewModel : ObservableObject
         }
     }
 
-    public void CategoryChanged()
+    public void CategoryChanged(int id)
     {
+        Expense.CategoryId = id;
         if (CurrentCategory != null)
         {
             Expense.SubCategoryId = CurrentCategory.SubCategoriesDto.First().Id;
@@ -93,42 +93,41 @@ internal sealed partial class ExpenseAddEditViewModel : ObservableObject
         _navigationManager.NavigateTo(PageConstants.ExpenseUrl);
     }
 
-    public async Task SubmitAsync(bool isValid)
+    public async Task OnSubmit()
     {
         if (Busy)
         {
             return;
         }
 
-        if (!isValid)
+        Error = null;
+        if (await validations.ValidateAll())
         {
-            Error = false;
-            ConcurrencyError = false;
-            return;
-        }
 
-        Busy = true;
-        try
-        {
-            if (_id != null)
+            try
             {
-                var createExpenseDto = new CreateExpenseDto(Expense.Title, Expense.Amount, Expense.DateTimeOffset, Expense.CategoryId, Expense.SubCategoryId, Expense.Accrued, CurrentUser?.Id, CurrentUser?.Id);
-                var response = await _httpClient.PutAsJsonAsync<CreateExpenseDto>($"{EndpointConstants.Expense}/{_id}", createExpenseDto);
-            }
-            else
-            {
-                var updateExpenseDto = new UpdateExpenseDto(Expense.Id, Expense.Title, Expense.Amount, Expense.DateTimeOffset, Expense.CategoryId, Expense.SubCategoryId, Expense.Accrued, CurrentUser?.Id, CurrentUser?.Id);
-                var response = await _httpClient.PostAsJsonAsync<UpdateExpenseDto>($"{EndpointConstants.Expense}", updateExpenseDto);
-            }
+                await validations.ClearAll();
+                Busy = true;
+                if (_id != null)
+                {
+                    var createExpenseDto = new CreateExpenseDto(Expense.Title, Expense.Amount, Expense.DateTimeOffset, Expense.CategoryId, Expense.SubCategoryId, Expense.Accrued, CurrentUser?.Id, CurrentUser?.Id);
+                    var response = await _httpClient.PutAsJsonAsync<CreateExpenseDto>($"{EndpointConstants.Expense}/{_id}", createExpenseDto);
+                }
+                else
+                {
+                    var updateExpenseDto = new UpdateExpenseDto(Expense.Id, Expense.Title, Expense.Amount, Expense.DateTimeOffset, Expense.CategoryId, Expense.SubCategoryId, Expense.Accrued, CurrentUser?.Id, CurrentUser?.Id);
+                    var response = await _httpClient.PostAsJsonAsync<UpdateExpenseDto>($"{EndpointConstants.Expense}", updateExpenseDto);
+                }
 
-            _navigationManager.NavigateTo(PageConstants.ExpenseUrl);
+                _navigationManager.NavigateTo(PageConstants.ExpenseUrl);
+            }
+            catch (Exception ex)
+            {
+                Error = ex.Message;
+                Busy = false;
+            }
         }
-        catch (Exception ex)
-        {
-            Error = true;
-            ErrorMessage = ex.Message;
-            Busy = false;
-        }
+        IsAlertVisible = !string.IsNullOrWhiteSpace(Error);
     }
 
     private async Task LoadAsync()

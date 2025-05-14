@@ -1,0 +1,96 @@
+﻿@attribute [Route(PageConstants.RegisterUrl)]
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components
+@using Yugen.HomeBudget.Client.Components
+@using Yugen.HomeBudget.Client.Components.Shared
+@using Yugen.HomeBudget.Client.ViewModels.Authentication
+@using Yugen.HomeBudget.Shared.Contants
+@inject RegisterViewModel ViewModel
+
+<TitleComponent PageTitle="@PageConstants.Register"
+                Title="@PageConstants.Register"
+                Breadcrumb="@PageConstants.Register" />
+<Row>
+
+    <Column ColumnSize="ColumnSize.Is6.OnDesktop">
+        <Card Margin="Margin.Is4.FromBottom"
+              Shadow="Shadow.Default">
+            <CardHeader>
+                <CardTitle>
+                    Sign In Form
+                </CardTitle>
+            </CardHeader>
+            <CardBody>
+                <CardText>
+                    Start creating the best possible user experience for you customers.
+                </CardText>
+            </CardBody>
+            <CardBody>
+                <Validations @ref="ViewModel.validations" Mode="ValidationMode.Auto" ValidateOnLoad="false">
+					@* <Blazorise.ValidationSummary Label="Following error occurs..." /> *@
+                    <Validation Validator="ValidationRule.IsNotEmpty">
+                        <Field>
+                            <FieldLabel RequiredIndicator>Email</FieldLabel>
+                            <TextEdit Autofocus 
+                                      Placeholder="Email" 
+                                      @bind-Text="@ViewModel.RegisterRequest.Email" />
+                        </Field>
+                    </Validation>
+                    <Validation Validator="ValidationRule.IsNotEmpty">
+                        <Field>
+                            <FieldLabel RequiredIndicator>Password</FieldLabel>
+                            <TextEdit Role="TextRole.Password"
+                                      Placeholder="Password" 
+                                      @bind-Text="@ViewModel.RegisterRequest.Password" />
+                        </Field>
+                    </Validation>
+                    @* TODO: Add Custom Validation *@
+                    <Validation Validator="ValidationRule.IsNotEmpty">
+                        <Field>
+                            <FieldLabel RequiredIndicator>Password Confirmation</FieldLabel>
+                            <TextEdit Role="TextRole.Password" Placeholder="Password Confirmation" @bind-Text="@ViewModel.RegisterRequest.PasswordConfirm" />
+                        </Field>
+                    </Validation>
+                @*     <Field Horizontal>
+                        <Check TValue="bool" @bind-Value="@ViewModel.LoginRequest.RememberMe">I'm not robot</Check>
+                    </Field> *@
+                    <Button Color="Color.Primary" Clicked="@ViewModel.OnSubmit">Sign Up</Button>
+                </Validations>
+            </CardBody>
+            <CardBody>
+                <CardText>
+                    <Alert Color="Color.Danger" @bind-Visible="@ViewModel.IsAlertVisible">
+                        <AlertDescription>
+                            @ViewModel.Error
+                        </AlertDescription>
+                        <CloseButton />
+                    </Alert>
+                    <Alert Color="Color.Info" Visible>
+                        <AlertDescription>
+                            <Link href="@PageConstants.LoginUrl">Sign In</Link>
+                        </AlertDescription>
+                    </Alert>
+                </CardText>
+            </CardBody>
+        </Card>
+    </Column>
+
+    <Column ColumnSize="ColumnSize.Is6.OnDesktop">
+        <Card Margin="Margin.Is4.FromBottom"
+              Shadow="Shadow.Default">
+            <CardHeader>
+                <CardTitle>
+                    Get Started
+                </CardTitle>
+            </CardHeader>
+            <CardImage Source="assets/images/auth/signin-image.svg" Alt="Placeholder image" />
+			@* <CardImage Source="assets/images/auth/shape.svg" Alt="Placeholder image" /> *@
+            <CardBody>
+                <CardText>
+                    Start creating the best possible user experience for you customers.
+                </CardText>
+            </CardBody>
+        </Card>
+    </Column>
+
+</Row>

@@ -104,6 +104,7 @@ namespace Yugen.HomeBudget.Application.Services
             expense.DateTimeOffset = updateExpenseDto.DateTimeOffset;
             expense.CategoryId = updateExpenseDto.CategoryId;
             expense.SubCategoryId = updateExpenseDto.SubCategoryId;
+            expense.Accrued = updateExpenseDto.Accrued;
             expense.LastModifiedByApplicationUserId = updateExpenseDto.LastModifiedByApplicationUserId;
 
             var expenseResult = await _expenseRepository.UpdateAsync(expense);

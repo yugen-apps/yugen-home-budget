@@ -12,9 +12,9 @@ public class TotalAccrued
 
         Icon = Percentage switch
         {
-            > 0 => Constants.ArrowUp,
-            < 0 => Constants.ArrowDown,
-            _ => Constants.ArrowRight
+            > 0 => IconName.ArrowUp,
+            < 0 => IconName.ArrowDown,
+            _ => IconName.ArrowRight
         };
     }
 
@@ -26,19 +26,19 @@ public class TotalAccrued
 
         Icon = Percentage switch
         {
-            > 0 => Constants.ArrowUp,
-            < 0 => Constants.ArrowDown,
-            _ => Constants.ArrowRight
+            > 0 => IconName.ArrowUp,
+            < 0 => IconName.ArrowDown,
+            _ => IconName.ArrowRight
         };
     }
 
-    public decimal Current { get; set; }
-
     public decimal CompareTo { get; set; }
 
-    public decimal Percentage { get; set; }
+    public decimal Current { get; set; }
 
-    public string Icon { get; set; }
+    public IconName Icon { get; set; }
+
+    public decimal Percentage { get; set; }
 
     private static decimal Percent(decimal current, decimal compareTo)
     {

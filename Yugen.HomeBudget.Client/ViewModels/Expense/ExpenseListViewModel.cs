@@ -1,5 +1,4 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using System.Globalization;
 using System.Net.Http.Json;
 using Yugen.HomeBudget.Client.Models;
 using Yugen.HomeBudget.Shared.Contants;
@@ -8,9 +7,12 @@ using Yugen.HomeBudget.Shared.Models.Expense;
 
 namespace Yugen.HomeBudget.Client.ViewModels.Expense;
 
-internal sealed partial class ExpenseListViewModel : ObservableObject
+public sealed partial class ExpenseListViewModel : ObservableObject
 {
+    public int[] Months = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 };
+    public int[] Years = { 2023, 2024, 2025 };
     private readonly HttpClient _httpClient;
+    private readonly IMessageService _messageService;
 
     [ObservableProperty]
     private bool _isLoading;
@@ -19,71 +21,68 @@ internal sealed partial class ExpenseListViewModel : ObservableObject
     private PaginatedList<ResponseExpenseDto> _paginatedList = new();
 
     [ObservableProperty]
-    private int? _pageNumber = 1;
+    private int _selectedMonth = DateTimeOffset.UtcNow.Month;
 
     [ObservableProperty]
-    private int _year = DateTimeOffset.UtcNow.Year;
+    private int _selectedYear = DateTimeOffset.UtcNow.Year;
 
-    [ObservableProperty]
-    private int _month = DateTimeOffset.UtcNow.Month;
-
-    public ExpenseListViewModel(HttpClient httpClient)
+    public ExpenseListViewModel(
+        HttpClient httpClient,
+        IMessageService messageService)
     {
         _httpClient = httpClient;
+        _messageService = messageService;
     }
 
-    public ICollection<ResponseExpenseDto> Expenses => PaginatedList.Items;
-
-    public static string GetDate(DateTimeOffset dateTimeOffset)
+    public async Task DateChanged(int? month, int? year)
     {
-        return dateTimeOffset.ToString("d", DateTimeFormatInfo.CurrentInfo);
+        SelectedMonth = month ?? SelectedMonth;
+        SelectedYear = year ?? SelectedYear;
+        await RefreshDataAsync(1, Constants.PageSizeSmall);
     }
 
-    public async Task LoadDataAsync()
+    public async Task OnReadData(int page, int pageSize)
+    {
+        await RefreshDataAsync(page, pageSize);
+    }
+
+    public async Task OnRowRemoving(CancellableRowChange<ResponseExpenseDto> e)
+    {
+        e.Cancel = await ShowDeleteConfirmMessage(e.OldItem.Id);
+    }
+
+    public async Task<bool> ShowDeleteConfirmMessage(int id)
+    {
+        var confirmed = await _messageService.Confirm("Are you sure you want to delete?", "Confirmation");
+        if (confirmed)
+        {
+            return await DeleteAsync(id);
+        }
+        return true;
+    }
+
+    private async Task<bool> DeleteAsync(int id)
+    {
+        var result = await _httpClient.DeleteAsync($"{EndpointConstants.Expense}/{id}");
+        if (result.IsSuccessStatusCode)
+        {
+            return false;
+        }
+        return true;
+    }
+
+    private async Task RefreshDataAsync(int page, int pageSize)
     {
         IsLoading = true;
 
         try
         {
-            var response = await _httpClient.GetFromJsonAsync<PaginatedList<ResponseExpenseDto>>($"{EndpointConstants.Expense}?year={Year}&month={Month}&pageNumber={PageNumber}&pageSize={Constants.PageSize}");
-            if (response != null)
-            {
-                PaginatedList = response;
-            }
+            var response = await _httpClient.GetFromJsonAsync<PaginatedList<ResponseExpenseDto>>($"{EndpointConstants.Expense}?year={SelectedYear}&month={SelectedMonth}&pageNumber={page}&pageSize={pageSize}");
+            PaginatedList = response ?? new();
         }
         finally
         {
             IsLoading = false;
         }
-    }
-
-    public async Task PageIndexChanged(int newPageNumber)
-    {
-        if (newPageNumber < 1 ||
-            newPageNumber > PaginatedList.TotalPages)
-        {
-            return;
-        }
-
-        PageNumber = newPageNumber;
-        await LoadDataAsync();
-    }
-
-    public async Task DeleteAsync(int id)
-    {
-        var result = await _httpClient.DeleteAsync($"{EndpointConstants.Expense}/{id}");
-        if (result.IsSuccessStatusCode)
-        {
-            var category = Expenses?.FirstOrDefault(c => c.Id.Equals(id));
-            if (category != null)
-            {
-                Expenses?.Remove(category);
-            }
-        }
-    }
-
-    public async Task DateChanged()
-    {
-        await LoadDataAsync();
     }
 }
