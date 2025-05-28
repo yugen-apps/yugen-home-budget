@@ -52,7 +52,7 @@
                 <CardBody>
                     <DataGrid TItem="ResponseExpenseDto"
                               Data="@ViewModel.PaginatedList.Items"
-                              ReadData="@ViewModel.OnReadData"
+                              ReadData="@OnReadData"
                               TotalItems="@ViewModel.PaginatedList.TotalItems"
                               PageSize="@Constants.PageSizeSmall"
                               RowRemoving="@ViewModel.OnRowRemoving"
