@@ -14,6 +14,8 @@ namespace Yugen.HomeBudget.Client.Components.Pages
 
         protected override async Task OnInitializedAsync()
         {
+            //ViewModel.PropertyChanged += (_, _) => StateHasChanged();
+
             await ViewModel.LoadDataAsync();
 
             await base.OnInitializedAsync();
