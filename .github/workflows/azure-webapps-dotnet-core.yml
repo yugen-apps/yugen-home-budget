@@ -47,6 +47,7 @@ jobs:
 
       - name: set_version
         id: set_version
+        shell: pwsh
         run: |
           $ref_name = "${{ github.ref_name }}"
 
@@ -58,6 +59,7 @@ jobs:
           Write-Output "MajorMinorPatchBuild=$($MajorMinorPatchBuild)" >> $Env:GITHUB_OUTPUT
 
       - name: print_version
+        shell: pwsh
         run: |
           Write-Host "${{ steps.set_version.outputs.MajorMinorPatch}}"
           Write-Host "${{ steps.set_version.outputs.MajorMinorPatchBuild}}"
@@ -76,12 +78,14 @@ jobs:
             ${{ runner.os }}-nuget-
 
       - name: Build with dotnet
+        shell: bash
         run: >
           dotnet build ${{ env.SERVER_PROJECT_NAME }} 
           --configuration Release 
           -p:Version=${{ steps.set_version.outputs.MajorMinorPatch }}
 
       - name: dotnet publish
+        shell: bash
         run: >
           dotnet publish ${{ env.SERVER_PROJECT_NAME }} 
           -c Release 
@@ -119,12 +123,14 @@ jobs:
             ${{ runner.os }}-nuget-
 
       - name: Install EF Tool
+        shell: bash
         run: >
           dotnet tool install dotnet-ef 
           --global 
           --version ${{ env.EF_VERSION }}
 
       - name: Generate EF migration script
+        shell: bash
         run: >
           dotnet ef migrations bundle 
           --startup-project ${{ env.SERVER_PROJECT_NAME }} 
@@ -155,9 +161,11 @@ jobs:
           path: ${{ env.EF_BUNDLE }}
 
       - name: chmod
+        shell: bash
         run: sudo chmod +x ./${{ env.EF_BUNDLE }}/${{ env.EF_BUNDLE }}
 
       - name: ls
+        shell: bash
         run: ls -al ${{ env.EF_BUNDLE }}
 
       - uses: azure/login@v2
@@ -193,6 +201,7 @@ jobs:
           path: ${{ env.AZURE_WEBAPP_PACKAGE }}
 
       - name: Display structure of downloaded files
+        shell: bash
         run: ls -R
 
       - uses: azure/login@v2
@@ -217,6 +226,7 @@ jobs:
             ]
 
       - name: Debug Url
+        shell: bash
         run: echo "The webapp-url is ${{ steps.settings.outputs.webapp-url }}"
       
       - name: Deploy to Azure Web App
@@ -243,6 +253,7 @@ jobs:
           path: ${{ env.AZURE_WEBAPP_PACKAGE }}
 
       - name: Display structure of downloaded files
+        shell: bash
         run: ls -R
 
       - uses: azure/login@v2
@@ -267,6 +278,7 @@ jobs:
             ]
 
       - name: Debug Url
+        shell: bash
         run: echo "The webapp-url is ${{ steps.settings.outputs.webapp-url }}"
       
       - name: Deploy to Azure Web App
