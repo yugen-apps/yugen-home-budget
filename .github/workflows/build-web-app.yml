@@ -1,0 +1,68 @@
+on:
+  workflow_call:
+    outputs:
+      major_minor_patch:
+        value: ${{ jobs.build.outputs.major_minor_patch }}
+
+jobs:
+  build_web_app:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: set_version
+        id: set_version
+        shell: pwsh
+        run: |
+          $ref_name = "${{ github.ref_name }}"
+
+          # Select the last item from the array
+          $MajorMinorPatch = $ref_name.Split("/")[-1]
+          Write-Output "MajorMinorPatch=$($MajorMinorPatch)" >> $Env:GITHUB_OUTPUT
+
+          $MajorMinorPatchBuild = "${MajorMinorPatch}.0"
+          Write-Output "MajorMinorPatchBuild=$($MajorMinorPatchBuild)" >> $Env:GITHUB_OUTPUT
+
+      - name: print_version
+        shell: pwsh
+        run: |
+          Write-Host "${{ steps.set_version.outputs.MajorMinorPatch}}"
+          Write-Host "${{ steps.set_version.outputs.MajorMinorPatchBuild}}"
+
+      - name: Set up .NET Core
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Set up dependency caching for faster builds
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+
+      - name: Build with dotnet
+        shell: bash
+        run: >
+          dotnet build ${{ env.SERVER_PROJECT_NAME }} 
+          --configuration Release 
+          -p:Version=${{ steps.set_version.outputs.MajorMinorPatch }}
+
+      - name: dotnet publish
+        shell: bash
+        run: >
+          dotnet publish ${{ env.SERVER_PROJECT_NAME }} 
+          -c Release 
+          -o ${{env.DOTNET_ROOT}}/${{ env.AZURE_WEBAPP_PACKAGE }} 
+          -p:Version=${{ steps.set_version.outputs.MajorMinorPatch }}
+
+      - name: Upload artifact for deployment job
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.AZURE_WEBAPP_PACKAGE }}
+          path: ${{env.DOTNET_ROOT}}/${{ env.AZURE_WEBAPP_PACKAGE }}/
