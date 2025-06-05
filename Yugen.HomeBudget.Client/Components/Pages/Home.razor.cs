@@ -1,4 +1,6 @@
-﻿namespace Yugen.HomeBudget.Client.Components.Pages
+﻿using Yugen.HomeBudget.Shared.Models.Expense;
+
+namespace Yugen.HomeBudget.Client.Components.Pages
 {
     public partial class Home
     {
@@ -17,6 +19,16 @@
             await ViewModel.LoadDataAsync();
 
             await base.OnInitializedAsync();
+        }
+
+        private async Task OnReadData(DataGridReadDataEventArgs<ResponseExpenseDto> e)
+        {
+            if (e.CancellationToken.IsCancellationRequested)
+            {
+                return;
+            }
+
+            await ViewModel.OnReadData(e.Page, e.PageSize);
         }
     }
 }

@@ -1,5 +1,4 @@
-﻿using Blazorise;
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using System.Net.Http.Json;
 using Yugen.HomeBudget.Client.Models;
 using Yugen.HomeBudget.Shared.Contants;
@@ -10,6 +9,8 @@ namespace Yugen.HomeBudget.Client.ViewModels.Expense;
 
 public sealed partial class ExpenseListViewModel : ObservableObject
 {
+    public int[] Months = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 };
+    public int[] Years = { 2023, 2024, 2025 };
     private readonly HttpClient _httpClient;
     private readonly IMessageService _messageService;
 
@@ -20,48 +21,35 @@ public sealed partial class ExpenseListViewModel : ObservableObject
     private PaginatedList<ResponseExpenseDto> _paginatedList = new();
 
     [ObservableProperty]
-    private int? _pageNumber = 1;
+    private int _selectedMonth = DateTimeOffset.UtcNow.Month;
 
     [ObservableProperty]
     private int _selectedYear = DateTimeOffset.UtcNow.Year;
 
-    [ObservableProperty]
-    private int _selectedMonth = DateTimeOffset.UtcNow.Month;
-
     public ExpenseListViewModel(
-        HttpClient httpClient, 
+        HttpClient httpClient,
         IMessageService messageService)
     {
         _httpClient = httpClient;
         _messageService = messageService;
     }
 
-    public int[] Months = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 };
-
-    public int[] Years = { 2023, 2024, 2025 };
-
-    public async Task LoadDataAsync()
+    public async Task DateChanged(int? month, int? year)
     {
-        IsLoading = true;
+        SelectedMonth = month ?? SelectedMonth;
+        SelectedYear = year ?? SelectedYear;
+        await RefreshDataAsync(1, Constants.PageSizeSmall);
+    }
 
-        try
-        {
-            var response = await _httpClient.GetFromJsonAsync<PaginatedList<ResponseExpenseDto>>($"{EndpointConstants.Expense}?year={SelectedYear}&month={SelectedMonth}&pageNumber={PageNumber}&pageSize={Constants.PageSize}");
-            if (response != null)
-            {
-                PaginatedList = response;
-            }
-        }
-        finally
-        {
-            IsLoading = false;
-        }
+    public async Task OnReadData(int page, int pageSize)
+    {
+        await RefreshDataAsync(page, pageSize);
     }
 
     public async Task OnRowRemoving(CancellableRowChange<ResponseExpenseDto> e)
     {
         e.Cancel = await ShowDeleteConfirmMessage(e.OldItem.Id);
-    }   
+    }
 
     public async Task<bool> ShowDeleteConfirmMessage(int id)
     {
@@ -83,10 +71,18 @@ public sealed partial class ExpenseListViewModel : ObservableObject
         return true;
     }
 
-    public async Task DateChanged(int? month, int? year)
+    private async Task RefreshDataAsync(int page, int pageSize)
     {
-        SelectedMonth = month ?? SelectedMonth;
-        SelectedYear = year ?? SelectedYear;
-        await LoadDataAsync();
+        IsLoading = true;
+
+        try
+        {
+            var response = await _httpClient.GetFromJsonAsync<PaginatedList<ResponseExpenseDto>>($"{EndpointConstants.Expense}?year={SelectedYear}&month={SelectedMonth}&pageNumber={page}&pageSize={pageSize}");
+            PaginatedList = response ?? new();
+        }
+        finally
+        {
+            IsLoading = false;
+        }
     }
 }

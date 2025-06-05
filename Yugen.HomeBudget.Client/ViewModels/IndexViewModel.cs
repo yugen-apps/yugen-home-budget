@@ -1,5 +1,4 @@
-﻿using Blazorise;
-using Blazorise.Charts;
+﻿using Blazorise.Charts;
 using CommunityToolkit.Mvvm.ComponentModel;
 using System.Net.Http.Json;
 using Yugen.HomeBudget.Client.Models;
@@ -40,7 +39,7 @@ public sealed partial class IndexViewModel : ObservableObject
     private int _year = DateTimeOffset.UtcNow.Year;
 
     public IndexViewModel(
-        HttpClient httpClient, 
+        HttpClient httpClient,
         IMessageService messageService)
     {
         _httpClient = httpClient;
@@ -143,35 +142,16 @@ public sealed partial class IndexViewModel : ObservableObject
         catch { }
     }
 
-    public async Task OnReadData(DataGridReadDataEventArgs<ResponseExpenseDto> e)
+    public async Task OnReadData(int page, int pageSize)
     {
         try
         {
-            if (!e.CancellationToken.IsCancellationRequested)
-            {
-                var response = await _httpClient.GetFromJsonAsync<PaginatedList<ResponseExpenseDto>>($"{EndpointConstants.Expense}?year={Year}&month={Month}&pageNumber={e.Page}&pageSize={e.PageSize}");
-                if (response != null &&
-                    !e.CancellationToken.IsCancellationRequested)
-                {
-                    PaginatedList = response;
-                }
-            }
+            var response = await _httpClient.GetFromJsonAsync<PaginatedList<ResponseExpenseDto>>($"{EndpointConstants.Expense}?year={Year}&month={Month}&pageNumber={page}&pageSize={pageSize}");
+            PaginatedList = response ?? new();
         }
         catch
         {
         }
-    }
-
-    private async Task HandleRedraw(string[] labels, PieChartDataset<double> pieChartDataset)
-    {
-        if (PieChart == null)
-        {
-            return;
-        }
-
-        await PieChart.Clear();
-
-        await PieChart.AddLabelsDatasetsAndUpdate(labels, pieChartDataset);
     }
 
     public async Task OnRowRemoving(CancellableRowChange<ResponseExpenseDto> e)
@@ -197,5 +177,17 @@ public sealed partial class IndexViewModel : ObservableObject
             return false;
         }
         return true;
+    }
+
+    private async Task HandleRedraw(string[] labels, PieChartDataset<double> pieChartDataset)
+    {
+        if (PieChart == null)
+        {
+            return;
+        }
+
+        await PieChart.Clear();
+
+        await PieChart.AddLabelsDatasetsAndUpdate(labels, pieChartDataset);
     }
 }

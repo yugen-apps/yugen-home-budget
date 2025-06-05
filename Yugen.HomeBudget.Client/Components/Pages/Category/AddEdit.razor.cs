@@ -9,8 +9,6 @@ namespace Yugen.HomeBudget.Client.Components.Pages.Category
 
         protected override async Task OnInitializedAsync()
         {
-            //ViewModel.PropertyChanged += (_, _) => StateHasChanged();
-
             await ViewModel.OnInitializedAsync(Id);
 
             await base.OnInitializedAsync();

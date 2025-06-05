@@ -1,0 +1,60 @@
+on:
+  workflow_call:
+    inputs:
+      data_project_name:
+        required: true
+        type: string
+      server_project_name:
+        required: true
+        type: string
+    outputs:
+      major_minor_patch:
+        value: ${{ jobs.build.outputs.major_minor_patch }}
+
+jobs:
+  build_ef:
+    runs-on: ubuntu-latest
+    env:
+      DOTNET_VERSION: "8.0.x" # set this to the .NET Core version to use
+      EF_BUNDLE: "efbundle"
+      EF_VERSION: "8.*"
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up .NET Core
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Set up dependency caching for faster builds
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+
+      - name: Install EF Tool
+        shell: bash
+        run: >
+          dotnet tool install dotnet-ef 
+          --global 
+          --version ${{ env.EF_VERSION }}
+
+      - name: Generate EF migration script
+        shell: bash
+        run: >
+          dotnet ef migrations bundle 
+          --startup-project ${{ inputs.server_project_name }} 
+          --project ${{ inputs.data_project_name }} 
+          --self-contained 
+          --verbose
+
+      - name: Upload artifact for deployment job
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.EF_BUNDLE }}
+          path: ${{ env.EF_BUNDLE }}

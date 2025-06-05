@@ -28,17 +28,17 @@ SqlAuthenticationProvider.SetProvider(SqlAuthenticationMethod.ActiveDirectoryMan
 SqlAuthenticationProvider.SetProvider(SqlAuthenticationMethod.ActiveDirectoryMSI, azureSqlTokenProvider);
 
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connection,
-															b => b.MigrationsAssembly("Yugen.HomeBudget.Data")));
+                                                    b => b.MigrationsAssembly("Yugen.HomeBudget.Data")));
 
 builder.Services.AddIdentity<ApplicationUser, IdentityRole<int>>().AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.ConfigureApplicationCookie(options =>
 {
-	options.Cookie.HttpOnly = false;
-	options.Events.OnRedirectToLogin = context =>
-	{
-		context.Response.StatusCode = 401;
-		return Task.CompletedTask;
-	};
+    options.Cookie.HttpOnly = false;
+    options.Events.OnRedirectToLogin = context =>
+    {
+        context.Response.StatusCode = 401;
+        return Task.CompletedTask;
+    };
 });
 
 // Add services to the container.
@@ -51,10 +51,10 @@ builder.Services.AddScoped<CustomStateProvider>();
 builder.Services.AddScoped<AuthenticationStateProvider>(s => s.GetRequiredService<CustomStateProvider>());
 builder.Services.AddScoped<IAuthService, AuthService>();
 
-builder.Services.AddHttpClient("Yugen.HomeBudget.ServerAPI", client => client.BaseAddress = new Uri(baseAddress));
+builder.Services.AddHttpClient("Yugen.HomeBudget.ServerAPI", client => client.BaseAddress = new Uri("https://localhost:7288/"));
 // Supply HttpClient instances that include access tokens when making requests to the server project
 builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>()
-								   .CreateClient("Yugen.HomeBudget.ServerAPI"));
+                                   .CreateClient("Yugen.HomeBudget.ServerAPI"));
 
 builder.Services.AddScoped<IndexViewModel>();
 builder.Services.AddScoped<LoginViewModel>();
@@ -70,8 +70,8 @@ builder.Services.AddRazorPages();
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
-	.AddInteractiveServerComponents()
-	.AddInteractiveWebAssemblyComponents();
+    .AddInteractiveServerComponents()
+    .AddInteractiveWebAssemblyComponents();
 
 AddBlazorise(builder.Services);
 
@@ -88,13 +88,13 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-	app.UseWebAssemblyDebugging();
+    app.UseWebAssemblyDebugging();
 }
 else
 {
-	app.UseExceptionHandler("/Error", createScopeForErrors: true);
-	// The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-	app.UseHsts();
+    app.UseExceptionHandler("/Error", createScopeForErrors: true);
+    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+    app.UseHsts();
 }
 
 app.UseHttpsRedirection();
@@ -110,17 +110,17 @@ app.MapRazorPages();
 app.MapControllers();
 
 app.MapRazorComponents<App>()
-	.AddInteractiveServerRenderMode()
-	.AddInteractiveWebAssemblyRenderMode()
-	.AddAdditionalAssemblies(typeof(Yugen.HomeBudget.Client.Components._Imports).Assembly);
+    .AddInteractiveServerRenderMode()
+    .AddInteractiveWebAssemblyRenderMode()
+    .AddAdditionalAssemblies(typeof(Yugen.HomeBudget.Client.Components._Imports).Assembly);
 
 app.Run();
 
 static void AddBlazorise(IServiceCollection services)
 {
-	services
-		.AddBlazorise();
-	services
-		.AddBootstrap5Providers()
-		.AddFontAwesomeIcons();
+    services
+        .AddBlazorise();
+    services
+        .AddBootstrap5Providers()
+        .AddFontAwesomeIcons();
 }

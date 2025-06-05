@@ -1,14 +1,17 @@
-﻿namespace Yugen.HomeBudget.Client.Components.Pages.Expense
+﻿using Yugen.HomeBudget.Shared.Models.Expense;
+
+namespace Yugen.HomeBudget.Client.Components.Pages.Expense
 {
     public partial class List
     {
-        protected override async Task OnInitializedAsync()
+        private async Task OnReadData(DataGridReadDataEventArgs<ResponseExpenseDto> e)
         {
-            //ViewModel.PropertyChanged += (_, _) => StateHasChanged();
+            if (e.CancellationToken.IsCancellationRequested)
+            {
+                return;
+            }
 
-            await ViewModel.LoadDataAsync();
-
-            await base.OnInitializedAsync();
+            await ViewModel.OnReadData(e.Page, e.PageSize);
         }
     }
 }
