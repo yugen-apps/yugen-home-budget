@@ -15,9 +15,9 @@ jobs:
   build_ef:
     runs-on: ubuntu-latest
     env:
-      DOTNET_VERSION: '8.0.x'                    # set this to the .NET Core version to use 
-      EF_BUNDLE: 'efbundle'
-      EF_VERSION: '8.*'       
+      DOTNET_VERSION: "8.0.x" # set this to the .NET Core version to use
+      EF_BUNDLE: "efbundle"
+      EF_VERSION: "8.*"
 
     steps:
       - uses: actions/checkout@v4

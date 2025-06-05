@@ -14,9 +14,9 @@ on:
 jobs:
   deploy_new:
     runs-on: ubuntu-latest
-    environment: ${{ inputs.environment_name }} 
+    environment: ${{ inputs.environment_name }}
     env:
-      EF_BUNDLE: 'efbundle'
+      EF_BUNDLE: "efbundle"
 
     steps:
       - name: Download efbundle artifact from build job

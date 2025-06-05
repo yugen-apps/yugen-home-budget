@@ -4,15 +4,15 @@ on:
 name: Run Azure Login With a Service Principal Secret
 
 env:
-  AZURE_WEBAPP_NAME: yugen-homebudget-app    # set this to the name of your Azure Web App
-  AZURE_WEBAPP_PACKAGE: 'myapp'              # set this to the path to your web app project, defaults to the repository root
-  DOTNET_VERSION: '8.0.x'                    # set this to the .NET Core version to use
+  AZURE_WEBAPP_NAME: yugen-homebudget-app # set this to the name of your Azure Web App
+  AZURE_WEBAPP_PACKAGE: "myapp" # set this to the path to your web app project, defaults to the repository root
+  DOTNET_VERSION: "8.0.x" # set this to the .NET Core version to use
   CLIENT_PROJECT_NAME: Yugen.HomeBudget.Client
   SERVER_PROJECT_NAME: Yugen.HomeBudget.Server
   DATA_PROJECT_NAME: Yugen.HomeBudget.Data
-  EF_BUNDLE: 'efbundle'
-  SERVER_NAME: 'yugen-homebudget-sql-server.database.windows.net,1433'
-  DATABASE: 'yugen-homebudget-sql-db-free'
+  EF_BUNDLE: "efbundle"
+  SERVER_NAME: "yugen-homebudget-sql-server.database.windows.net,1433"
+  DATABASE: "yugen-homebudget-sql-db-free"
 
 jobs:
   build:
@@ -40,7 +40,7 @@ jobs:
 
       - name: Install EF Tool
         run: dotnet tool install --global dotnet-ef
-            
+
       - name: Generate EF migration script
         run: dotnet ef migrations bundle --startup-project ${{ env.SERVER_PROJECT_NAME }} --project ${{ env.DATA_PROJECT_NAME }} --self-contained --verbose
 
@@ -56,7 +56,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     environment:
-      name: 'PROD'
+      name: "PROD"
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
 
     steps:
@@ -79,14 +79,14 @@ jobs:
 
       # - name: Azure CLI script
       #   uses: azure/cli@v2
-      #   with:          
+      #   with:
       #     azcliversion: latest
       #     inlineScript: |
       #       az account show
 
       # - name: Azure PowerShell script
       #   uses: azure/powershell@v2
-      #   with:          
+      #   with:
       #     azPSVersion: "latest"
       #     inlineScript: |
       #       Get-AzWebApp
@@ -95,17 +95,16 @@ jobs:
       #   uses: azure/cli@v2
       #   with:
       #     azcliversion: latest
-      #     inlineScript: >            
-      #       ./${{ env.EF_BUNDLE }}/${{ env.EF_BUNDLE }} 
+      #     inlineScript: >
+      #       ./${{ env.EF_BUNDLE }}/${{ env.EF_BUNDLE }}
       #       --connection 'Server=tcp:${{ env.SERVER_NAME }};Database=${{ env.DATABASE }};Encrypt=True;Authentication=Active Directory Managed Identity;'
       #       --verbose
 
       - name: Azure PowerShell script
         uses: azure/powershell@v2
-        with:          
+        with:
           azPSVersion: "latest"
-          inlineScript: >            
+          inlineScript: >
             ./${{ env.EF_BUNDLE }}/${{ env.EF_BUNDLE }} 
             --connection 'Server=tcp:${{ env.SERVER_NAME }};Database=${{ env.DATABASE }};Encrypt=True;Authentication=Active Directory Managed Identity;'
             --verbose
-            

@@ -12,11 +12,11 @@ jobs:
   deploy_web_app:
     runs-on: ubuntu-latest
     environment:
-      name: ${{ inputs.environment_name }} 
+      name: ${{ inputs.environment_name }}
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
 
     env:
-      AZURE_WEBAPP_PACKAGE: 'myapp'              # set this to the path to your web app project, defaults to the repository root
+      AZURE_WEBAPP_PACKAGE: "myapp" # set this to the path to your web app project, defaults to the repository root
 
     steps:
       - name: Download webapp artifact from build job
@@ -53,7 +53,7 @@ jobs:
       - name: Debug Url
         shell: bash
         run: echo "The webapp-url is ${{ steps.settings.outputs.webapp-url }}"
-      
+
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
