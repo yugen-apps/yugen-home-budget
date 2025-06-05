@@ -19,12 +19,6 @@
 
 name: Build and deploy ASP.Net Core app to an Azure Web App
 
-env:
-  AZURE_WEBAPP_PACKAGE: 'myapp'              # set this to the path to your web app project, defaults to the repository root
-  DOTNET_VERSION: '8.0.x'                    # set this to the .NET Core version to use
-  SERVER_PROJECT_NAME: Yugen.HomeBudget.Server
-  EF_BUNDLE: 'efbundle'
-
 on:
   push:
     branches:
@@ -38,6 +32,8 @@ permissions:
 jobs:
   build_web_app:
     uses: "./.github/workflows/build-web-app.yml"
+    with:
+      server_project_name: Yugen.HomeBudget.Server
 
   # deploy_web_app_prod:
   #   uses: "./.github/workflows/deploy-web-app.yml"
@@ -55,9 +51,9 @@ jobs:
 
   build_ef:
     uses: "./.github/workflows/build-ef.yml"
-    needs: [build_web_app]
     with:
       data_project_name: Yugen.HomeBudget.Data
+      server_project_name: Yugen.HomeBudget.Server
       # major_minor_patch: ${{needs.build_app.outputs.major_minor_patch}}
 
   # deploy_ef:

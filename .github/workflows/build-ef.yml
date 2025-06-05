@@ -4,6 +4,9 @@ on:
       data_project_name:
         required: true
         type: string
+      server_project_name:
+        required: true
+        type: string
     outputs:
       major_minor_patch:
         value: ${{ jobs.build.outputs.major_minor_patch }}
@@ -12,7 +15,9 @@ jobs:
   build_ef:
     runs-on: ubuntu-latest
     env:
-      EF_VERSION: '8.*'        
+      DOTNET_VERSION: '8.0.x'                    # set this to the .NET Core version to use 
+      EF_BUNDLE: 'efbundle'
+      EF_VERSION: '8.*'       
 
     steps:
       - uses: actions/checkout@v4
@@ -43,7 +48,7 @@ jobs:
         shell: bash
         run: >
           dotnet ef migrations bundle 
-          --startup-project ${{ env.SERVER_PROJECT_NAME }} 
+          --startup-project ${{ inputs.server_project_name }} 
           --project ${{ inputs.data_project_name }} 
           --self-contained 
           --verbose

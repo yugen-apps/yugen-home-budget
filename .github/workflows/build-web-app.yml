@@ -1,5 +1,9 @@
 on:
   workflow_call:
+    inputs:
+      server_project_name:
+        required: true
+        type: string
     outputs:
       major_minor_patch:
         value: ${{ jobs.build.outputs.major_minor_patch }}
@@ -7,6 +11,10 @@ on:
 jobs:
   build_web_app:
     runs-on: ubuntu-latest
+
+    env:
+      AZURE_WEBAPP_PACKAGE: 'myapp'              # set this to the path to your web app project, defaults to the repository root
+      DOTNET_VERSION: '8.0.x'                    # set this to the .NET Core version to use
 
     steps:
       - name: Checkout
@@ -49,14 +57,14 @@ jobs:
       - name: Build with dotnet
         shell: bash
         run: >
-          dotnet build ${{ env.SERVER_PROJECT_NAME }} 
+          dotnet build ${{ inputs.server_project_name }} 
           --configuration Release 
           -p:Version=${{ steps.set_version.outputs.MajorMinorPatch }}
 
       - name: dotnet publish
         shell: bash
         run: >
-          dotnet publish ${{ env.SERVER_PROJECT_NAME }} 
+          dotnet publish ${{ inputs.server_project_name }} 
           -c Release 
           -o ${{env.DOTNET_ROOT}}/${{ env.AZURE_WEBAPP_PACKAGE }} 
           -p:Version=${{ steps.set_version.outputs.MajorMinorPatch }}
