@@ -19,6 +19,13 @@ jobs:
       EF_BUNDLE: "efbundle"
 
     steps:
+      - name: Wait for external validation
+        uses: trstringer/manual-approval@v1
+        with:
+          secret: ${{ github.TOKEN }}
+          approvers: Panda-Sharp
+          minimum-approvals: 1
+          
       - name: Download efbundle artifact from build job
         uses: actions/download-artifact@v4
         with:
