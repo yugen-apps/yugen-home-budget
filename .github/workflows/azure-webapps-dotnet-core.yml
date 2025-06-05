@@ -42,7 +42,7 @@ jobs:
     secrets: inherit
     with:
       environment_name: 'PROD'
-      azure_webapp_name: yugen-homebudget-app    # set this to the name of your Azure Web App
+      azure_webapp_name: yugen-homebudget-app
 
   deploy_web_app_prod_new:
     uses: "./.github/workflows/deploy-web-app.yml"
@@ -50,7 +50,15 @@ jobs:
     secrets: inherit
     with:
       environment_name: "PROD_NEW"
-      azure_webapp_name: webapp-yugen-home-budget # set this to the name of your Azure Web App
+      azure_webapp_name: webapp-yugen-home-budget
+
+  deploy_web_app_prod_dev:
+    uses: "./.github/workflows/deploy-web-app.yml"
+    needs: [build_web_app]
+    secrets: inherit
+    with:
+      environment_name: "DEV"
+      azure_webapp_name: webapp-yugen-home-budget-dev
 
   build_ef:
     uses: "./.github/workflows/build-ef.yml"

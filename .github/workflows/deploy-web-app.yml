@@ -4,6 +4,7 @@ on:
       environment_name:
         required: true
         type: string
+      # set this to the name of your Azure Web App
       azure_webapp_name:
         required: true
         type: string
