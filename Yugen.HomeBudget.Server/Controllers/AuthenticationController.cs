@@ -25,7 +25,7 @@ public class AuthenticationController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Login(LoginRequest request)
     {
-        var user = await _userManager.FindByNameAsync(request.UserName);
+        var user = await _userManager.FindByEmailAsync(request.Email);
         if (user == null)
         {
             return BadRequest("User does not exist");
@@ -46,7 +46,7 @@ public class AuthenticationController : ControllerBase
     {
         var user = new ApplicationUser
         {
-            UserName = parameters.UserName
+            Email = parameters.Email
         };
 
         var result = await _userManager.CreateAsync(user, parameters.Password);
@@ -57,7 +57,7 @@ public class AuthenticationController : ControllerBase
 
         return await Login(new LoginRequest
         {
-            UserName = parameters.UserName,
+            Email = parameters.Email,
             Password = parameters.Password
         });
     }

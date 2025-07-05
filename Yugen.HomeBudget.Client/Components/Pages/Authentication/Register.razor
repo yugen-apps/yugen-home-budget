@@ -30,14 +30,18 @@
 					@* <Blazorise.ValidationSummary Label="Following error occurs..." /> *@
                     <Validation Validator="ValidationRule.IsNotEmpty">
                         <Field>
-                            <FieldLabel RequiredIndicator>UserName</FieldLabel>
-                            <TextEdit Autofocus Placeholder="UserName" @bind-Text="@ViewModel.RegisterRequest.UserName" />
+                            <FieldLabel RequiredIndicator>Email</FieldLabel>
+                            <TextEdit Autofocus 
+                                      Placeholder="Email" 
+                                      @bind-Text="@ViewModel.RegisterRequest.Email" />
                         </Field>
                     </Validation>
                     <Validation Validator="ValidationRule.IsNotEmpty">
                         <Field>
                             <FieldLabel RequiredIndicator>Password</FieldLabel>
-                            <TextEdit Role="TextRole.Password" Placeholder="Password" @bind-Text="@ViewModel.RegisterRequest.Password" />
+                            <TextEdit Role="TextRole.Password"
+                                      Placeholder="Password" 
+                                      @bind-Text="@ViewModel.RegisterRequest.Password" />
                         </Field>
                     </Validation>
                     @* TODO: Add Custom Validation *@
