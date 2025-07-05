@@ -48,6 +48,14 @@ jobs:
         id: settings
         with:
           app-name: ${{ inputs.azure_webapp_name }}
+          app-settings-json: >
+            [
+              {
+                "name": "BaseUrl",
+                "value": "https://${{ inputs.azure_webapp_name }}.azurewebsites.net/",
+                "slotSetting": false
+              }
+            ]
           connection-strings-json: >
             [
               {
