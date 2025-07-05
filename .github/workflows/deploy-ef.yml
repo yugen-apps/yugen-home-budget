@@ -18,14 +18,7 @@ jobs:
     env:
       EF_BUNDLE: "efbundle"
 
-    steps:
-      - name: Wait for external validation
-        uses: trstringer/manual-approval@v1
-        with:
-          secret: ${{ github.TOKEN }}
-          approvers: Panda-Sharp
-          minimum-approvals: 1
-          
+    steps:          
       - name: Download efbundle artifact from build job
         uses: actions/download-artifact@v4
         with:
@@ -36,7 +29,7 @@ jobs:
         shell: bash
         run: sudo chmod +x ./${{ env.EF_BUNDLE }}/${{ env.EF_BUNDLE }}
 
-      - name: ls
+      - name: Debug bundle directory
         shell: bash
         run: ls -al ${{ env.EF_BUNDLE }}
 
