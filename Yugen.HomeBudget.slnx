@@ -1,0 +1,17 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path=".github/workflows/azcli.yml" />
+    <File Path=".github/workflows/azure-webapps-dev.yml" />
+    <File Path=".github/workflows/azure-webapps.yml" />
+    <File Path=".github/workflows/build-ef.yml" />
+    <File Path=".github/workflows/build-web-app.yml" />
+    <File Path=".github/workflows/deploy-ef.yml" />
+    <File Path=".github/workflows/deploy-web-app.yml" />
+    <File Path="README.md" />
+  </Folder>
+  <Project Path="Yugen.HomeBudget.Application/Yugen.HomeBudget.Application.csproj" />
+  <Project Path="Yugen.HomeBudget.Client/Yugen.HomeBudget.Client.csproj" />
+  <Project Path="Yugen.HomeBudget.Data/Yugen.HomeBudget.Data.csproj" />
+  <Project Path="Yugen.HomeBudget.Server/Yugen.HomeBudget.Server.csproj" />
+  <Project Path="Yugen.HomeBudget.Shared/Yugen.HomeBudget.Shared.csproj" />
+</Solution>

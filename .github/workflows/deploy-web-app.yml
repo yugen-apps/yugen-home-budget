@@ -4,7 +4,17 @@ on:
       environment_name:
         required: true
         type: string
+      # set this to the name of your Azure Web App
       azure_webapp_name:
+        required: true
+        type: string
+      server_name:
+        required: true
+        type: string
+      database:
+        required: true
+        type: string
+      user_id:
         required: true
         type: string
 
@@ -18,14 +28,14 @@ jobs:
     env:
       AZURE_WEBAPP_PACKAGE: "myapp" # set this to the path to your web app project, defaults to the repository root
 
-    steps:
+    steps:          
       - name: Download webapp artifact from build job
         uses: actions/download-artifact@v4
         with:
           name: ${{ env.AZURE_WEBAPP_PACKAGE }}
           path: ${{ env.AZURE_WEBAPP_PACKAGE }}
 
-      - name: Display structure of downloaded files
+      - name: Debug downloaded artifact directory
         shell: bash
         run: ls -R
 
@@ -40,11 +50,19 @@ jobs:
         id: settings
         with:
           app-name: ${{ inputs.azure_webapp_name }}
+          app-settings-json: >
+            [
+              {
+                "name": "BaseUrl",
+                "value": "https://${{ inputs.azure_webapp_name }}.azurewebsites.net/",
+                "slotSetting": false
+              }
+            ]
           connection-strings-json: >
             [
               {
                 "name": "AZURE_SQL_CONNECTIONSTRING",
-                "value": "${{ secrets.AZURE_SQL_CONNECTIONSTRING }}",
+                "value": "Server=tcp:${{ inputs.server_name }};Database=${{ inputs.database }};Encrypt=True;User ID=${{ inputs.user_id }};Connection Timeout=10;Authentication=Active Directory Managed Identity;",
                 "type": "SQLAzure",
                 "slotSetting": false
               }

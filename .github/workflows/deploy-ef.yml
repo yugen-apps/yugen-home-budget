@@ -10,6 +10,9 @@ on:
       database:
         required: true
         type: string
+      user_id:
+        required: true
+        type: string
 
 jobs:
   deploy_new:
@@ -18,7 +21,7 @@ jobs:
     env:
       EF_BUNDLE: "efbundle"
 
-    steps:
+    steps:          
       - name: Download efbundle artifact from build job
         uses: actions/download-artifact@v4
         with:
@@ -29,7 +32,7 @@ jobs:
         shell: bash
         run: sudo chmod +x ./${{ env.EF_BUNDLE }}/${{ env.EF_BUNDLE }}
 
-      - name: ls
+      - name: Debug bundle directory
         shell: bash
         run: ls -al ${{ env.EF_BUNDLE }}
 
@@ -46,5 +49,5 @@ jobs:
           azPSVersion: "latest"
           inlineScript: >
             ./${{ env.EF_BUNDLE }}/${{ env.EF_BUNDLE }}
-            --connection 'Server=tcp:${{ inputs.server_name }};Database=${{ inputs.database }};Encrypt=True;Authentication=Active Directory Managed Identity;'
+            --connection 'Server=tcp:${{ inputs.server_name }};Database=${{ inputs.database }};Encrypt=True;Authentication=Active Directory Default;'
             --verbose

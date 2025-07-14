@@ -3,7 +3,6 @@ using Blazorise.Bootstrap5;
 using Blazorise.Icons.FontAwesome;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Yugen.HomeBudget.Application.Services;
 using Yugen.HomeBudget.Client.Services;
@@ -15,17 +14,12 @@ using Yugen.HomeBudget.Client.ViewModels.Info;
 using Yugen.HomeBudget.Data;
 using Yugen.HomeBudget.Data.Models;
 using Yugen.HomeBudget.Data.Repositories;
-using Yugen.HomeBudget.Server.AuthenticationProviders;
 using Yugen.HomeBudget.Server.Components;
 
 var builder = WebApplication.CreateBuilder(args);
 var baseAddress = builder.Configuration.GetValue<string>("BaseUrl");
 
 var connection = builder.Configuration.GetConnectionString("AZURE_SQL_CONNECTIONSTRING");
-
-var azureSqlTokenProvider = new AzureCredentialSqlAuthenticationProvider(builder.Environment.IsDevelopment());
-SqlAuthenticationProvider.SetProvider(SqlAuthenticationMethod.ActiveDirectoryManagedIdentity, azureSqlTokenProvider);
-SqlAuthenticationProvider.SetProvider(SqlAuthenticationMethod.ActiveDirectoryMSI, azureSqlTokenProvider);
 
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connection,
                                                     b => b.MigrationsAssembly("Yugen.HomeBudget.Data")));

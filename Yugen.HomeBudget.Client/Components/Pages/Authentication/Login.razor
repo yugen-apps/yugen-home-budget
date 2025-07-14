@@ -29,10 +29,10 @@
 					@* <Blazorise.ValidationSummary Label="Following error occurs..." /> *@
                     <Validation Validator="ValidationRule.IsNotEmpty">
                         <Field>
-                            <FieldLabel RequiredIndicator>UserName</FieldLabel>
+                            <FieldLabel RequiredIndicator>Email</FieldLabel>
                             <TextEdit Autofocus
-                                      Placeholder="UserName"
-                                      @bind-Text="@ViewModel.LoginRequest.UserName" />
+                                      Placeholder="Email"
+                                      @bind-Text="@ViewModel.LoginRequest.Email" />
                         </Field>
                     </Validation>
                     <Validation Validator="ValidationRule.IsNotEmpty">
