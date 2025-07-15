@@ -26,7 +26,7 @@ jobs:
       azure_webapp_name: webapp-yugen-home-budget-dev
       server_name: "sql-server-yugen.database.windows.net,1433"
       database: "sql-db-yugen-homebudget-dev"
-      user_id: "c66e8e82-0ee5-4e47-bd98-a4c9fa7c3378"
+      user_id: "ddc4c0ff-bab8-4f28-adda-7afa0a086920"
 
   build_ef:
     uses: "./.github/workflows/build-ef.yml"
@@ -44,4 +44,4 @@ jobs:
       environment_name: 'DEV'
       server_name: "sql-server-yugen.database.windows.net,1433"
       database: "sql-db-yugen-homebudget-dev"
-      user_id: "c66e8e82-0ee5-4e47-bd98-a4c9fa7c3378"
+      # user_id: "ddc4c0ff-bab8-4f28-adda-7afa0a086920"

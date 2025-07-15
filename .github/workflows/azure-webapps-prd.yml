@@ -23,10 +23,10 @@ jobs:
     secrets: inherit
     with:
       environment_name: "PRD"
-      azure_webapp_name: webapp-yugen-home-budget
+      azure_webapp_name: webapp-yugen-home-budget-prd
       server_name: "sql-server-yugen.database.windows.net,1433"
-      database: "sql-db-yugen-homebudget"
-      user_id: "c66e8e82-0ee5-4e47-bd98-a4c9fa7c3378"
+      database: "sql-db-yugen-homebudget-prd"
+      user_id: "ddc4c0ff-bab8-4f28-adda-7afa0a086920"
 
   build_ef:
     uses: "./.github/workflows/build-ef.yml"
@@ -43,5 +43,5 @@ jobs:
     with:
       environment_name: "PRD"
       server_name: "sql-server-yugen.database.windows.net,1433"
-      database: "sql-db-yugen-homebudget"
-      user_id: "c66e8e82-0ee5-4e47-bd98-a4c9fa7c3378"
+      database: "sql-db-yugen-homebudget-prd"
+      # user_id: "ddc4c0ff-bab8-4f28-adda-7afa0a086920"
