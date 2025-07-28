@@ -45,7 +45,7 @@ builder.Services.AddScoped<CustomStateProvider>();
 builder.Services.AddScoped<AuthenticationStateProvider>(s => s.GetRequiredService<CustomStateProvider>());
 builder.Services.AddScoped<IAuthService, AuthService>();
 
-builder.Services.AddHttpClient("Yugen.HomeBudget.ServerAPI", client => client.BaseAddress = new Uri("https://localhost:7288/"));
+builder.Services.AddHttpClient("Yugen.HomeBudget.ServerAPI", client => client.BaseAddress = new Uri(baseAddress));
 // Supply HttpClient instances that include access tokens when making requests to the server project
 builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>()
                                    .CreateClient("Yugen.HomeBudget.ServerAPI"));
