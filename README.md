@@ -45,12 +45,12 @@ server_name: "sql-server-yugen.database.windows.net,1433"
 database: "sql-db-yugen-homebudget-dev"
 user_id: "ddc4c0ff-bab8-4f28-adda-7afa0a086920"
 
-
-
 Server=tcp:sql-server-yugen.database.windows.net,1433;
 Database=sql-db-yugen-homebudget;Encrypt=True;
 User ID=ddc4c0ff-bab8-4f28-adda-7afa0a086920;
 Connection Timeout=10;Authentication=Active Directory Managed Identity;
+
+Server=tcp:sql-server-yugen.database.windows.net,1433;Database=sql-db-yugen-homebudget-dev;Encrypt=True;User ID=ddc4c0ff-bab8-4f28-adda-7afa0a086920;Connection Timeout=10;Authentication=Active Directory Managed Identity;
 
 
 
@@ -76,6 +76,7 @@ Server=yugen-homebudget-sql-server.database.windows.net,1433;Database=yugen-home
 Server=yugen-homebudget-sql-server.database.windows.net,1433;Database=yugen-homebudget-sql-db;Encrypt=True;Authentication=Active Directory Managed Identity;
 
 Server=tcp:yugen-homebudget-sql-server.database.windows.net,1433;Database=yugen-homebudget-sql-db;Encrypt=True;Authentication=Active Directory Managed Identity;
+
 
 
 Server
