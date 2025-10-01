@@ -29,7 +29,7 @@ Prepare a user-assigned managed identity for Login with OIDC
 Create a user-assigned managed identity and assign a role to it
 Configure a federated identity credential on a user-assigned managed identity
 
-AZURE_CLIENT_ID: the service principal r user-assigned managed identity client ID
+AZURE_CLIENT_ID: the service principal or user-assigned managed identity client ID
 AZURE_SUBSCRIPTION_ID: the subscription ID
 AZURE_TENANT_ID: the tenant ID
 
@@ -39,7 +39,7 @@ AZURE_TENANT_ID: "5098fa58-735a-4e2f-b5a4-ea9995b7b00a"
 
 add role (e.g.) contributor to id-yugen-home-budget for all the resources it needs
 
-user_id: the service principal or user-assigned managed identity Enterprise Application ID
+user_id: the service principal or user-assigned managed identity client ID
 
 server_name: "sql-server-yugen.database.windows.net,1433"
 database: "sql-db-yugen-homebudget-dev"
