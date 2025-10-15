@@ -1,0 +1,14 @@
+﻿<AuthorizeView>
+    <Authorized>
+        <MudText Typo="Typo.body2"> Hello @UserName! </MudText>
+        <MudAvatar>
+            <MudImage Src="@Avatar" />
+        </MudAvatar>
+    </Authorized>
+    <NotAuthorized>
+        <MudAvatar>
+            <MudIcon Color="Color.Inherit" 
+                     Icon="@Icons.Material.Filled.Settings" />
+        </MudAvatar>
+    </NotAuthorized>
+</AuthorizeView>

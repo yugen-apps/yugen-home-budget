@@ -1,0 +1,73 @@
+﻿@using Microsoft.AspNetCore.Authorization
+@using Yugen.HomeBudget.Server.Components.Shared
+@using Yugen.HomeBudget.Server.Helpers.Icons
+@using Yugen.HomeBudget.Server.Navigation
+@using Yugen.HomeBudget.Server.ViewModels.Category
+@attribute [Route(MenuConstants.CategoryPath)]
+@attribute [Authorize]
+@inject CategoryListViewModel ViewModel
+
+
+<MudGrid>
+
+	<MudOverlay Visible="ViewModel.IsLoading" DarkBackground="true" Absolute="true">
+		<MudProgressCircular Color="Color.Secondary" Indeterminate="true" Size="Size.Large"  />
+	</MudOverlay>
+
+	<MudItem xs="12">
+		<HeaderComponent PageTitle="@MenuConstants.CategoryMenuItem.Title"
+						 Title="@MenuConstants.CategoryMenuItem.Title"
+						 Breadcrumb="@MenuConstants.CategoryMenuItem.Title" />
+	</MudItem>
+
+	<MudItem xs="12">
+		<MudCard Elevation="8">
+			<MudCardContent>
+				<MudButton Color="Color.Primary"
+						   Href="@MenuConstants.CategoryDetailsPath"
+						   StartIcon="@Icons.Material.Filled.Add"
+						   Variant="Variant.Filled">
+					Add
+				</MudButton>
+
+				<MudPagination Color="Color.Primary" 
+							   Count="ViewModel.PaginatedList.TotalPages"
+							   SelectedChanged="(newPageNumber) => ViewModel.PageIndexChanged(newPageNumber)" />
+
+			</MudCardContent>
+		</MudCard>
+	</MudItem>
+
+	@foreach (var category in ViewModel.Categories)
+	{
+		<MudItem xs="12" sm="6" md="3">
+			<MudCard Elevation="8">
+				<MudCardHeader>
+					<MudIcon Icon="@IconHelper.GetIconCode(category.IconName)" />
+					@category.Title
+				</MudCardHeader>
+				<MudCardContent>
+					<MudPaper Height="150px" 
+							  Elevation="0">
+					@foreach (var subcategory in category.SubCategoriesDto)
+					{
+						<MudChip T="string" Color="Color.Primary">@subcategory.Title</MudChip>
+					}
+					</MudPaper>
+				</MudCardContent>
+				<MudCardActions>
+					<MudIconButton Color="Color.Warning"
+							   Href=@($"{MenuConstants.CategoryDetailsPath}/{category.Id}")
+							   Icon="@Icons.Material.Filled.Edit"
+							   Variant="Variant.Filled" />
+					<MudIconButton Color="Color.Error"
+							   Class="ms-2"
+							   Icon="@Icons.Material.Filled.Delete"
+							   OnClick="() => ViewModel.ShowDeleteConfirmMessage(category.Id)"
+							   Variant="Variant.Filled" />
+				</MudCardActions>
+			</MudCard>
+		</MudItem>
+	}
+
+</MudGrid>

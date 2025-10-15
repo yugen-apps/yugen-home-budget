@@ -1,8 +1,11 @@
-﻿using Yugen.HomeBudget.Application.Extensions;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Yugen.HomeBudget.Application.Extensions;
+using Yugen.HomeBudget.Application.Models;
+using Yugen.HomeBudget.Application.Models.Expense;
 using Yugen.HomeBudget.Data.Models;
 using Yugen.HomeBudget.Data.Repositories;
-using Yugen.HomeBudget.Shared.Models;
-using Yugen.HomeBudget.Shared.Models.Expense;
 
 namespace Yugen.HomeBudget.Application.Services
 {
@@ -15,43 +18,40 @@ namespace Yugen.HomeBudget.Application.Services
             _expenseRepository = expenseRepository;
         }
 
-        public async Task<IEnumerable<ResponseExpenseDto>> ListAsync()
+        public async Task<List<ResponseExpenseDto>> ListAsync()
         {
-            var expenses = await _expenseRepository.ListAsync();
-            return expenses.Select(e => e.ToDto()).ToList();
+            var result = await _expenseRepository.ListAsync(0, 0, 0, 0);
+
+            var expensesDto = result.Items
+                                .Select(e => e.ToDto())
+                                .ToList();
+
+            return expensesDto;
         }
 
-        public async Task<IEnumerable<ResponseExpenseDto>> ListAsync(int year, int month)
+        public async Task<PaginatedList<ResponseExpenseDto>> ListAsync(
+            int pageIndex,
+            int pageSize,
+            int month,
+            int year)
         {
-            var expenses = await _expenseRepository.ListAsync(year, month);
-            return expenses.Select(e => e.ToDto()).ToList();
+            var result = await _expenseRepository.ListAsync(pageIndex, pageSize, month, year);
+
+            var expensesDto = result.Items
+                                .Select(e => e.ToDto())
+                                .ToList();
+
+            return new PaginatedList<ResponseExpenseDto>(expensesDto, result.TotalCount, pageIndex, pageSize);
         }
 
-        public async Task<IEnumerable<ExportExpenseDto>> ExportAsync(int year)
+        public async Task<decimal> SumAsync(int year, int month)
         {
-            var expenses = await _expenseRepository.ListAsync(year);
-            return expenses.Select(e => e.ToExportExpenseDto()).ToList();
+            return await _expenseRepository.SumAsync(year, month);
         }
 
-        public async Task<PaginatedList<ResponseExpenseDto>> ListAsync(int year, int month, int pageIndex, int pageSize)
+        public async Task<decimal> SumAccruedAsync(int year, int month)
         {
-            var totalItemCount = await _expenseRepository.CountAsync(year, month);
-            var skip = (pageIndex - 1) * pageSize;
-            var categoriesDto = (await _expenseRepository.ListAsync(year, month, skip, pageSize))
-                .Select(e => e.ToDto())
-                .ToList();
-
-            return new PaginatedList<ResponseExpenseDto>(categoriesDto, totalItemCount, pageIndex, pageSize);
-        }
-
-        public Task<decimal> SumAsync(int year, int month)
-        {
-            return _expenseRepository.SumAsync(year, month);
-        }     
-        
-        public Task<decimal> SumAccruedAsync(int year, int month)
-        {
-            return _expenseRepository.SumAccruedAsync(year, month);
+            return await _expenseRepository.SumAccruedAsync(year, month);
         }
 
         public async Task<List<ResponseExpenseGroupedByCategoryDto>> GroupedByCategoryAsync(int year, int month)
@@ -70,13 +70,13 @@ namespace Yugen.HomeBudget.Application.Services
             return groupedList;
         }
 
-        public async Task<ResponseExpenseDto?> GetAsync(int id)
+        public async Task<ResponseExpenseDto> GetAsync(int id)
         {
             var expense = await _expenseRepository.GetAsync(id);
             return expense?.ToDto();
         }
 
-        public async Task<ResponseExpenseDto?> CreateAsync(CreateExpenseDto createExpenseDto)
+        public async Task<ResponseExpenseDto> CreateAsync(CreateExpenseDto createExpenseDto)
         {
             var expense = new Expense(
                 createExpenseDto.Title,
@@ -91,7 +91,7 @@ namespace Yugen.HomeBudget.Application.Services
             return expenseResult.ToDto();
         }
 
-        public async Task<ResponseExpenseDto?> UpdateAsync(int id, UpdateExpenseDto updateExpenseDto)
+        public async Task<ResponseExpenseDto> UpdateAsync(int id, UpdateExpenseDto updateExpenseDto)
         {
             var expense = await _expenseRepository.GetAsync(id);
             if (expense == null)

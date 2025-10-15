@@ -15,9 +15,9 @@ jobs:
   build_ef:
     runs-on: ubuntu-latest
     env:
-      DOTNET_VERSION: "8.0.x" # set this to the .NET Core version to use
+      DOTNET_VERSION: "10.0.x"
       EF_BUNDLE: "efbundle"
-      EF_VERSION: "8.*"
+      EF_VERSION: "10.0.*"
 
     steps:
       - uses: actions/checkout@v4
@@ -44,14 +44,27 @@ jobs:
           --global 
           --version ${{ env.EF_VERSION }}
 
+      - name: Build with dotnet
+        shell: bash
+        run: >
+          dotnet build ${{ inputs.server_project_name }} 
+          --configuration Release 
+
       - name: Generate EF migration script
         shell: bash
         run: >
           dotnet ef migrations bundle 
+          --configuration Release 
           --startup-project ${{ inputs.server_project_name }} 
           --project ${{ inputs.data_project_name }} 
           --self-contained 
           --verbose
+
+      # - name: Upload artifact for deployment job
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: appsettings
+      #     path: ${{ inputs.server_project_name }}/appsettings.json
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Yugen.HomeBudget.Data.Models;
 
@@ -13,10 +14,10 @@ public abstract class Entity
     [ForeignKey(nameof(CreatedByApplicationUser))]
     public int? CreatedByApplicationUserId { get; set; }
 
-    public ApplicationUser? CreatedByApplicationUser { get; set; }
+    public ApplicationUser CreatedByApplicationUser { get; set; }
 
     [ForeignKey(nameof(LastModifiedByApplicationUser))]
     public int? LastModifiedByApplicationUserId { get; set; }
 
-    public ApplicationUser? LastModifiedByApplicationUser { get; set; }
+    public ApplicationUser LastModifiedByApplicationUser { get; set; }
 }

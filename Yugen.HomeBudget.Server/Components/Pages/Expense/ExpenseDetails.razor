@@ -1,0 +1,117 @@
+﻿@using Microsoft.AspNetCore.Authorization
+@using Yugen.HomeBudget.Application.Models.Category
+@using Yugen.HomeBudget.Server.Components.Shared
+@using Yugen.HomeBudget.Server.Navigation
+@using Yugen.HomeBudget.Server.ViewModels.Expense
+@attribute [Route(MenuConstants.ExpenseDetailsPath)]
+@attribute [Route(MenuConstants.ExpenseDetailsRoute)]
+@attribute [Authorize]
+@inject ExpenseDetailsViewModel ViewModel
+
+<MudGrid>
+
+	<MudItem xs="12">
+		<HeaderComponent PageTitle="@MenuConstants.ExpenseMenuItem.Title"
+						 Title="@MenuConstants.AddEditTitle(MenuConstants.ExpenseMenuItem.Title, Id)"
+						 Breadcrumb="@MenuConstants.ExpenseMenuItem.Title" />
+	</MudItem>
+
+	<MudItem xs="12">
+		@if (ViewModel.Model != null)
+		{
+			<MudCard Elevation="8">
+				<MudCardHeader>
+					Add/Edit Expense
+				</MudCardHeader>
+
+				<MudCardContent>
+					<MudForm @ref="ViewModel.Form"
+							 @bind-IsValid="ViewModel.IsFormValid"
+							 Model="ViewModel.Model">
+						<MudTextField Autofocus
+									  Label="Title"
+									  Placeholder="Title"
+									  Required="true"
+									  @bind-Value="@ViewModel.Model.Title" />
+
+						<MudTextField T="decimal?"
+									  Label="Amount"
+									  Placeholder="0"
+									  Required="true"
+									  @bind-Value="@ViewModel.Model.Amount" />
+
+						<MudTextField Label="Date"
+									  Format="yyyy-MM-dd"
+									  InputType="InputType.Date"
+									  Placeholder="dd/mm/yyyy"
+									  Required="true"
+									  T="DateTime"
+									  @bind-Value="@ViewModel.Model.DateTime" />
+
+						<MudTextField T="decimal"
+									  Label="Accrued"
+									  Placeholder="0"
+									  @bind-Value="@ViewModel.Model.Accrued" />
+
+	
+						<MudSelect T="ResponseCategoryDto"
+								   AnchorOrigin="Origin.TopCenter"
+								   Label="Category"
+								   Placeholder="Please Select"
+								   Required="true"
+								   TransformOrigin="Origin.BottomCenter"
+								   Value="ViewModel.Model.SelectedCategory"
+								   ValueChanged="ViewModel.Model.CategoryChanged">
+							@foreach (var category in ViewModel.Model.Categories)
+							{
+								<MudSelectItem Value="category">
+									@category.Title
+								</MudSelectItem>
+							}
+						</MudSelect>
+
+						<MudSelect T="SubCategoryDto"
+								   AnchorOrigin="Origin.TopCenter"
+								   Label="SubCategory"
+								   Placeholder="Please Select"
+								   TransformOrigin="Origin.BottomCenter"
+								   Required="true"
+								   @bind-Value="ViewModel.Model.SelectedSubCategory">
+							@foreach (var subCategory in ViewModel.Model.SubCategories)
+							{
+								<MudSelectItem Value="subCategory">
+									@subCategory.Title
+								</MudSelectItem>
+							}
+						</MudSelect>
+
+					</MudForm>
+				</MudCardContent>
+
+				<MudCardActions>
+					<MudButton Color="Color.Primary"
+							   Variant="Variant.Filled"
+							   OnClick="@ViewModel.OnSubmit">
+						Save
+					</MudButton>
+					<MudButton Color="Color.Warning"
+							   Class="ms-2"
+							   Variant="Variant.Filled"
+							   OnClick="@ViewModel.CancelAsync">
+						Cancel
+					</MudButton>
+					<MudText>
+						@if (ViewModel.IsAlertVisible)
+						{
+							<MudAlert Severity="Severity.Error"
+									  ShowCloseIcon="true"
+									  CloseIconClicked="(() => ViewModel.IsAlertVisible = false )">
+								@ViewModel.Error
+							</MudAlert>
+						}
+					</MudText>
+				</MudCardActions>
+			</MudCard>
+		}
+	</MudItem>
+</MudGrid>

@@ -1,0 +1,41 @@
+﻿<MudIconButton Color="Color.Inherit"
+			   Href="/"
+			   Icon="@Icons.Material.Filled.Home" />
+<MudMenu>
+	<ActivatorContent>
+		<LoginDisplay />
+	</ActivatorContent>
+	<ChildContent>
+		<AuthorizeView>
+			<Authorized>
+				<MudMenuItem Href="/Account/Manage"
+							 Icon="@Icons.Material.Filled.Settings"
+							 Label="Manage" />
+				<form action="Account/Logout" method="post">
+					<AntiforgeryToken />
+					<input type="hidden" name="ReturnUrl" value="@Routes.CurrentUrl" />
+					<button type="submit" class="mud-nav-link mud-ripple">
+						<MudIcon Class="mr-3"
+								 Color="Color.Info"
+								 Icon="@Icons.Material.Filled.Logout" />
+						Logout
+					</button>
+					@* <MudButton ButtonType="ButtonType.Submit"
+								  Color="Color.Info"
+							      StartIcon="@Icons.Material.Filled.Logout"
+								  Variant="Variant.Filled">
+									Logout
+								  </MudButton> *@
+				</form>
+			</Authorized>
+			<NotAuthorized>
+				<MudMenuItem Href="/Account/Login"
+							 Icon="@Icons.Material.Filled.Login"
+							 Label="Log In" />
+				<MudMenuItem Href="/Account/Register"
+							 Icon="@Icons.Material.Filled.PlusOne"
+							 Label="Register" />
+			</NotAuthorized>
+		</AuthorizeView>
+	</ChildContent>
+</MudMenu>

@@ -26,7 +26,7 @@ jobs:
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
 
     env:
-      AZURE_WEBAPP_PACKAGE: "myapp" # set this to the path to your web app project, defaults to the repository root
+      AZURE_WEBAPP_PACKAGE: "myapp"
 
     steps:          
       - name: Download webapp artifact from build job

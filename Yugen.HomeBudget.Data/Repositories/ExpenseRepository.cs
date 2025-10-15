@@ -1,9 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Yugen.HomeBudget.Data.Models;
 
 namespace Yugen.HomeBudget.Data.Repositories
 {
-    public class ExpenseRepository
+    public class ExpenseRepository : BaseRepository
     {
         private readonly ApplicationDbContext _context;
 
@@ -12,81 +16,73 @@ namespace Yugen.HomeBudget.Data.Repositories
             _context = context;
         }
 
-        public Task<List<Expense>> ListAsync()
+        public async Task<BaseListDto<Expense>> ListAsync(
+            int page,
+            int pageSize,
+            int month,
+            int year)
         {
-            return _context.Expenses
-                .Include(e => e.Category)
-                .Include(e => e.SubCategory)
-                .ToListAsync();
-        }
-
-        public Task<List<Expense>> ListAsync(int year)
-        {
-            return _context.Expenses
-                .Where(x => x.DateTimeOffset.Year == year)
+            var query = _context.Expenses
                 .Include(e => e.Category)
                 .Include(e => e.SubCategory)
                 .OrderByDescending(x => x.DateTimeOffset)
-                .ToListAsync();
+                .AsQueryable();
+
+            query = FilterResults(query, year, month);
+
+            var pagedResults = await GetListAsync(query, page, pageSize);
+
+            return pagedResults;
         }
 
-        public Task<List<Expense>> ListAsync(int year, int month)
+        private IQueryable<Expense> FilterResults(IQueryable<Expense> query, int year, int month)
         {
-            return _context.Expenses
-                .Where(x => x.DateTimeOffset.Month == month &&
-                            x.DateTimeOffset.Year == year)
-                .Include(e => e.Category)
-                .Include(e => e.SubCategory)
-                .OrderByDescending(x => x.DateTimeOffset)
-                .ToListAsync();
+            if (year > 0)
+            {
+                query = query.Where(x => x.DateTimeOffset.Year == year);
+            }
+
+            if (month > 0)
+            {
+                query = query.Where(x => x.DateTimeOffset.Month == month);
+            }
+
+            return query;
         }
 
-        public Task<List<Expense>> ListAsync(int year, int month, int skip, int pageSize)
-        {
-            return _context.Expenses
-                .Where(x => x.DateTimeOffset.Month == month &&
-                            x.DateTimeOffset.Year == year)
-                .Include(e => e.Category)
-                .Include(e => e.SubCategory)
-                .OrderByDescending(x => x.DateTimeOffset)
-                .Skip(skip)
-                .Take(pageSize)
-                .ToListAsync();
-        }
-
-        public Task<decimal> SumAsync(int year, int month)
+        public async Task<decimal> SumAsync(int year, int month)
         {
             if (month == 0)
             {
-                return _context.Expenses
+                return await _context.Expenses
                     .Where(x => x.DateTimeOffset.Year == year)
                     .SumAsync(x => x.Amount);
             }
 
-            return _context.Expenses
+            return await _context.Expenses
                 .Where(x => x.DateTimeOffset.Month == month &&
                             x.DateTimeOffset.Year == year)
                 .SumAsync(x => x.Amount);
         }
 
-        public Task<decimal> SumAccruedAsync(int year, int month)
+        public async Task<decimal> SumAccruedAsync(int year, int month)
         {
             if (month == 0)
             {
-                return _context.Expenses
+                return await _context.Expenses
                     .Where(x => x.DateTimeOffset.Year == year)
                     .SumAsync(x => x.Accrued);
             }
 
-            return _context.Expenses
+            return await _context.Expenses
                 .Where(x => x.DateTimeOffset.Month == month &&
                             x.DateTimeOffset.Year == year)
                 .SumAsync(x => x.Accrued);
         }
 
-        public Task<List<IGrouping<Category, Expense>>> GroupedByCategoryAsync(int year, int month)
+        public async Task<List<IGrouping<Category, Expense>>> GroupedByCategoryAsync(int year, int month)
         {
-            return _context.Expenses
+            return await _context.Expenses
                 .Where(x => x.DateTimeOffset.Month == month &&
                             x.DateTimeOffset.Year == year)
                 .Include(e => e.Category)
@@ -94,7 +90,7 @@ namespace Yugen.HomeBudget.Data.Repositories
                 .ToListAsync();
         }
 
-        public async Task<Expense?> GetAsync(int id)
+        public async Task<Expense> GetAsync(int id)
         {
             var expense = await _context.Expenses.FindAsync(id);
 
@@ -159,17 +155,17 @@ namespace Yugen.HomeBudget.Data.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public Task<int> CountAsync(int year, int month)
+        public async Task<int> CountAsync(int year, int month)
         {
-            return _context.Expenses
+            return await _context.Expenses
                 .Where(x => x.DateTimeOffset.Month == month &&
                             x.DateTimeOffset.Year == year)
                 .CountAsync();
         }
 
-        public Task<bool> ExistsAsync(string title)
+        public async Task<bool> ExistsAsync(string title)
         {
-            return _context.Expenses.AnyAsync(x => x.Title == title);
+            return await _context.Expenses.AnyAsync(x => x.Title == title);
         }
     }
 }

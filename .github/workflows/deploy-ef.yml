@@ -20,21 +20,28 @@ jobs:
     environment: ${{ inputs.environment_name }}
     env:
       EF_BUNDLE: "efbundle"
+      ARTIFACTS_DIR: "artifacts"
 
     steps:          
+      # - name: Download appsettings.json artifact from build job
+      #   uses: actions/download-artifact@v4
+      #   with:
+      #     name: appsettings
+      #     path: ${{ env.ARTIFACTS_DIR }}
+
       - name: Download efbundle artifact from build job
         uses: actions/download-artifact@v4
         with:
           name: ${{ env.EF_BUNDLE }}
-          path: ${{ env.EF_BUNDLE }}
+          path: ${{ env.ARTIFACTS_DIR }}
 
       - name: chmod
         shell: bash
-        run: sudo chmod +x ./${{ env.EF_BUNDLE }}/${{ env.EF_BUNDLE }}
+        run: sudo chmod +x ./${{ env.ARTIFACTS_DIR }}/${{ env.EF_BUNDLE }}
 
       - name: Debug bundle directory
         shell: bash
-        run: ls -al ${{ env.EF_BUNDLE }}
+        run: ls -al ${{ env.ARTIFACTS_DIR }}
 
       - uses: azure/login@v2
         with:
@@ -47,7 +54,8 @@ jobs:
         uses: azure/powershell@v2
         with:
           azPSVersion: "latest"
+          failOnStandardError: true 
           inlineScript: >
-            ./${{ env.EF_BUNDLE }}/${{ env.EF_BUNDLE }}
+            ./${{ env.ARTIFACTS_DIR }}/${{ env.EF_BUNDLE }}
             --connection 'Server=tcp:${{ inputs.server_name }};Database=${{ inputs.database }};Encrypt=True;Authentication=Active Directory Default;'
             --verbose

@@ -1,19 +1,21 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+<Project Sdk="Microsoft.NET.Sdk.Web">
 
 	<PropertyGroup>
-		<TargetFramework>net8.0</TargetFramework>
-		<Nullable>enable</Nullable>
-		<ImplicitUsings>enable</ImplicitUsings>
+		<TargetFramework>net10.0</TargetFramework>
+		<UserSecretsId>aspnet-Blazor_Google_App-37fc5d25-1a87-4d1e-872a-b1a0bc8a846f</UserSecretsId>
+		<BlazorDisableThrowNavigationException>true</BlazorDisableThrowNavigationException>
 	</PropertyGroup>
 
-	<ItemGroup>	
-		<PackageReference Include="Blazorise" Version="1.8.3" />
-		<PackageReference Include="Blazorise.Bootstrap5" Version="1.8.3" />
-		<PackageReference Include="Blazorise.Icons.FontAwesome" Version="1.8.3" />
-		<PackageReference Include="Blazorise.DataGrid" Version="1.8.3" />
-		<PackageReference Include="EPPlus" Version="8.2.0" />
-		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="8.0.*" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.*">
+	<ItemGroup>
+		<PackageReference Include="MudBlazor" Version="8.*" />
+		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+		<PackageReference Include="EPPlus" Version="8.2.1" />
+		<PackageReference Include="Extensions.MudBlazor.StaticInput" Version="3.*" />
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="10.0.*" />
+		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="10.0.*" />
+		<PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="10.0.*" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="10.0.*" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.*">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
@@ -22,7 +24,6 @@
 	<ItemGroup>
 		<ProjectReference Include="..\Yugen.HomeBudget.Application\Yugen.HomeBudget.Application.csproj" />
 		<ProjectReference Include="..\Yugen.HomeBudget.Client\Yugen.HomeBudget.Client.csproj" />
-		<ProjectReference Include="..\Yugen.HomeBudget.Shared\Yugen.HomeBudget.Shared.csproj" />
 	</ItemGroup>
 
 </Project>
