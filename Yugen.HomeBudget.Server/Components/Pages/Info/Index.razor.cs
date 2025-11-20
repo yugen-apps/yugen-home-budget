@@ -1,4 +1,6 @@
 ﻿
+using System.Threading.Tasks;
+
 namespace Yugen.HomeBudget.Server.Components.Pages.Info
 {
     public partial class Index

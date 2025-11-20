@@ -1,9 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 using Yugen.HomeBudget.Data.Models;
 
 namespace Yugen.HomeBudget.Data.Repositories
 {
-    public class CategoryRepository
+    public class CategoryRepository : BaseRepository
     {
         private readonly ApplicationDbContext _context;
 
@@ -12,25 +15,19 @@ namespace Yugen.HomeBudget.Data.Repositories
             _context = context;
         }
 
-        public Task<List<Category>> ListAsync()
+        public async Task<BaseListDto<Category>> ListAsync(int page, int pageSize)
         {
-            return _context.Categories
+            var query = _context.Categories
                 .Include(category => category.SubCategories.OrderBy(subcategory => subcategory.Title))
                 .OrderBy(category => category.Title)
-                .ToListAsync();
+                .AsQueryable();
+
+            var pagedResults = await GetListAsync(query, page, pageSize);
+
+            return pagedResults;
         }
 
-        public Task<List<Category>> ListAsync(int skip, int pageSize)
-        {
-            return _context.Categories
-                .Include(category => category.SubCategories.OrderBy(subcategory => subcategory.Title))
-                .OrderBy(category => category.Title)
-                .Skip(skip)
-                .Take(pageSize)
-                .ToListAsync();
-        }
-
-        public async Task<Category?> GetAsync(int id)
+        public async Task<Category> GetAsync(int id)
         {
             var category = await _context.Categories.FindAsync(id);
 
@@ -75,14 +72,14 @@ namespace Yugen.HomeBudget.Data.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public Task<int> CountAsync()
+        public async Task<int> CountAsync()
         {
-            return _context.Categories.CountAsync();
+            return await _context.Categories.CountAsync();
         }
 
-        public Task<bool> ExistsAsync(string title)
+        public async Task<bool> ExistsAsync(string title)
         {
-            return _context.Categories.AnyAsync(x => x.Title == title);
+            return await _context.Categories.AnyAsync(x => x.Title == title);
         }
     }
 }

@@ -17,7 +17,7 @@ namespace Yugen.HomeBudget.Data.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "10.0.0-rc.1.25451.107")
+                .HasAnnotation("ProductVersion", "10.0.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -293,7 +293,7 @@ namespace Yugen.HomeBudget.Data.Migrations
                     b.Property<decimal>("Amount")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int>("CategoryId")
+                    b.Property<int?>("CategoryId")
                         .HasColumnType("int");
 
                     b.Property<int?>("CreatedByApplicationUserId")
@@ -338,7 +338,7 @@ namespace Yugen.HomeBudget.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("CategoryId")
+                    b.Property<int?>("CategoryId")
                         .HasColumnType("int");
 
                     b.Property<int?>("CreatedByApplicationUserId")
@@ -486,9 +486,7 @@ namespace Yugen.HomeBudget.Data.Migrations
                 {
                     b.HasOne("Yugen.HomeBudget.Data.Models.Category", "Category")
                         .WithMany("Expenses")
-                        .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("CategoryId");
 
                     b.HasOne("Yugen.HomeBudget.Data.Models.ApplicationUser", "CreatedByApplicationUser")
                         .WithMany("CreatedByExpenses")
@@ -515,9 +513,7 @@ namespace Yugen.HomeBudget.Data.Migrations
                 {
                     b.HasOne("Yugen.HomeBudget.Data.Models.Category", "Category")
                         .WithMany("SubCategories")
-                        .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("CategoryId");
 
                     b.HasOne("Yugen.HomeBudget.Data.Models.ApplicationUser", "CreatedByApplicationUser")
                         .WithMany("CreatedBySubCategories")

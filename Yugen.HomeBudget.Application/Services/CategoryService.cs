@@ -1,8 +1,11 @@
-﻿using Yugen.HomeBudget.Application.Extensions;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Yugen.HomeBudget.Application.Extensions;
+using Yugen.HomeBudget.Application.Models;
+using Yugen.HomeBudget.Application.Models.Category;
 using Yugen.HomeBudget.Data.Models;
 using Yugen.HomeBudget.Data.Repositories;
-using Yugen.HomeBudget.Shared.Models;
-using Yugen.HomeBudget.Shared.Models.Category;
 
 namespace Yugen.HomeBudget.Application.Services
 {
@@ -15,30 +18,36 @@ namespace Yugen.HomeBudget.Application.Services
             _categoryRepository = categoryRepository;
         }
 
-        public async Task<IEnumerable<ResponseCategoryDto>> ListAsync()
+        public async Task<List<ResponseCategoryDto>> ListAsync()
         {
-            var categories = await _categoryRepository.ListAsync();
-            return categories.Select(c => c.ToDto()).ToList();
+            var result = await _categoryRepository.ListAsync(0, 0);
+
+            var categoriesDto = result.Items
+                                .Select(c => c.ToDto())
+                                .ToList();
+
+            return categoriesDto;
         }
 
         public async Task<PaginatedList<ResponseCategoryDto>> ListAsync(int pageIndex, int pageSize)
         {
-            var totalItemCount = await _categoryRepository.CountAsync();
-            var skip = (pageIndex - 1) * pageSize;
-            var categoriesDto = (await _categoryRepository.ListAsync(skip, pageSize))
+            var result = await _categoryRepository.ListAsync(pageIndex, pageSize);
+
+            var categoriesDto = result.Items
                                 .Select(c => c.ToDto())
                                 .ToList();
 
-            return new PaginatedList<ResponseCategoryDto>(categoriesDto, totalItemCount, pageIndex, pageSize);
+
+            return new PaginatedList<ResponseCategoryDto>(categoriesDto, result.TotalCount, pageIndex, pageSize);
         }
 
-        public async Task<ResponseCategoryDto?> GetAsync(int id)
+        public async Task<ResponseCategoryDto> GetAsync(int id)
         {
             var category = await _categoryRepository.GetAsync(id);
             return category?.ToDto();
         }
 
-        public async Task<ResponseCategoryDto?> CreateAsync(CreateCategoryDto createCategoryDto)
+        public async Task<ResponseCategoryDto> CreateAsync(CreateCategoryDto createCategoryDto)
         {
             var exists = await _categoryRepository.ExistsAsync(createCategoryDto.Title);
             if (exists)
@@ -57,7 +66,7 @@ namespace Yugen.HomeBudget.Application.Services
             return categoryResult.ToDto();
         }
 
-        public async Task<ResponseCategoryDto?> UpdateAsync(int id, UpdateCategoryDto updateCategoryDto)
+        public async Task<ResponseCategoryDto> UpdateAsync(int id, UpdateCategoryDto updateCategoryDto)
         {
             var category = await _categoryRepository.GetAsync(id);
             if (category == null)

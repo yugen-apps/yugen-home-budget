@@ -1,11 +1,11 @@
 ﻿@page "/Account/Manage/Disable2fa"
-
-
-@using Yugen.HomeBudget.Data.Models
-@using Yugen.HomeBudget.Server.Components.Account
+@using Microsoft.AspNetCore.Http
 @using Microsoft.AspNetCore.Identity
+@using Microsoft.Extensions.Logging
+@using Yugen.HomeBudget.Data.Models
 
 @inject UserManager<ApplicationUser> UserManager
+@inject IdentityUserAccessor UserAccessor
 @inject IdentityRedirectManager RedirectManager
 @inject ILogger<Disable2fa> Logger
 
@@ -32,19 +32,14 @@
 </div>
 
 @code {
-    private ApplicationUser? user;
+    private ApplicationUser user = default!;
 
     [CascadingParameter]
     private HttpContext HttpContext { get; set; } = default!;
 
     protected override async Task OnInitializedAsync()
     {
-        user = await UserManager.GetUserAsync(HttpContext.User);
-        if (user is null)
-        {
-            RedirectManager.RedirectToInvalidUser(UserManager, HttpContext);
-            return;
-        }
+        user = await UserAccessor.GetRequiredUserAsync(HttpContext);
 
         if (HttpMethods.IsGet(HttpContext.Request.Method) && !await UserManager.GetTwoFactorEnabledAsync(user))
         {
@@ -54,12 +49,6 @@
 
     private async Task OnSubmitAsync()
     {
-        if (user is null)
-        {
-            RedirectManager.RedirectToInvalidUser(UserManager, HttpContext);
-            return;
-        }
-
         var disable2faResult = await UserManager.SetTwoFactorEnabledAsync(user, false);
         if (!disable2faResult.Succeeded)
         {

@@ -1,10 +1,9 @@
 ﻿@page "/Account/ConfirmEmailChange"
-
 @using System.Text
-@using Yugen.HomeBudget.Data.Models
-@using Yugen.HomeBudget.Server.Components.Account
+@using Microsoft.AspNetCore.Http
 @using Microsoft.AspNetCore.Identity
 @using Microsoft.AspNetCore.WebUtilities
+@using Yugen.HomeBudget.Data.Models
 
 @inject UserManager<ApplicationUser> UserManager
 @inject SignInManager<ApplicationUser> SignInManager
@@ -17,19 +16,19 @@
 <StatusMessage Message="@message" />
 
 @code {
-    private string? message;
+    private string message;
 
     [CascadingParameter]
     private HttpContext HttpContext { get; set; } = default!;
 
     [SupplyParameterFromQuery]
-    private string? UserId { get; set; }
+    private string UserId { get; set; }
 
     [SupplyParameterFromQuery]
-    private string? Email { get; set; }
+    private string Email { get; set; }
 
     [SupplyParameterFromQuery]
-    private string? Code { get; set; }
+    private string Code { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -37,7 +36,6 @@
         {
             RedirectManager.RedirectToWithStatus(
                 "Account/Login", "Error: Invalid email change confirmation link.", HttpContext);
-            return;
         }
 
         var user = await UserManager.FindByIdAsync(UserId);

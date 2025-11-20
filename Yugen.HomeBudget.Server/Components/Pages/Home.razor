@@ -1,115 +1,138 @@
-﻿@attribute [Route(MenuConstants.HomePath)]
-@using Blazorise.Charts
-@using Blazorise.DataGrid
-@using Blazorise.LoadingIndicator
-@using Microsoft.AspNetCore.Authorization
-@using Yugen.HomeBudget.Server.Components
+﻿@using Yugen.HomeBudget.Application.Models.Expense
 @using Yugen.HomeBudget.Server.Components.Shared
 @using Yugen.HomeBudget.Server.Models
 @using Yugen.HomeBudget.Server.Navigation
-@using Yugen.HomeBudget.Server.ViewModels
-@using Yugen.HomeBudget.Shared.Models.Expense
-@inject HomeViewModel ViewModel
+@attribute [Route(MenuConstants.HomePath)]
+@inject Yugen.HomeBudget.Server.ViewModels.HomeViewModel ViewModel
 
-<HeaderComponent PageTitle="@MenuConstants.HomeMenuItem.Title"
-				Title="@MenuConstants.HomeMenuItem.Title"
-				Breadcrumb="@MenuConstants.HomeMenuItem.Title" />
+<MudGrid>
 
-<AuthorizeView>
-	<Authorized>
-		<LoadingIndicator @bind-Visible="@ViewModel.IsLoading">
-			<Row>
+	<MudOverlay Visible="ViewModel.IsLoading" DarkBackground="true" Absolute="true">
+		<MudProgressCircular Color="Color.Secondary" Indeterminate="true" Size="Size.Large" />
+	</MudOverlay>
 
-				<Column ColumnSize="ColumnSize.Is12">
-					<CardDeck Margin="Margin.Is4.FromBottom">
-						<HomeCardComponent Header="Current Year"
-										   IconName="IconName.Cart"
-										   TotalExpense="@ViewModel.CurrentYearTotalExpense"
-										   Footer="Expense Total" />
+	<MudItem xs="12">
+		<HeaderComponent PageTitle="@MenuConstants.HomeMenuItem.Title"
+						 Title="@MenuConstants.HomeMenuItem.Title"
+						 Breadcrumb="@MenuConstants.HomeMenuItem.Title" />
+	</MudItem>
 
-						<HomeCardComponent Header="Previous Month"
-										   IconName="IconName.DollarSign"
-										   TotalExpense="@ViewModel.PreviousMonthTotalExpense"
-										   Footer="Expense Total" />
+	<AuthorizeView>
+		<Authorized>
 
-						<HomeCardComponent Header="Current Month"
-										   IconName="IconName.CreditCard"
-										   TotalExpense="@ViewModel.CurrentMonthTotalExpense"
-										   Footer="Expense Total" />
+			<MudItem xs="12" sm="6" md="3">
+				<HomeCardComponent Header="Current Year"
+								   IconName="@Icons.Material.Filled.ShoppingCart"
+								   TotalExpense="@ViewModel.CurrentYearTotalExpense"
+								   Footer="Expense Total" />
+			</MudItem>
 
-						<HomeCardComponent Header="Current Year"
-										   IconName="IconName.MoneyBillAlt"
-										   TotalAccrued="@ViewModel.CurrentYearTotalAccrued"
-										   Footer="Accrued Total" />
+			<MudItem xs="12" sm="6" md="3">
+				<HomeCardComponent Header="Previous Month"
+								   IconName="@Icons.Material.Filled.AttachMoney"
+								   TotalExpense="@ViewModel.PreviousMonthTotalExpense"
+								   Footer="Expense Total" />
+			</MudItem>
 
-					</CardDeck>
-				</Column>
+			<MudItem xs="12" sm="6" md="3">
+				<HomeCardComponent Header="Current Month"
+								   IconName="@Icons.Material.Filled.CreditCard"
+								   TotalExpense="@ViewModel.CurrentMonthTotalExpense"
+								   Footer="Expense Total" />
+			</MudItem>
 
-				<Column ColumnSize="ColumnSize.Is7.OnDesktop">
-					<Card Margin="Margin.Is4.FromBottom"
-						  Shadow="Shadow.Default">
-						<CardHeader>
-							Current Month Expenses History
-						</CardHeader>
-						<CardBody>
-							<DataGrid TItem="ResponseExpenseDto"
-									  Data="@ViewModel.PaginatedList.Items"
-									  ReadData="@OnReadData"
-									  TotalItems="@ViewModel.PaginatedList.TotalItems"
-									  PageSize="@Constants.PageSizeSmall"
-									  RowRemoving="@ViewModel.OnRowRemoving"
-									  Editable
-									  ShowPager
-									  Responsive>
-								@* <DataGridCommandColumn DeleteCommandAllowed="true">
-							<NewCommandTemplate>
-								<Button Color="Color.Primary"
-										Clicked="@context.Clicked"
-										Type="ButtonType.Link"
-										To="@MenuConstants.ExpenseAddUrl">
-									<Icon Name="IconName.Add" />
-								</Button>
-							</NewCommandTemplate>
-							<EditCommandTemplate>
-								<Button Color="Color.Warning"
-										Clicked="@context.Clicked"
-										Type="ButtonType.Link"
-										To="@PageHelper.EditHref(MenuConstants.ExpenseUrl, context.Item.Id)">
-									<Icon Name="IconName.Edit" />
-								</Button>
-							</EditCommandTemplate>
-							<DeleteCommandTemplate>
-								<Button Color="Color.Danger"
-										Clicked="@context.Clicked">
-									<Icon Name="IconName.Delete" />
-								</Button>
-							</DeleteCommandTemplate>
-						</DataGridCommandColumn> *@
-								<DataGridDateColumn Field="@nameof(ResponseExpenseDto.DateTimeOffset)" Caption="@nameof(ResponseExpenseDto.DateTimeOffset)" DisplayFormat="{0:d}" />
-								<DataGridColumn Field="@nameof(ResponseExpenseDto.Title)" Caption="@nameof(ResponseExpenseDto.Title)" />
-								<DataGridColumn Field="@nameof(ResponseExpenseDto.Amount)" Caption="@nameof(ResponseExpenseDto.Amount)" />
-								<DataGridColumn Field="@nameof(ResponseExpenseDto.Accrued)" Caption="@nameof(ResponseExpenseDto.Accrued)" />
-							</DataGrid>
-						</CardBody>
-					</Card>
-				</Column>
+			<MudItem xs="12" sm="6" md="3">
+				<HomeCardComponent Header="Current Year"
+								   IconName="@Icons.Material.Filled.Money"
+								   TotalAccrued="@ViewModel.CurrentYearTotalAccrued"
+								   Footer="Accrued Total" />
+			</MudItem>
 
-				<Column ColumnSize="ColumnSize.Is5.OnDesktop">
-					<Card Margin="Margin.Is4.FromBottom"
-						  Shadow="Shadow.Default">
-						<CardHeader>
-							Current Month Expenses Chart
-						</CardHeader>
-						<CardBody>
-							<PieChart @ref="ViewModel.PieChart" TItem="double" />
-						</CardBody>
-					</Card>
-				</Column>
-			</Row>
-		</LoadingIndicator>
+			<MudItem xs="12" sm="12" md="7">
+				<MudCard Elevation="8">
+					<MudCardHeader>
+						Current Month Expenses History
+					</MudCardHeader>
 
-	</Authorized>
-	<NotAuthorized>
-		<Link To="/Account/Login">Please Login</Link>
-	</NotAuthorized>
-</AuthorizeView>
+					<MudCardContent>
+						<MudDataGrid @ref="ViewModel.DataGrid"
+									 T="ResponseExpenseDto"
+									 Loading="ViewModel.IsDataGridLoading"
+									 ServerData="ViewModel.ServerReload"
+									 Bordered="true"
+									 Dense="true">
+							<ToolBarContent>
+								<MudText Typo="Typo.h6">Expenses</MudText>
+								<MudSpacer />
+								<MudButtonGroup Class="ma-0 pa-0"
+												Color="Color.Success"
+												Variant="Variant.Filled">
+									<MudButton Color="Color.Primary"
+											   Href="@MenuConstants.ExpenseDetailsPath"
+											   StartIcon="@Icons.Material.Filled.Add"
+											   Variant="Variant.Filled">
+										Add New Item
+									</MudButton>
+								</MudButtonGroup>
+							</ToolBarContent>
+							<Columns>
+								<PropertyColumn Property="x => x.DateTimeOffset"
+												Title="@nameof(ResponseExpenseDto.DateTimeOffset)"
+												Format="d" />
+								<PropertyColumn Property="x => x.Title"
+												Title="@nameof(ResponseExpenseDto.Title)" />
+								<PropertyColumn Property="x => x.Amount"
+												Title="@nameof(ResponseExpenseDto.Amount)" />
+								<PropertyColumn Property="x => x.Accrued"
+												Title="@nameof(ResponseExpenseDto.Accrued)" />
+
+								<TemplateColumn CellClass="d-flex justify-between">
+									<CellTemplate Context="expenseContext">
+										<MudIconButton Size="@Size.Small"
+													   Icon="@Icons.Material.Outlined.Edit"
+													   Href="@($"{MenuConstants.ExpenseDetailsPath}/{expenseContext.Item.Id}")" />
+										<MudIconButton Size="@Size.Small"
+													   Icon="@Icons.Material.Outlined.Delete"
+													   OnClick="@(() => ViewModel.ShowDeleteConfirmMessage(expenseContext.Item.Id))" />
+									</CellTemplate>
+								</TemplateColumn>
+							</Columns>
+							<PagerContent>
+								<MudDataGridPager T="ResponseExpenseDto"
+												  PageSizeOptions=@( new int[] { Constants.PageSizeSmall, Constants.PageSize } ) />
+							</PagerContent>
+						</MudDataGrid>
+					</MudCardContent>
+				</MudCard>
+			</MudItem>
+
+			<MudItem xs="12" sm="12" md="5">
+				<MudCard Elevation="8">
+					<MudCardHeader>
+						Current Month Expenses Chart
+					</MudCardHeader>
+					<MudCardContent>
+						<MudChart ChartType="ChartType.Pie"
+								  InputData="@ViewModel.Data"
+								  InputLabels="@ViewModel.Labels"
+								  Width="300px"
+								  Height="300px" />
+					</MudCardContent>
+				</MudCard>
+			</MudItem>
+
+		</Authorized>
+
+		<NotAuthorized>
+			<MudItem xs="12">
+				<MudButton Href="/Account/Login"
+						   StartIcon="@Icons.Material.Filled.Login"
+						   Color="Color.Primary"
+						   Variant="Variant.Filled">
+					Please Login
+				</MudButton>
+			</MudItem>
+		</NotAuthorized>
+	</AuthorizeView>
+
+</MudGrid>

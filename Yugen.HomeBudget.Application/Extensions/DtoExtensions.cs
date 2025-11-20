@@ -1,6 +1,6 @@
-﻿using Yugen.HomeBudget.Data.Models;
-using Yugen.HomeBudget.Shared.Models.Category;
-using Yugen.HomeBudget.Shared.Models.Expense;
+﻿using Yugen.HomeBudget.Application.Models.Category;
+using Yugen.HomeBudget.Application.Models.Expense;
+using Yugen.HomeBudget.Data.Models;
 
 namespace Yugen.HomeBudget.Application.Extensions;
 

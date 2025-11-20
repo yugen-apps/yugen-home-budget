@@ -55,7 +55,7 @@ Server=tcp:sql-server-yugen.database.windows.net,1433;Database=sql-db-yugen-home
 # Migrations
 
 ```
-dotnet ef migrations add V3 `
+dotnet ef migrations add V1 `
 --startup-project ".\Yugen.HomeBudget.Server\Yugen.HomeBudget.Server.csproj" `
 --project ".\Yugen.HomeBudget.Data\Yugen.HomeBudget.Data.csproj"`
 --verbose

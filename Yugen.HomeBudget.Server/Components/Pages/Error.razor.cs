@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Http;
 using System.Diagnostics;
 
 namespace Yugen.HomeBudget.Server.Components.Pages
@@ -6,9 +7,9 @@ namespace Yugen.HomeBudget.Server.Components.Pages
     public partial class Error
     {
         [CascadingParameter]
-        private HttpContext? HttpContext { get; set; }
+        private HttpContext HttpContext { get; set; }
 
-        private string? RequestId { get; set; }
+        private string RequestId { get; set; }
 
         private bool ShowRequestId => !string.IsNullOrEmpty(RequestId);
 

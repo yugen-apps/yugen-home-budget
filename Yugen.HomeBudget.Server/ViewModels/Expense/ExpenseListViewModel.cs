@@ -1,10 +1,12 @@
-﻿using Blazorise;
-using Blazorise.DataGrid;
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using MudBlazor;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
+using Yugen.HomeBudget.Application.Models;
+using Yugen.HomeBudget.Application.Models.Expense;
 using Yugen.HomeBudget.Application.Services;
-using Yugen.HomeBudget.Server.Models;
-using Yugen.HomeBudget.Shared.Models;
-using Yugen.HomeBudget.Shared.Models.Expense;
+using Yugen.HomeBudget.Server.Components.Shared;
 
 namespace Yugen.HomeBudget.Server.ViewModels.Expense;
 
@@ -12,8 +14,9 @@ public sealed partial class ExpenseListViewModel : ObservableObject
 {
     public int[] Months = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 };
     public int[] Years = { 2023, 2024, 2025 };
+    public MudDataGrid<ResponseExpenseDto> DataGrid;
     private readonly ExpenseService _expenseService;
-    private readonly IMessageService _messageService;
+    private readonly IDialogService _dialogService;
 
     [ObservableProperty]
     private bool _isLoading;
@@ -29,59 +32,74 @@ public sealed partial class ExpenseListViewModel : ObservableObject
 
     public ExpenseListViewModel(
         ExpenseService expenseService,
-        IMessageService messageService)
+        IDialogService dialogService)
     {
         _expenseService = expenseService;
-        _messageService = messageService;
+        _dialogService = dialogService;
     }
 
-    public async Task DateChanged(int? month, int? year)
+    public async Task<GridData<ResponseExpenseDto>> ServerReload(GridState<ResponseExpenseDto> state)
+    {
+        await RefreshDataAsync(state.Page, state.PageSize);
+
+        return new GridData<ResponseExpenseDto>
+        {
+            TotalItems = PaginatedList.TotalItems,
+            Items = PaginatedList.Items
+        };
+    }
+
+    public Task DateChanged(int? month, int? year)
     {
         SelectedMonth = month ?? SelectedMonth;
         SelectedYear = year ?? SelectedYear;
-        await RefreshDataAsync(1, Constants.PageSizeSmall);
+        return DataGrid.ReloadServerData();
     }
 
-    public async Task OnReadData(int page, int pageSize)
+    public async Task ShowDeleteConfirmMessage(int id)
     {
-        await RefreshDataAsync(page, pageSize);
-    }
-
-    public async Task OnRowRemoving(CancellableRowChange<ResponseExpenseDto> e)
-    {
-        e.Cancel = await ShowDeleteConfirmMessage(e.OldItem.Id);
-    }
-
-    public async Task<bool> ShowDeleteConfirmMessage(int id)
-    {
-        var confirmed = await _messageService.Confirm("Are you sure you want to delete?", "Confirmation");
-        if (confirmed)
+        var parameters = new DialogParameters<MessageDialog>
         {
-            return await DeleteAsync(id);
+            { x => x.ContentText, "Do you really want to delete these records? This process cannot be undone." },
+            { x => x.ButtonText, "Delete" },
+            { x => x.Color, Color.Error }
+        };
+
+        var dialog = await _dialogService.ShowAsync<MessageDialog>("Delete", parameters);
+
+        var result = await dialog.Result;
+        if ((result?.Canceled) != false)
+        {
+            return;
         }
-        return true;
+
+        await DeleteAsync(id);
     }
 
-    private async Task<bool> DeleteAsync(int id)
+    private async Task DeleteAsync(int id)
     {
-        //var result = await _httpClient.DeleteAsync($"{EndpointConstants.Expense}/{id}");
         var result = await _expenseService.DeleteAsync(id);
-        if (result)
+        if (!result)
         {
-            return false;
+            return;
         }
-        return true;
+
+        var deletedItem = PaginatedList.Items.FirstOrDefault(x => x.Id == id);
+        if (deletedItem == null)
+        {
+            return;
+        }
+
+        PaginatedList.Remove(deletedItem);
     }
 
-    private async Task RefreshDataAsync(int page, int pageSize)
+    public async Task RefreshDataAsync(int page, int pageSize)
     {
         IsLoading = true;
 
         try
         {
-            PaginatedList = await _expenseService.ListAsync(SelectedYear, SelectedMonth, page, Constants.PageSize) ?? new();
-            //var response = await _httpClient.GetFromJsonAsync<PaginatedList<ResponseExpenseDto>>($"{EndpointConstants.Expense}?year={SelectedYear}&month={SelectedMonth}&pageNumber={page}&pageSize={pageSize}");
-            //PaginatedList = response ?? new();
+            PaginatedList = await _expenseService.ListAsync(page, pageSize, SelectedMonth, SelectedYear) ?? new();
         }
         finally
         {

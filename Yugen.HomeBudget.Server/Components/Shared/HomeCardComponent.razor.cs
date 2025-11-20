@@ -1,29 +1,28 @@
-﻿using Blazorise;
-using Microsoft.AspNetCore.Components;
-using Yugen.HomeBudget.Server.Models;
+﻿using Microsoft.AspNetCore.Components;
+using Yugen.HomeBudget.Server.Models.Home;
 
 namespace Yugen.HomeBudget.Server.Components.Shared
 {
     public partial class HomeCardComponent
     {
         [Parameter]
-        public string? Header { get; set; }
+        public string Header { get; set; }
 
         [Parameter]
-        public IconName? IconName { get; set; }
+        public string IconName { get; set; }
 
         [Parameter]
-        public TotalExpense? TotalExpense { get; set; }
+        public TotalExpense TotalExpense { get; set; }
 
         [Parameter]
-        public TotalAccrued? TotalAccrued { get; set; }
+        public TotalAccrued TotalAccrued { get; set; }
 
         [Parameter]
-        public string? Footer { get; set; }
+        public string Footer { get; set; }
 
         public decimal? Current { get; private set; }
 
-        public IconName? Icon { get; private set; }
+        public string Icon { get; private set; }
 
         public decimal? Percentage { get; private set; }
 

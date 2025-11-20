@@ -1,10 +1,11 @@
-﻿using Blazorise;
+﻿using MudBlazor;
+using System.Collections.Generic;
 
 namespace Yugen.HomeBudget.Server.Navigation
 {
     public class MenuItem
     {
-        public IconName Icon { get; set; } = IconName.Dashboard;
+        public string Icon { get; set; } = Icons.Material.Filled.Dashboard;
 
         public bool IsParent => MenuSubItems.Count > 0;
 

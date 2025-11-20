@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components.Authorization;
-using Yugen.HomeBudget.Shared.Models.Authentication;
+using System.Threading.Tasks;
+using Yugen.HomeBudget.Server.Models.Account;
 
 namespace Yugen.HomeBudget.Server.Services;
 

@@ -1,4 +1,5 @@
-﻿using Blazorise;
+﻿using MudBlazor;
+using System.Collections.Generic;
 
 namespace Yugen.HomeBudget.Server.Navigation
 {
@@ -6,13 +7,13 @@ namespace Yugen.HomeBudget.Server.Navigation
     {
         public const string HomePath = "/";
 
-        public const string CategoriesPath = "Categories";
-        public const string CategoryPath = $"{CategoriesPath}/addedit";
-        public const string CategoryRoute = $"{CategoryPath}/{{Id:int}}";
+        public const string CategoryPath = "category";
+        public const string CategoryDetailsPath = $"{CategoryPath}/details";
+        public const string CategoryDetailsRoute = $"{CategoryDetailsPath}/{{Id:int}}";
 
-        public const string ExpensesPath = "Expenses";
-        public const string ExpensePath = $"{ExpensesPath}/addedit";
-        public const string ExpenseRoute = $"{ExpensePath}/{{Id:int}}";
+        public const string ExpensePath = "expenses";
+        public const string ExpenseDetailsPath = $"{ExpensePath}/details";
+        public const string ExpenseDetailsRoute = $"{ExpenseDetailsPath}/{{Id:int}}";
 
         public const string InfoPath = "info";
 
@@ -22,29 +23,29 @@ namespace Yugen.HomeBudget.Server.Navigation
         public static List<MenuItem> MenuItems =>
         [
             HomeMenuItem,
-            CategoriesMenuItem,
-            ExpensesMenuItem
+            CategoryMenuItem,
+            ExpenseMenuItem
         ];
 
         public static MenuItem HomeMenuItem => new()
         {
             Path = HomePath,
-            Icon = IconName.Dashboard,
+            Icon = Icons.Material.Filled.Dashboard,
             Title = "Home"
         };
 
-        public static MenuItem CategoriesMenuItem => new()
+        public static MenuItem CategoryMenuItem => new()
         {
-            Path = CategoriesPath,
-            Icon = IconName.List,
-            Title = "Categories"
+            Path = CategoryPath,
+            Icon = Icons.Material.Filled.List,
+            Title = "Category"
         };
 
-        public static MenuItem ExpensesMenuItem => new()
+        public static MenuItem ExpenseMenuItem => new()
         {
-            Path = ExpensesPath,
-            Icon = IconName.DollarSign,
-            Title = "Expenses"
+            Path = ExpensePath,
+            Icon = Icons.Material.Filled.Money,
+            Title = "Expense"
         };
 
         public static string AddEditTitle(string page, int? id) => id == null

@@ -15,9 +15,9 @@ jobs:
   build_ef:
     runs-on: ubuntu-latest
     env:
-      DOTNET_VERSION: "10.0.x" # set this to the .NET Core version to use
+      DOTNET_VERSION: "10.0.x"
       EF_BUNDLE: "efbundle"
-      EF_VERSION: "10.0.0-*" # "10.0.*"
+      EF_VERSION: "10.0.*"
 
     steps:
       - uses: actions/checkout@v4
@@ -59,6 +59,12 @@ jobs:
           --project ${{ inputs.data_project_name }} 
           --self-contained 
           --verbose
+
+      # - name: Upload artifact for deployment job
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: appsettings
+      #     path: ${{ inputs.server_project_name }}/appsettings.json
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4

@@ -1,21 +1,25 @@
-using Blazorise;
-using Blazorise.Bootstrap5;
-using Blazorise.Icons.FontAwesome;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using MudBlazor.Services;
+using System;
+using System.Net.Http;
 using Yugen.HomeBudget.Application.Services;
 using Yugen.HomeBudget.Data;
 using Yugen.HomeBudget.Data.Models;
 using Yugen.HomeBudget.Data.Repositories;
 using Yugen.HomeBudget.Server.Components.Account;
+using Yugen.HomeBudget.Server.Models.Account;
 using Yugen.HomeBudget.Server.Services;
 using Yugen.HomeBudget.Server.ViewModels;
 using Yugen.HomeBudget.Server.ViewModels.Category;
 using Yugen.HomeBudget.Server.ViewModels.Expense;
 using Yugen.HomeBudget.Server.ViewModels.Info;
-using Yugen.HomeBudget.Shared.Models.Authentication;
 
 namespace Yugen.HomeBudget.Server
 {
@@ -32,6 +36,7 @@ namespace Yugen.HomeBudget.Server
                 .AddAuthenticationStateSerialization();
 
             builder.Services.AddCascadingAuthenticationState();
+            builder.Services.AddScoped<IdentityUserAccessor>();
             builder.Services.AddScoped<IdentityRedirectManager>();
             builder.Services.AddScoped<AuthenticationStateProvider, IdentityRevalidatingAuthenticationStateProvider>();
 
@@ -48,11 +53,11 @@ namespace Yugen.HomeBudget.Server
                 })
                 .AddIdentityCookies();
 
-            #if DEBUG
-                AddDbContext(builder, false);
-            #else
-                AddDbContext(builder, false);
-            #endif
+#if DEBUG
+            AddDbContext(builder, false);
+#else
+            AddDbContext(builder, false);
+#endif
 
             builder.Services.AddIdentityCore<ApplicationUser>(options =>
                 {
@@ -79,14 +84,16 @@ namespace Yugen.HomeBudget.Server
             builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>()
                                                .CreateClient("Yugen.HomeBudget.ServerAPI"));
 
-            builder.Services.AddScoped<HomeViewModel>();
-            builder.Services.AddScoped<CategoryAddEditViewModel>();
-            builder.Services.AddScoped<CategoryListViewModel>();
-            builder.Services.AddScoped<ExpenseAddEditViewModel>();
-            builder.Services.AddScoped<ExpenseListViewModel>();
-            builder.Services.AddScoped<InfoIndexViewodel>();
+            builder.Services.AddTransient<HomeViewModel>();
+            builder.Services.AddTransient<CategoryDetailsViewModel>();
+            builder.Services.AddTransient<CategoryListViewModel>();
+            builder.Services.AddTransient<ExpenseDetailsViewModel>();
+            builder.Services.AddTransient<ExpenseListViewModel>();
+            builder.Services.AddTransient<InfoIndexViewodel>();
 
-            AddBlazorise(builder.Services);
+            builder.Services.AddControllers();
+
+            builder.Services.AddMudServices();
 
             var app = builder.Build();
 
@@ -108,6 +115,8 @@ namespace Yugen.HomeBudget.Server
 
             app.UseAntiforgery();
 
+            app.MapControllers();
+
             app.MapStaticAssets();
             app.MapRazorComponents<Components.App>()
                 .AddInteractiveServerRenderMode()
@@ -124,34 +133,25 @@ namespace Yugen.HomeBudget.Server
 
         private static void AddDbContext(WebApplicationBuilder builder, bool useInMemoryDatabase)
         {
-            var connectionString = builder.Configuration.GetConnectionString("AZURE_SQL_CONNECTIONSTRING") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+            var connectionString = builder.Configuration.GetConnectionString("AZURE_SQL_CONNECTIONSTRING"); // ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
             if (useInMemoryDatabase)
             {
                 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseInMemoryDatabase("db"));
             }
             else
             {
-                builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connectionString));
+                builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connectionString,
+                                                                                                    b => b.MigrationsAssembly("Yugen.HomeBudget.Data")),
+                                                                    ServiceLifetime.Transient);
             }
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
         }
 
-        private static void AddBlazorise(IServiceCollection services)
-        {
-            services
-                .AddBlazorise();
-            services
-                .AddBootstrap5Providers()
-                .AddFontAwesomeIcons();
-        }
-
         private static void PingDb(WebApplication app)
         {
-            using (var scope = app.Services.CreateScope())
-            {
-                var infoService = scope.ServiceProvider.GetRequiredService<InfoService>();
-                infoService.CanConnect();
-            }
+            using var scope = app.Services.CreateScope();
+            var infoService = scope.ServiceProvider.GetRequiredService<InfoService>();
+            infoService.CanConnect();
         }
     }
 }

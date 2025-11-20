@@ -12,5 +12,4 @@
   <Project Path="Yugen.HomeBudget.Client/Yugen.HomeBudget.Client.csproj" />
   <Project Path="Yugen.HomeBudget.Data/Yugen.HomeBudget.Data.csproj" />
   <Project Path="Yugen.HomeBudget.Server/Yugen.HomeBudget.Server.csproj" />
-  <Project Path="Yugen.HomeBudget.Shared/Yugen.HomeBudget.Shared.csproj" />
 </Solution>

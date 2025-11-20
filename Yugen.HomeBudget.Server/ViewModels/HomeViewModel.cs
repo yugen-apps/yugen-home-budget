@@ -1,67 +1,108 @@
-﻿using Blazorise;
-using Blazorise.Charts;
-using Blazorise.DataGrid;
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using MudBlazor;
+using System;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Threading.Tasks;
+using Yugen.HomeBudget.Application.Models;
+using Yugen.HomeBudget.Application.Models.Expense;
 using Yugen.HomeBudget.Application.Services;
-using Yugen.HomeBudget.Server.Models;
-using Yugen.HomeBudget.Shared.Models;
-using Yugen.HomeBudget.Shared.Models.Expense;
+using Yugen.HomeBudget.Server.Components.Shared;
+using Yugen.HomeBudget.Server.Models.Home;
 
 namespace Yugen.HomeBudget.Server.ViewModels;
 
 public sealed partial class HomeViewModel : ObservableObject
 {
-    public PieChart<double>? PieChart;
     private readonly CategoryService _categoryService;
     private readonly ExpenseService _expenseService;
-    private readonly IMessageService _messageService;
+    private readonly IDialogService _dialogService;
+
+    private readonly TaskCompletionSource _tcs = new();
+    private readonly DateTimeOffset _now = DateTimeOffset.UtcNow;
 
     [ObservableProperty]
-    private TotalExpense? _currentMonthTotalExpense;
+    private TotalExpense _currentYearTotalExpense;
 
     [ObservableProperty]
-    private TotalAccrued? _currentYearTotalAccrued;
+    private TotalExpense _previousMonthTotalExpense;
 
     [ObservableProperty]
-    private TotalExpense? _currentYearTotalExpense;
+    private TotalExpense _currentMonthTotalExpense;
+
+    [ObservableProperty]
+    private TotalAccrued _currentYearTotalAccrued;
 
     [ObservableProperty]
     private bool _isLoading;
 
     [ObservableProperty]
-    private int _month = DateTimeOffset.UtcNow.Month;
+    private bool _isDataGridLoading;
 
     [ObservableProperty]
     private PaginatedList<ResponseExpenseDto> _paginatedList = new();
 
-    [ObservableProperty]
-    private TotalExpense? _previousMonthTotalExpense;
-
-    [ObservableProperty]
-    private int _year = DateTimeOffset.UtcNow.Year;
-
     public HomeViewModel(
         CategoryService categoryService,
         ExpenseService expenseService,
-        IMessageService messageService)
+        IDialogService dialogService)
     {
         _categoryService = categoryService;
         _expenseService = expenseService;
-        _messageService = messageService;
+        _dialogService = dialogService;
     }
 
-    public ICollection<ResponseExpenseDto> Expenses => PaginatedList.Items;
+    private int Year => _now.Year;
 
-    public async Task DateChanged()
+    private int Month => _now.Month;
+
+    private int PreviousMonth => _now.AddMonths(-1).Month;
+
+    public MudDataGrid<ResponseExpenseDto> DataGrid;
+
+    public string[] Labels { get; private set; } = [];
+
+    public double[] Data { get; private set; } = [];
+        
+    public async Task LoadDataAsync()
     {
-        await LoadDataAsync();
+        IsLoading = true;
+
+        await LoadCurrentYearTotalExpense();
+        await LoadPreviousMonthTotalExpense();
+        await LoadCurrentMonthTotalExpense();
+        await LoadCurrentYearTotalAccrued();
+        await LoadChartData();
+
+        _tcs.SetResult();
+
+        IsLoading = false;
+    }
+
+    public async Task LoadCurrentYearTotalExpense()
+    {
+        try
+        {
+            var currentYearTotalExpense = await _expenseService.SumAsync(Year, 0);
+            CurrentYearTotalExpense = new TotalExpense(currentYearTotalExpense);
+        }
+        catch { }
+    }
+
+    public async Task LoadPreviousMonthTotalExpense()
+    {
+        try
+        {
+            var previousMonthExpenseTotal = await _expenseService.SumAsync(Year, PreviousMonth);
+            PreviousMonthTotalExpense = new TotalExpense(previousMonthExpenseTotal, CurrentMonthTotalExpense?.Current ?? 0);
+        }
+        catch { }
     }
 
     public async Task LoadCurrentMonthTotalExpense()
     {
         try
         {
-            //var currentMonthExpenseTotal = await _httpClient.GetFromJsonAsync<decimal>($"{EndpointConstants.ExpenseSum}?year={Year}&month={Month}");
             var currentMonthExpenseTotal = await _expenseService.SumAsync(Year, Month);
             CurrentMonthTotalExpense = new TotalExpense(currentMonthExpenseTotal, PreviousMonthTotalExpense?.Current ?? 0);
         }
@@ -72,134 +113,89 @@ public sealed partial class HomeViewModel : ObservableObject
     {
         try
         {
-            //var currentYearTotalAccrued = await _httpClient.GetFromJsonAsync<decimal>($"{EndpointConstants.AccruedSum}?year={Year}");
             var currentYearTotalAccrued = await _expenseService.SumAccruedAsync(Year, 0);
             CurrentYearTotalAccrued = new TotalAccrued(currentYearTotalAccrued);
         }
         catch { }
     }
 
-    public async Task LoadCurrentYearTotalExpense()
+    public async Task LoadChartData()
     {
         try
         {
-            //var currentYearTotalExpense = await _httpClient.GetFromJsonAsync<decimal>($"{EndpointConstants.ExpenseSum}?year={Year}");
-            var currentYearTotalExpense = await _expenseService.SumAsync(Year, 0);
-            CurrentYearTotalExpense = new TotalExpense(currentYearTotalExpense);
-        }
-        catch { }
-    }
-
-    public async Task LoadDataAsync()
-    {
-        IsLoading = true;
-
-        try
-        {
-            await LoadCurrentYearTotalExpense();
-            await LoadPreviousMonthTotalExpense();
-            await LoadCurrentYearTotalAccrued();
-            await LoadCurrentMonthTotalExpense();
-        }
-        //catch (AccessTokenNotAvailableException exception)
-        //exception.Redirect();
-        finally
-        {
-            IsLoading = false;
-        }
-    }
-
-    public async Task LoadPieChartData()
-    {
-        try
-        {
-            //var data = await _httpClient.GetFromJsonAsync<List<ResponseExpenseGroupedByCategoryDto>>($"{EndpointConstants.GroupedByCategory}?year={Year}&month={Month}");
             var data = await _expenseService.GroupedByCategoryAsync(Year, Month);
             if (data != null)
             {
                 var labels = data.Select(x => x.Category).ToList();
                 var values = data.Select(x => (double)x.Total).ToList();
-                var colors = data.Select(x => Constants.ChartColors[x.Index]).ToList();
 
-                //var currentMonthAccruedTotal = await _httpClient.GetFromJsonAsync<decimal>($"{EndpointConstants.AccruedSum}?year={Year}&month={Month}");
                 var currentMonthAccruedTotal = await _expenseService.SumAccruedAsync(Year, Month);
                 labels.Add("Accrued");
                 values.Add((double)currentMonthAccruedTotal);
-                colors.Add(Constants.ChartColors[colors.Count]);
 
-                var pieChartDataset = new PieChartDataset<double>
-                {
-                    Label = "Expenses",
-                    Data = values,
-                    BackgroundColor = colors,
-                    BorderColor = colors,
-                };
-
-                await HandleRedraw(labels.ToArray(), pieChartDataset);
+                Labels = labels.ToArray();
+                Data = values.ToArray();
             }
         }
         catch { }
     }
 
-    public async Task LoadPreviousMonthTotalExpense()
+    public async Task<GridData<ResponseExpenseDto>> ServerReload(GridState<ResponseExpenseDto> state)
     {
         try
         {
-            //var previousMonthExpenseTotal = await _httpClient.GetFromJsonAsync<decimal>($"{EndpointConstants.ExpenseSum}?year={Year}&month={Month - 1}");
-            var previousMonthExpenseTotal = await _expenseService.SumAsync(Year, Month - 1);
-            PreviousMonthTotalExpense = new TotalExpense(previousMonthExpenseTotal, CurrentMonthTotalExpense?.Current ?? 0);
-        }
-        catch { }
-    }
+            IsDataGridLoading = true;
 
-    public async Task OnReadData(int page, int pageSize)
-    {
-        try
+            await _tcs.Task;
+
+            PaginatedList = await _expenseService.ListAsync(state.Page, state.PageSize, Month, Year) ?? new();
+
+            return new GridData<ResponseExpenseDto>
+            {
+                TotalItems = PaginatedList.TotalItems,
+                Items = PaginatedList.Items
+            };
+        }
+        finally
         {
-            PaginatedList = await _expenseService.ListAsync(Year, Month, page, pageSize) ?? new();
-            //var response = await _httpClient.GetFromJsonAsync<PaginatedList<ResponseExpenseDto>>($"{EndpointConstants.Expense}?year={Year}&month={Month}&pageNumber={page}&pageSize={pageSize}");
-            //PaginatedList = response ?? new();
+            IsDataGridLoading = false;
         }
-        catch
+    }
+
+    public async Task ShowDeleteConfirmMessage(int id)
+    {
+        var parameters = new DialogParameters<MessageDialog>
         {
-        }
-    }
+            { x => x.ContentText, "Do you really want to delete these records? This process cannot be undone." },
+            { x => x.ButtonText, "Delete" },
+            { x => x.Color, Color.Error }
+        };
 
-    public async Task OnRowRemoving(CancellableRowChange<ResponseExpenseDto> e)
-    {
-        e.Cancel = await ShowDeleteConfirmMessage(e.OldItem.Id);
-    }
+        var dialog = await _dialogService.ShowAsync<MessageDialog>("Delete", parameters);
 
-    public async Task<bool> ShowDeleteConfirmMessage(int id)
-    {
-        var confirmed = await _messageService.Confirm("Are you sure you want to delete?", "Confirmation");
-        if (confirmed)
-        {
-            return await DeleteAsync(id);
-        }
-        return true;
-    }
-
-    private async Task<bool> DeleteAsync(int id)
-    {
-        //var result = await _httpClient.DeleteAsync($"{EndpointConstants.Expense}/{id}");
-        var result = await _expenseService.DeleteAsync(id);
-        if (result)
-        {
-            return false;
-        }
-        return true;
-    }
-
-    private async Task HandleRedraw(string[] labels, PieChartDataset<double> pieChartDataset)
-    {
-        if (PieChart == null)
+        var result = await dialog.Result;
+        if ((result?.Canceled) != false)
         {
             return;
         }
 
-        await PieChart.Clear();
+        await DeleteAsync(id);
+    }
 
-        await PieChart.AddLabelsDatasetsAndUpdate(labels, pieChartDataset);
+    private async Task DeleteAsync(int id)
+    {
+        var result = await _expenseService.DeleteAsync(id);
+        if (!result)
+        {
+            return;
+        }
+
+        var deletedItem = PaginatedList.Items.FirstOrDefault(x => x.Id == id);
+        if (deletedItem == null)
+        {
+            return;
+        }
+
+        PaginatedList.Remove(deletedItem);
     }
 }

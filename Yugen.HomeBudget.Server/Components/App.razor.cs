@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
+using Microsoft.AspNetCore.Http;
 
 namespace Yugen.HomeBudget.Server.Components
 {
@@ -8,8 +9,12 @@ namespace Yugen.HomeBudget.Server.Components
         [CascadingParameter]
         private HttpContext HttpContext { get; set; } = default!;
 
-        private IComponentRenderMode? RenderModeForPage => HttpContext.Request.Path.StartsWithSegments("/Account")
+        private IComponentRenderMode PageRenderMode => HttpContext.Request.Path.StartsWithSegments("/Account")
             ? null
             : new InteractiveServerRenderMode(false);
+
+        //private IComponentRenderMode? PageRenderMode => HttpContext.AcceptsInteractiveRouting() 
+        //    ? new InteractiveAutoRenderMode() 
+        //    : null;
     }
 }

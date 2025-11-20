@@ -1,22 +1,21 @@
-﻿@using Yugen.HomeBudget.Server.Components.Account
+﻿@using Microsoft.AspNetCore.Http
 @if (!string.IsNullOrEmpty(DisplayMessage))
 {
-    var statusMessageClass = DisplayMessage.StartsWith("Error") ? "danger" : "success";
-    <div class="alert alert-@statusMessageClass" role="alert">
-        @DisplayMessage
-    </div>
+    var severity = DisplayMessage.StartsWith("Error") ? Severity.Error : Severity.Success;
+
+    <MudAlert Variant="Variant.Outlined" Severity="@severity">@DisplayMessage</MudAlert>
 }
 
 @code {
-    private string? messageFromCookie;
+    private string messageFromCookie;
 
     [Parameter]
-    public string? Message { get; set; }
+    public string Message { get; set; }
 
     [CascadingParameter]
     private HttpContext HttpContext { get; set; } = default!;
 
-    private string? DisplayMessage => Message ?? messageFromCookie;
+    private string DisplayMessage => Message ?? messageFromCookie;
 
     protected override void OnInitialized()
     {
