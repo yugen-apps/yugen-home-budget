@@ -1,0 +1,53 @@
+<BarDropdown>
+    <BarDropdownToggle>
+        <Icon Name="IconName.Tint" /> Theme
+    </BarDropdownToggle>
+    <BarDropdownMenu Style="padding: 15px; min-width:550px;">
+        <Row>
+            <Column Margin="Margin.Is2.FromBottom">
+                <Field>
+                    <Switch TValue="bool"
+                            Checked="@(Theme?.Enabled == true)"
+                            CheckedChanged="@OnThemeEnabledChanged">Theme enabled</Switch>
+                </Field>
+            </Column>
+        </Row>
+        <Row>
+            <Column Margin="Margin.Is2.FromBottom">
+                <Field>
+                    <Check TValue="bool"
+                           Checked="@(Theme?.IsGradient == true)"
+                           CheckedChanged="@OnThemeGradientChanged">Gradient colors</Check>
+                </Field>
+                <Field>
+                    <Check TValue="bool"
+                           Checked="@(Theme?.IsRounded == true)"
+                           CheckedChanged="@OnThemeRoundedChanged">Rounded elements</Check>
+                </Field>
+            </Column>
+        </Row>
+        <Row>
+            <Column>
+                <Container Fluid>
+                    <div>
+                        @foreach (var color in ThemeColors.Items.Values)
+                        {
+                            <div @key="color.Key">
+                                @foreach (var shade in color.Shades.Values)
+                                {
+                                    var temp = shade.Value;
+
+                                    <div @key="shade.Key"
+                                         class="demo-theme-color-item"
+                                         style="background: @temp"
+                                         @onclick="@(() => OnThemeColorSelect(temp))">
+                                    </div>
+                                }
+                            </div>
+                        }
+                    </div>
+                </Container>
+            </Column>
+        </Row>
+    </BarDropdownMenu>
+</BarDropdown>

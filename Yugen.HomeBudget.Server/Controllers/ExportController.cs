@@ -2,21 +2,21 @@
 using Microsoft.AspNetCore.Mvc;
 using OfficeOpenXml;
 using Yugen.HomeBudget.Application.Services;
-using Yugen.HomeBudget.Shared.Contants;
+using Yugen.HomeBudget.Server.Navigation;
 
 namespace Yugen.HomeBudget.Server.Controllers
 {
     //[Authorize]
     [AllowAnonymous]
     [ApiController]
-    [Route($"{EndpointConstants.Prefix}/[controller]")]
+    [Route($"{MenuConstants.ApiPrefix}/[controller]")]
     public class ExportController : ControllerBase
     {
-        private readonly ILogger<ExpenseController> _logger;
+        private readonly ILogger<ExportController> _logger;
         private readonly ExpenseService _expenseService;
-        
+
         public ExportController(
-            ILogger<ExpenseController> logger,
+            ILogger<ExportController> logger,
             ExpenseService expenseService)
         {
             _logger = logger;

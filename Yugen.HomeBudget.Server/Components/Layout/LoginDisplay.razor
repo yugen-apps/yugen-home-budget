@@ -1,0 +1,15 @@
+﻿
+<AuthorizeView>
+    <Authorized>
+        <Figure Size="FigureSize.Is32x32">
+            <FigureImage Source="@Avatar"
+                         AlternateText="Avatar"
+                         Background="Background.Light"
+                         Rounded />
+        </Figure>
+        <Text> Hello @UserName! </Text>
+    </Authorized>
+    <NotAuthorized>
+        Settings
+    </NotAuthorized>
+</AuthorizeView>

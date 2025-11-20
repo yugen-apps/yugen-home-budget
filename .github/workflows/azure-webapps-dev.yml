@@ -17,7 +17,7 @@ jobs:
     with:
       server_project_name: Yugen.HomeBudget.Server
 
-  deploy_web_app_prod:
+  deploy_web_app:
     uses: "./.github/workflows/deploy-web-app.yml"
     needs: [build_web_app]
     secrets: inherit

@@ -1,0 +1,23 @@
+﻿@attribute [Route(MenuConstants.InfoPath)]
+@using Microsoft.AspNetCore.Authorization
+@using Yugen.HomeBudget.Server.Components.Shared
+@using Yugen.HomeBudget.Server.Navigation
+@using Yugen.HomeBudget.Server.ViewModels.Info
+@inject InfoIndexViewodel ViewModel
+
+<HeaderComponent PageTitle="@MenuConstants.InfoPath"
+                Title="@MenuConstants.InfoPath"
+                Breadcrumb="@MenuConstants.InfoPath" />
+
+<Row>
+    <Column ColumnSize="ColumnSize.Is12">
+        <ListGroup>
+            @foreach (var item in ViewModel.List)
+            {
+                <ListGroupItem>
+                    @($"{item.Key}: {item.Value}")
+                </ListGroupItem>
+            }
+        </ListGroup>
+    </Column>
+</Row>

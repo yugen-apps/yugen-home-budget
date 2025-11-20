@@ -1,120 +1,157 @@
 using Blazorise;
 using Blazorise.Bootstrap5;
 using Blazorise.Icons.FontAwesome;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Yugen.HomeBudget.Application.Services;
-using Yugen.HomeBudget.Client.Services;
-using Yugen.HomeBudget.Client.ViewModels;
-using Yugen.HomeBudget.Client.ViewModels.Authentication;
-using Yugen.HomeBudget.Client.ViewModels.Category;
-using Yugen.HomeBudget.Client.ViewModels.Expense;
-using Yugen.HomeBudget.Client.ViewModels.Info;
 using Yugen.HomeBudget.Data;
 using Yugen.HomeBudget.Data.Models;
 using Yugen.HomeBudget.Data.Repositories;
-using Yugen.HomeBudget.Server.Components;
+using Yugen.HomeBudget.Server.Components.Account;
+using Yugen.HomeBudget.Server.Services;
+using Yugen.HomeBudget.Server.ViewModels;
+using Yugen.HomeBudget.Server.ViewModels.Category;
+using Yugen.HomeBudget.Server.ViewModels.Expense;
+using Yugen.HomeBudget.Server.ViewModels.Info;
+using Yugen.HomeBudget.Shared.Models.Authentication;
 
-var builder = WebApplication.CreateBuilder(args);
-var baseAddress = builder.Configuration.GetValue<string>("BaseUrl");
-
-var connection = builder.Configuration.GetConnectionString("AZURE_SQL_CONNECTIONSTRING");
-
-builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connection,
-                                                    b => b.MigrationsAssembly("Yugen.HomeBudget.Data")));
-
-builder.Services.AddIdentity<ApplicationUser, IdentityRole<int>>().AddEntityFrameworkStores<ApplicationDbContext>();
-builder.Services.ConfigureApplicationCookie(options =>
+namespace Yugen.HomeBudget.Server
 {
-    options.Cookie.HttpOnly = false;
-    options.Events.OnRedirectToLogin = context =>
+    public class Program
     {
-        context.Response.StatusCode = 401;
-        return Task.CompletedTask;
-    };
-});
+        public static void Main(string[] args)
+        {
+            var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-builder.Services.AddScoped<CategoryRepository>();
-builder.Services.AddScoped<ExpenseRepository>();
-builder.Services.AddScoped<CategoryService>();
-builder.Services.AddScoped<ExpenseService>();
+            // Add services to the container.
+            builder.Services.AddRazorComponents()
+                .AddInteractiveServerComponents()
+                .AddInteractiveWebAssemblyComponents()
+                .AddAuthenticationStateSerialization();
 
-builder.Services.AddScoped<CustomStateProvider>();
-builder.Services.AddScoped<AuthenticationStateProvider>(s => s.GetRequiredService<CustomStateProvider>());
-builder.Services.AddScoped<IAuthService, AuthService>();
+            builder.Services.AddCascadingAuthenticationState();
+            builder.Services.AddScoped<IdentityRedirectManager>();
+            builder.Services.AddScoped<AuthenticationStateProvider, IdentityRevalidatingAuthenticationStateProvider>();
 
-builder.Services.AddHttpClient("Yugen.HomeBudget.ServerAPI", client => client.BaseAddress = new Uri(baseAddress));
-// Supply HttpClient instances that include access tokens when making requests to the server project
-builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>()
-                                   .CreateClient("Yugen.HomeBudget.ServerAPI"));
+            builder.Services.AddAuthentication(options =>
+                {
+                    options.DefaultScheme = IdentityConstants.ApplicationScheme;
+                    options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
+                })
+                .AddGoogle(options =>
+                {
+                    options.ClientId = builder.Configuration.GetValue<string>("Authentication:Google:ClientId") ?? string.Empty;
+                    options.ClientSecret = builder.Configuration.GetValue<string>("Authentication:Google:ClientSecret") ?? string.Empty;
+                    options.ClaimActions.MapJsonKey(GoogleClaimTypes.Picture, "picture");
+                })
+                .AddIdentityCookies();
 
-builder.Services.AddScoped<IndexViewModel>();
-builder.Services.AddScoped<LoginViewModel>();
-builder.Services.AddScoped<RegisterViewModel>();
-builder.Services.AddScoped<CategoryAddEditViewModel>();
-builder.Services.AddScoped<CategoryListViewModel>();
-builder.Services.AddScoped<ExpenseAddEditViewModel>();
-builder.Services.AddScoped<ExpenseListViewModel>();
-builder.Services.AddScoped<InfoIndexViewodel>();
+            #if DEBUG
+                AddDbContext(builder, false);
+            #else
+                AddDbContext(builder, false);
+            #endif
 
-builder.Services.AddControllers();
-builder.Services.AddRazorPages();
+            builder.Services.AddIdentityCore<ApplicationUser>(options =>
+                {
+                    options.SignIn.RequireConfirmedAccount = true;
+                    options.Stores.SchemaVersion = IdentitySchemaVersions.Version3;
+                })
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddSignInManager()
+                .AddDefaultTokenProviders();
 
-// Add services to the container.
-builder.Services.AddRazorComponents()
-    .AddInteractiveServerComponents()
-    .AddInteractiveWebAssemblyComponents();
+            builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
+            builder.Services.AddScoped<CategoryRepository>();
+            builder.Services.AddScoped<ExpenseRepository>();
 
-AddBlazorise(builder.Services);
+            builder.Services.AddScoped<CategoryService>();
+            builder.Services.AddScoped<ExpenseService>();
+            builder.Services.AddScoped<InfoService>();
 
-var app = builder.Build();
+            builder.Services.AddScoped<AuthService>();
 
-// using (var scope = app.Services.CreateScope())
-// {
-//    var services = scope.ServiceProvider;
+            var baseAddress = builder.Configuration.GetValue<string>("BaseUrl") ?? string.Empty;
+            builder.Services.AddHttpClient("Yugen.HomeBudget.ServerAPI", client => client.BaseAddress = new Uri(baseAddress));
+            // Supply HttpClient instances that include access tokens when making requests to the server project
+            builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>()
+                                               .CreateClient("Yugen.HomeBudget.ServerAPI"));
 
-//    var context = services.GetRequiredService<ApplicationDbContext>();
-//    context.Database.EnsureCreated();
-// }
+            builder.Services.AddScoped<HomeViewModel>();
+            builder.Services.AddScoped<CategoryAddEditViewModel>();
+            builder.Services.AddScoped<CategoryListViewModel>();
+            builder.Services.AddScoped<ExpenseAddEditViewModel>();
+            builder.Services.AddScoped<ExpenseListViewModel>();
+            builder.Services.AddScoped<InfoIndexViewodel>();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseWebAssemblyDebugging();
-}
-else
-{
-    app.UseExceptionHandler("/Error", createScopeForErrors: true);
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    app.UseHsts();
-}
+            AddBlazorise(builder.Services);
 
-app.UseHttpsRedirection();
-app.UseStaticFiles();
+            var app = builder.Build();
 
-app.UseRouting();
+            // Configure the HTTP request pipeline.
+            if (app.Environment.IsDevelopment())
+            {
+                app.UseWebAssemblyDebugging();
+                app.UseMigrationsEndPoint();
+            }
+            else
+            {
+                app.UseExceptionHandler("/Error");
+                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+                app.UseHsts();
+            }
 
-app.UseAuthentication();
-app.UseAuthorization();
-app.UseAntiforgery();
+            app.UseStatusCodePagesWithReExecute("/not-found", createScopeForStatusCodePages: true);
+            app.UseHttpsRedirection();
 
-app.MapRazorPages();
-app.MapControllers();
+            app.UseAntiforgery();
 
-app.MapRazorComponents<App>()
-    .AddInteractiveServerRenderMode()
-    .AddInteractiveWebAssemblyRenderMode()
-    .AddAdditionalAssemblies(typeof(Yugen.HomeBudget.Client.Components._Imports).Assembly);
+            app.MapStaticAssets();
+            app.MapRazorComponents<Components.App>()
+                .AddInteractiveServerRenderMode()
+                .AddInteractiveWebAssemblyRenderMode()
+                .AddAdditionalAssemblies(typeof(Client._Imports).Assembly);
 
-app.Run();
+            // Add additional endpoints required by the Identity /Account Razor components.
+            app.MapAdditionalIdentityEndpoints();
 
-static void AddBlazorise(IServiceCollection services)
-{
-    services
-        .AddBlazorise();
-    services
-        .AddBootstrap5Providers()
-        .AddFontAwesomeIcons();
+            PingDb(app);
+
+            app.Run();
+        }
+
+        private static void AddDbContext(WebApplicationBuilder builder, bool useInMemoryDatabase)
+        {
+            var connectionString = builder.Configuration.GetConnectionString("AZURE_SQL_CONNECTIONSTRING") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+            if (useInMemoryDatabase)
+            {
+                builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseInMemoryDatabase("db"));
+            }
+            else
+            {
+                builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connectionString));
+            }
+            builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+        }
+
+        private static void AddBlazorise(IServiceCollection services)
+        {
+            services
+                .AddBlazorise();
+            services
+                .AddBootstrap5Providers()
+                .AddFontAwesomeIcons();
+        }
+
+        private static void PingDb(WebApplication app)
+        {
+            using (var scope = app.Services.CreateScope())
+            {
+                var infoService = scope.ServiceProvider.GetRequiredService<InfoService>();
+                infoService.CanConnect();
+            }
+        }
+    }
 }

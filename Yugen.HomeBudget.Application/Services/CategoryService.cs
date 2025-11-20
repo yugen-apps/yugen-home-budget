@@ -28,7 +28,7 @@ namespace Yugen.HomeBudget.Application.Services
             var categoriesDto = (await _categoryRepository.ListAsync(skip, pageSize))
                                 .Select(c => c.ToDto())
                                 .ToList();
-            
+
             return new PaginatedList<ResponseCategoryDto>(categoriesDto, totalItemCount, pageIndex, pageSize);
         }
 

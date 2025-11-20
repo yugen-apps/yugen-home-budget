@@ -1,0 +1,115 @@
+﻿@attribute [Route(MenuConstants.HomePath)]
+@using Blazorise.Charts
+@using Blazorise.DataGrid
+@using Blazorise.LoadingIndicator
+@using Microsoft.AspNetCore.Authorization
+@using Yugen.HomeBudget.Server.Components
+@using Yugen.HomeBudget.Server.Components.Shared
+@using Yugen.HomeBudget.Server.Models
+@using Yugen.HomeBudget.Server.Navigation
+@using Yugen.HomeBudget.Server.ViewModels
+@using Yugen.HomeBudget.Shared.Models.Expense
+@inject HomeViewModel ViewModel
+
+<HeaderComponent PageTitle="@MenuConstants.HomeMenuItem.Title"
+				Title="@MenuConstants.HomeMenuItem.Title"
+				Breadcrumb="@MenuConstants.HomeMenuItem.Title" />
+
+<AuthorizeView>
+	<Authorized>
+		<LoadingIndicator @bind-Visible="@ViewModel.IsLoading">
+			<Row>
+
+				<Column ColumnSize="ColumnSize.Is12">
+					<CardDeck Margin="Margin.Is4.FromBottom">
+						<HomeCardComponent Header="Current Year"
+										   IconName="IconName.Cart"
+										   TotalExpense="@ViewModel.CurrentYearTotalExpense"
+										   Footer="Expense Total" />
+
+						<HomeCardComponent Header="Previous Month"
+										   IconName="IconName.DollarSign"
+										   TotalExpense="@ViewModel.PreviousMonthTotalExpense"
+										   Footer="Expense Total" />
+
+						<HomeCardComponent Header="Current Month"
+										   IconName="IconName.CreditCard"
+										   TotalExpense="@ViewModel.CurrentMonthTotalExpense"
+										   Footer="Expense Total" />
+
+						<HomeCardComponent Header="Current Year"
+										   IconName="IconName.MoneyBillAlt"
+										   TotalAccrued="@ViewModel.CurrentYearTotalAccrued"
+										   Footer="Accrued Total" />
+
+					</CardDeck>
+				</Column>
+
+				<Column ColumnSize="ColumnSize.Is7.OnDesktop">
+					<Card Margin="Margin.Is4.FromBottom"
+						  Shadow="Shadow.Default">
+						<CardHeader>
+							Current Month Expenses History
+						</CardHeader>
+						<CardBody>
+							<DataGrid TItem="ResponseExpenseDto"
+									  Data="@ViewModel.PaginatedList.Items"
+									  ReadData="@OnReadData"
+									  TotalItems="@ViewModel.PaginatedList.TotalItems"
+									  PageSize="@Constants.PageSizeSmall"
+									  RowRemoving="@ViewModel.OnRowRemoving"
+									  Editable
+									  ShowPager
+									  Responsive>
+								@* <DataGridCommandColumn DeleteCommandAllowed="true">
+							<NewCommandTemplate>
+								<Button Color="Color.Primary"
+										Clicked="@context.Clicked"
+										Type="ButtonType.Link"
+										To="@MenuConstants.ExpenseAddUrl">
+									<Icon Name="IconName.Add" />
+								</Button>
+							</NewCommandTemplate>
+							<EditCommandTemplate>
+								<Button Color="Color.Warning"
+										Clicked="@context.Clicked"
+										Type="ButtonType.Link"
+										To="@PageHelper.EditHref(MenuConstants.ExpenseUrl, context.Item.Id)">
+									<Icon Name="IconName.Edit" />
+								</Button>
+							</EditCommandTemplate>
+							<DeleteCommandTemplate>
+								<Button Color="Color.Danger"
+										Clicked="@context.Clicked">
+									<Icon Name="IconName.Delete" />
+								</Button>
+							</DeleteCommandTemplate>
+						</DataGridCommandColumn> *@
+								<DataGridDateColumn Field="@nameof(ResponseExpenseDto.DateTimeOffset)" Caption="@nameof(ResponseExpenseDto.DateTimeOffset)" DisplayFormat="{0:d}" />
+								<DataGridColumn Field="@nameof(ResponseExpenseDto.Title)" Caption="@nameof(ResponseExpenseDto.Title)" />
+								<DataGridColumn Field="@nameof(ResponseExpenseDto.Amount)" Caption="@nameof(ResponseExpenseDto.Amount)" />
+								<DataGridColumn Field="@nameof(ResponseExpenseDto.Accrued)" Caption="@nameof(ResponseExpenseDto.Accrued)" />
+							</DataGrid>
+						</CardBody>
+					</Card>
+				</Column>
+
+				<Column ColumnSize="ColumnSize.Is5.OnDesktop">
+					<Card Margin="Margin.Is4.FromBottom"
+						  Shadow="Shadow.Default">
+						<CardHeader>
+							Current Month Expenses Chart
+						</CardHeader>
+						<CardBody>
+							<PieChart @ref="ViewModel.PieChart" TItem="double" />
+						</CardBody>
+					</Card>
+				</Column>
+			</Row>
+		</LoadingIndicator>
+
+	</Authorized>
+	<NotAuthorized>
+		<Link To="/Account/Login">Please Login</Link>
+	</NotAuthorized>
+</AuthorizeView>

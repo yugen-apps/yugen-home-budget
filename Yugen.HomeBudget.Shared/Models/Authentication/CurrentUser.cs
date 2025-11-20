@@ -1,12 +1,40 @@
-﻿namespace Yugen.HomeBudget.Shared.Models.Authentication;
+﻿using System.Security.Claims;
+
+namespace Yugen.HomeBudget.Shared.Models.Authentication;
 
 public class CurrentUser
 {
-    public bool IsAuthenticated { get; set; }
+    public CurrentUser(ClaimsPrincipal user)
+    {
+        User = user;
+        IsAuthenticated = User?.Identity?.IsAuthenticated ?? false;
 
-    public string UserName { get; set; } = string.Empty;
+        if (IsAuthenticated)
+        {            
+            UserName = User?.Identity?.Name;
+            GivenName = User?.FindFirst(ClaimTypes.GivenName)?.Value;
+            Surname = User?.FindFirst(ClaimTypes.Surname)?.Value;
+            Avatar = User?.FindFirst(GoogleClaimTypes.Picture)?.Value;
 
-    public Dictionary<string, string> Claims { get; set; } = new Dictionary<string, string>();
+            var currentUserIdentifier = User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (int.TryParse(currentUserIdentifier, out var currentUserId))
+            {
+                Id = currentUserId;
+            }
+        }
+    }
+
+    public ClaimsPrincipal? User { get; }
+
+    public bool IsAuthenticated { get; }
+
+    public string? UserName { get; }
+
+    public string? GivenName { get; }
+
+    public string? Surname { get; }
+
+    public string? Avatar { get; }
 
     public int? Id { get; set; }
 }

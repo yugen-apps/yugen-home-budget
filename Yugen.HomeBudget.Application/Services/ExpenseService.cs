@@ -47,8 +47,8 @@ namespace Yugen.HomeBudget.Application.Services
         public Task<decimal> SumAsync(int year, int month)
         {
             return _expenseRepository.SumAsync(year, month);
-        }     
-        
+        }
+
         public Task<decimal> SumAccruedAsync(int year, int month)
         {
             return _expenseRepository.SumAccruedAsync(year, month);

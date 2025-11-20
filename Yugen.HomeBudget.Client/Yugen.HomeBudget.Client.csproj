@@ -1,45 +1,17 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
+<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
 
 	<PropertyGroup>
-		<TargetFramework>net8.0</TargetFramework>
-		<Nullable>enable</Nullable>
+		<TargetFramework>net10.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
-		<ServiceWorkerAssetsManifest>service-worker-assets.js</ServiceWorkerAssetsManifest>
-		<Version>1.0.0</Version>
+		<Nullable>enable</Nullable>
 		<NoDefaultLaunchSettingsFile>true</NoDefaultLaunchSettingsFile>
 		<StaticWebAssetProjectMode>Default</StaticWebAssetProjectMode>
+		<BlazorDisableThrowNavigationException>true</BlazorDisableThrowNavigationException>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Blazorise" Version="1.8.3" />
-		<PackageReference Include="Blazorise.Bootstrap5" Version="1.8.3" />
-		<PackageReference Include="Blazorise.Charts" Version="1.8.3" />
-		<PackageReference Include="Blazorise.Components" Version="1.8.3" />
-		<PackageReference Include="Blazorise.Icons.FontAwesome" Version="1.8.3" />
-		<PackageReference Include="Blazorise.DataGrid" Version="1.8.3" />
-		<PackageReference Include="Blazorise.LoadingIndicator" Version="1.8.3" />
-		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
-		<PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="8.0.*" />
-		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.*" />
-		<PackageReference Include="Microsoft.Extensions.Http" Version="8.0.*" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<ProjectReference Include="..\Yugen.HomeBudget.Shared\Yugen.HomeBudget.Shared.csproj" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<EmbeddedResource Include="wwwroot\*" />
-		<EmbeddedResource Include="wwwroot\assets\*" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <EmbeddedResource Remove="wwwroot\service-worker.js" />
-	  <EmbeddedResource Remove="wwwroot\service-worker.published.js" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<ServiceWorker Include="wwwroot\service-worker.js" PublishedContent="wwwroot\service-worker.published.js" />
+		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="10.0.0-*" />
+		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="10.0.0-*" />
 	</ItemGroup>
 
 </Project>

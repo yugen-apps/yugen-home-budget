@@ -1,0 +1,93 @@
+﻿@using Yugen.HomeBudget.Server.Navigation
+
+<Bar @ref="@TargetForwardRef.Current"
+	 Breakpoint="Breakpoint.Desktop"
+	 CollapseMode="BarCollapseMode.Hide"
+	 Mode="BarMode.VerticalInline"
+	 NavigationBreakpoint="Breakpoint.Tablet"
+	 ThemeContrast="ThemeContrast.Dark">
+	<BarBrand>
+		<BarItem>
+			<BarLink To="/">
+				<BarIcon IconName="customIcon" />
+				<Text TextSize="TextSize.Small">
+					Yugen.HomeBudget
+				</Text>
+			</BarLink>
+		</BarItem>
+	</BarBrand>
+	<BarMenu>
+		<BarStart>
+			@if (MenuItems != null)
+			{
+				@foreach (var menuItem in MenuItems)
+				{
+					@if (menuItem.IsParent)
+					{
+						<BarItem>
+							<BarDropdown @bind-Visible="_pagesBarVisible">
+								<BarDropdownToggle>
+									<BarIcon IconName="@menuItem.Icon" />
+									@menuItem.Title
+								</BarDropdownToggle>
+								@foreach (var menuSubItem in menuItem.MenuSubItems)
+								{
+									<AuthorizeView Policy="@menuSubItem.Policy">
+										<Authorized>
+											<BarDropdownMenu>
+												<BarDropdownItem To="@menuSubItem.Path">
+													@menuSubItem.Title
+												</BarDropdownItem>
+											</BarDropdownMenu>
+										</Authorized>
+									</AuthorizeView>
+								}
+							</BarDropdown>
+						</BarItem>
+					}
+					else
+					{
+						<AuthorizeView Policy="@menuItem.Policy">
+							<Authorized>
+								<BarItem>
+									<BarLink To="@menuItem.Path">
+										<BarIcon IconName="@menuItem.Icon" />
+										@menuItem.Title
+									</BarLink>
+								</BarItem>
+							</Authorized>
+						</AuthorizeView>
+					}
+				}
+			}
+		</BarStart>
+
+		<BarEnd>
+			<BarItem>
+				<BarDropdown>
+					<BarDropdownToggle>
+						<BarIcon IconName="IconName.Smartphone" />
+						Debug
+					</BarDropdownToggle>
+					<BarDropdownMenu>
+						<BarDropdownItem To="@MenuConstants.InfoPath">
+							@MenuConstants.InfoPath
+						</BarDropdownItem>
+						<BarDropdownItem To="https://blazorise.com/docs"
+										 Target="Target.Blank">
+							Docs
+						</BarDropdownItem>
+						<BarDropdownItem To="https://bootstrapdemo.blazorise.com/"
+										 Target="Target.Blank">
+							Demo
+						</BarDropdownItem>
+						@* <BarItem>
+				<BarLink To="/auth">Auth Required</BarLink>
+			</BarItem> *@
+					</BarDropdownMenu>
+				</BarDropdown>
+			</BarItem>
+		</BarEnd>
+
+	</BarMenu>
+</Bar>

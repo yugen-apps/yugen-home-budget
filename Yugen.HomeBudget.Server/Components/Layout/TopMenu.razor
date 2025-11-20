@@ -1,0 +1,81 @@
+﻿@using Blazorise.Localization
+@using Microsoft.AspNetCore.Components.Authorization
+
+<Bar Breakpoint="Breakpoint.Tablet"
+     Background="Background.Primary"
+     ThemeContrast="ThemeContrast.Light">
+    <BarBrand>
+        @if (!IsAccount)
+        {
+            <BarToggler Bar="@TargetForwardRef.Current"
+                        Margin="Margin.Is2.FromStart" />
+        }
+    </BarBrand>
+    <BarMenu>
+        <BarStart>
+            @if (IsAccount)
+            {
+			<BarItem>
+				<BarLink To="/">
+					<BarIcon IconName="IconName.Dashboard" />
+					Dashboard
+				</BarLink>
+			</BarItem>
+            }
+        </BarStart>
+        <BarEnd>
+            @if (!IsAccount)
+            {
+                <BarItem>
+                    <BarDropdown RightAligned>
+
+                        <BarDropdownToggle>
+                            <LoginDisplay />
+                        </BarDropdownToggle>
+
+                        <BarDropdownMenu>
+
+                            <LanguageSelector />
+
+                            <BarDropdownDivider />
+                            <ThemeColorSelector />
+
+                            <BarDropdownDivider />
+                            <AuthorizeView>
+                                <Authorized>
+                                    <BarDropdownItem To="/Account/Manage">
+                                        <BarIcon IconName="IconName.Dashboard" />
+                                        Manage
+                                    </BarDropdownItem>
+                                    <BarDropdownDivider />
+                                    <BarDropdownItem>
+                                        <Form method="post" action="Account/Logout">
+                                            <AntiforgeryToken />
+                                            <input type="hidden" name="ReturnUrl" value="@Routes.CurrentUrl" />
+                                            <Button Type="ButtonType.Submit">
+                                                <Icon Name="IconName.ArrowDown" />
+                                                Logout
+                                            </Button>
+                                        </Form>
+                                    </BarDropdownItem>
+                                </Authorized>
+                                <NotAuthorized>
+                                    <BarDropdownItem To="/Account/Register">
+                                        <Icon Name="IconName.ArrowUp" />
+                                        Log in
+                                    </BarDropdownItem>
+                                    <BarDropdownDivider />
+                                    <BarDropdownItem To="/Account/Register">
+                                        <Icon Name="IconName.PlusSquare" />
+                                        Register
+                                    </BarDropdownItem>
+                                </NotAuthorized>
+                            </AuthorizeView>
+
+                        </BarDropdownMenu>
+                    </BarDropdown>
+                </BarItem>
+            }
+        </BarEnd>
+    </BarMenu>
+</Bar>

@@ -1,0 +1,29 @@
+﻿@using Blazorise.LoadingIndicator
+@using Microsoft.AspNetCore.Components.Authorization
+
+@inherits LayoutComponentBase
+
+<Layout Sider>
+	<LayoutSider>
+		<LayoutSiderContent>
+			<SideMenu TargetForwardRef="@barForwardRef" />
+		</LayoutSiderContent>
+	</LayoutSider>
+	<Layout>
+		<LayoutHeader Fixed>
+			<TopMenu TargetForwardRef="@barForwardRef" />
+		</LayoutHeader>
+		<LayoutContent Padding="Padding.Is2">
+			@Body
+		</LayoutContent>
+		<LayoutFooter Fixed>
+			<FooterMenu />
+		</LayoutFooter>
+	</Layout>
+</Layout>
+
+<div id="blazor-error-ui" data-nosnippet>
+	An unhandled error has occurred.
+	<a href="." class="reload">Reload</a>
+	<span class="dismiss">🗙</span>
+</div>

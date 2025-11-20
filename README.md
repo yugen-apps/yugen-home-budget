@@ -52,7 +52,51 @@ Connection Timeout=10;Authentication=Active Directory Managed Identity;
 
 Server=tcp:sql-server-yugen.database.windows.net,1433;Database=sql-db-yugen-homebudget-dev;Encrypt=True;User ID=ddc4c0ff-bab8-4f28-adda-7afa0a086920;Connection Timeout=10;Authentication=Active Directory Managed Identity;
 
+# Migrations
 
+```
+dotnet ef migrations add V3 `
+--startup-project ".\Yugen.HomeBudget.Server\Yugen.HomeBudget.Server.csproj" `
+--project ".\Yugen.HomeBudget.Data\Yugen.HomeBudget.Data.csproj"`
+--verbose
+```
+
+```
+dotnet ef database update `
+--startup-project ".\Yugen.HomeBudget.Server\Yugen.HomeBudget.Server.csproj" `
+--project ".\Yugen.HomeBudget.Data\Yugen.HomeBudget.Data.csproj"`
+--configuration "debug" `
+--verbose
+```
+
+```
+dotnet build `
+".\Yugen.HomeBudget.Server\Yugen.HomeBudget.Server.csproj" `
+--configuration Release `
+--verbosity detailed
+```
+
+```
+dotnet ef migrations bundle `
+--startup-project ".\Yugen.HomeBudget.Server\Yugen.HomeBudget.Server.csproj" `
+--project ".\Yugen.HomeBudget.Data\Yugen.HomeBudget.Data.csproj"`
+--configuration Release `
+--self-contained `
+--verbose
+```
+
+
+
+
+
+
+
+
+
+
+
+
+# Old
 
 BaseUrl
 https://webapp-yugen-home-budget-dev.azurewebsites.net/

@@ -3,7 +3,7 @@
 public class ResponseExpenseGroupedByCategoryDto
 {
     public ResponseExpenseGroupedByCategoryDto(
-        string category, 
+        string category,
         int total,
         int index)
     {
