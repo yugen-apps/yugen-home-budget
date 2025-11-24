@@ -20,7 +20,7 @@
 
 <MudText Typo="Typo.h3" GutterBottom="true">Register</MudText>
 
-<MudGrid>
+@* <MudGrid>
     <MudItem md="6">
         <StatusMessage Message="@Message" />
         <EditForm Model="Input" asp-route-returnUrl="@ReturnUrl" method="post" OnValidSubmit="RegisterUser" FormName="register">
@@ -54,18 +54,23 @@
         <MudText Typo="Typo.body1" GutterBottom="true">Use another service to register.</MudText>
         <ExternalLoginPicker />
     </MudItem>
-</MudGrid>
+</MudGrid> *@
 
-@code {
+@* @code {
     private IEnumerable<IdentityError> identityErrors;
 
     [SupplyParameterFromForm]
-    private InputModel Input { get; set; } = new();
+    private InputModel Input { get; set; } = default;
 
     [SupplyParameterFromQuery]
     private string ReturnUrl { get; set; }
 
     private string Message => identityErrors is null ? null : $"Error: {string.Join(", ", identityErrors.Select(error => error.Description))}";
+    
+    protected override void OnInitialized()
+    {
+        Input ??= new();
+    }
 
     public async Task RegisterUser(EditContext editContext)
     {
@@ -143,5 +148,5 @@
         [Display(Name = "Confirm password")]
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; } = "";
-    }
+    } *@
 }

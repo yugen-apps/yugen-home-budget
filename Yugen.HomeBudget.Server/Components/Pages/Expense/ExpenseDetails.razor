@@ -61,7 +61,7 @@
 								   Required="true"
 								   TransformOrigin="Origin.BottomCenter"
 								   Value="ViewModel.Model.SelectedCategory"
-								   ValueChanged="ViewModel.Model.CategoryChanged">
+								   ValueChanged="CategoryChanged">
 							@foreach (var category in ViewModel.Model.Categories)
 							{
 								<MudSelectItem Value="category">
@@ -76,7 +76,8 @@
 								   Placeholder="Please Select"
 								   TransformOrigin="Origin.BottomCenter"
 								   Required="true"
-								   @bind-Value="ViewModel.Model.SelectedSubCategory">
+								   Value="ViewModel.Model.SelectedSubCategory"
+								   ValueChanged="ViewModel.Model.SubCategoryChanged">
 							@foreach (var subCategory in ViewModel.Model.SubCategories)
 							{
 								<MudSelectItem Value="subCategory">

@@ -108,13 +108,13 @@ public sealed partial class ExpenseDetailsViewModel : ObservableObject
                         Model.Title,
                         (decimal)Model.Amount,
                         Model.DateTime,
-                        1, //Model.CategoryId, 
-                        1, //Model.SubCategoryId, 
+                        Model.SelectedCategory.Id, 
+                        Model.SelectedSubCategory.Id, 
                         Model.Accrued,
                         _currentUser.Id,
                         _currentUser.Id);
-                    var response = await _expenseService.UpdateAsync((int)_id, updateExpenseDto);
 
+                    var response = await _expenseService.UpdateAsync((int)_id, updateExpenseDto);
                 }
                 else
                 {
@@ -122,13 +122,13 @@ public sealed partial class ExpenseDetailsViewModel : ObservableObject
                         Model.Title,
                         (decimal)Model.Amount,
                         Model.DateTime,
-                        1, //Model.CategoryId, 
-                        1, //Model.SubCategoryId, 
+                        Model.SelectedCategory.Id,
+                        Model.SelectedSubCategory.Id,
                         Model.Accrued,
                         _currentUser.Id,
                         _currentUser.Id);
-                    var response = await _expenseService.CreateAsync(createExpenseDto);
 
+                    var response = await _expenseService.CreateAsync(createExpenseDto);
                 }
 
                 _navigationManager.NavigateTo(MenuConstants.ExpensePath);

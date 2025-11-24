@@ -9,10 +9,9 @@ namespace Yugen.HomeBudget.Server.Components.Layout
     {
         [Inject]
         private AuthService AuthService { get; set; } = default!;
+
         [Parameter]
         public EventCallback<bool> DarkModeChanged { get; set; }
-
-        private static bool IsAccount => Routes.CurrentUrl?.StartsWith("Account") ?? false;
 
         private bool _isDarkMode;
         private string Avatar;

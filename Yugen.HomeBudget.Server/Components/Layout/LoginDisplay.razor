@@ -1,4 +1,4 @@
-﻿@if (IsAccount)
+﻿@if (Routes.IsAccount)
 {
 	<MudIconButton Color="Color.Inherit"
 				   Href="/"
@@ -99,10 +99,10 @@ else
 						<MudMenuItem Href="/Account/Login"
 									 Icon="@Icons.Material.Filled.Login"
 									 Label="Log In" />
-						<MudDivider />
+						@* <MudDivider />
 						<MudMenuItem Href="/Account/Register"
 									 Icon="@Icons.Material.Filled.PlusOne"
-									 Label="Register" />
+									 Label="Register" /> *@
 
 						@* 
 						<MudButton Color="Color.Default"

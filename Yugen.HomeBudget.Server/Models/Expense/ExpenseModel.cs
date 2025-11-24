@@ -52,6 +52,11 @@ namespace Yugen.HomeBudget.Server.Models.Expense
             SelectedSubCategory = SubCategories.First();
         }
 
+        public void SubCategoryChanged(SubCategoryDto subCategory)
+        {
+            SelectedSubCategory = subCategory;
+        }
+
         public ResponseCategoryDto SelectedCategory { get; set; }
 
         public List<ResponseCategoryDto> Categories { get; set; } = [];

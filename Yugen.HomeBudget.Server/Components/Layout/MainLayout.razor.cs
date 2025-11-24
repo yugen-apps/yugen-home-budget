@@ -1,15 +1,13 @@
-﻿using Microsoft.AspNetCore.Components;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 namespace Yugen.HomeBudget.Server.Components.Layout
 {
     public partial class MainLayout
     {
         private bool _drawerOpen = true;
+        private bool _isDarkMode;
 
         private void DrawerToggle() => _drawerOpen = !_drawerOpen;
-
-        private bool _isDarkMode;
 
         private Task OnDarkModeChanged(bool value)
         {           

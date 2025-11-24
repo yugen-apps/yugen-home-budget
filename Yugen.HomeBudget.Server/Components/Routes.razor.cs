@@ -7,6 +7,10 @@ namespace Yugen.HomeBudget.Server.Components
     {
         public static string CurrentUrl { get; private set; }
 
+        public static bool IsAccount => CurrentUrl?.StartsWith("Account") ?? false;
+
+        public static bool IsAccountManage => CurrentUrl?.StartsWith("Account/Manage") ?? false;
+
         [Inject]
         private NavigationManager NavigationManager { get; set; }
 
