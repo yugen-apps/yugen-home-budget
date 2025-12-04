@@ -1,6 +1,5 @@
-﻿namespace Yugen.HomeBudget.Server.Components.Layout
+﻿namespace Yugen.HomeBudget.Server.Components.Layout;
+
+public partial class SideMenu
 {
-    public partial class SideMenu
-    {
-    }
 }

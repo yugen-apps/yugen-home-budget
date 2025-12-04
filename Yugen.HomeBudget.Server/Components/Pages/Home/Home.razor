@@ -1,7 +1,7 @@
 ﻿@using Yugen.HomeBudget.Application.Models.Expense
 @using Yugen.HomeBudget.Server.Components.Shared
 @using Yugen.HomeBudget.Server.Models
-@using Yugen.HomeBudget.Server.Navigation
+@using Yugen.HomeBudget.Server.Models.Navigation
 @attribute [Route(MenuConstants.HomePath)]
 @inject Yugen.HomeBudget.Server.ViewModels.HomeViewModel ViewModel
 
@@ -55,8 +55,7 @@
 					</MudCardHeader>
 
 					<MudCardContent>
-						<MudDataGrid @ref="ViewModel.DataGrid"
-									 T="ResponseExpenseDto"
+						<MudDataGrid T="ResponseExpenseDto"
 									 Loading="ViewModel.IsDataGridLoading"
 									 ServerData="ViewModel.ServerReload"
 									 Bordered="true"
@@ -113,8 +112,8 @@
 					</MudCardHeader>
 					<MudCardContent>
 						<MudChart ChartType="ChartType.Pie"
-								  InputData="@ViewModel.Data"
-								  InputLabels="@ViewModel.Labels"
+								  ChartSeries="@ViewModel.Data.AsChartDataSet()"
+								  ChartLabels="@ViewModel.Labels"
 								  Width="300px"
 								  Height="300px" />
 					</MudCardContent>

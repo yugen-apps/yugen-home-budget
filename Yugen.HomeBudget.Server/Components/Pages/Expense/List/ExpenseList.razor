@@ -2,7 +2,7 @@
 @using Yugen.HomeBudget.Application.Models.Expense
 @using Yugen.HomeBudget.Server.Components.Shared
 @using Yugen.HomeBudget.Server.Models
-@using Yugen.HomeBudget.Server.Navigation
+@using Yugen.HomeBudget.Server.Models.Navigation
 @using Yugen.HomeBudget.Server.ViewModels.Expense
 @attribute [Route(MenuConstants.ExpensePath)]
 @attribute [Authorize]
@@ -54,7 +54,7 @@
 			</MudCardHeader>
 
 			<MudCardContent>
-				<MudDataGrid @ref="ViewModel.DataGrid"
+				<MudDataGrid @ref="DataGrid"
 							 T="ResponseExpenseDto"
 							 ServerData="ViewModel.ServerReload"
 							 Bordered="true"

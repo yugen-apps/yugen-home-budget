@@ -1,9 +1,8 @@
-﻿
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
-namespace Yugen.HomeBudget.Server.Components.Pages.Info;
+namespace Yugen.HomeBudget.Server.Components.Pages.Category.List;
 
-public partial class Index
+public partial class CategoryList
 {
     protected override async Task OnInitializedAsync()
     {

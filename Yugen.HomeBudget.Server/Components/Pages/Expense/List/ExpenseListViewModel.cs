@@ -2,6 +2,7 @@
 using MudBlazor;
 using System;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Yugen.HomeBudget.Application.Models;
 using Yugen.HomeBudget.Application.Models.Expense;
@@ -14,7 +15,6 @@ public sealed partial class ExpenseListViewModel : ObservableObject
 {
     public int[] Months = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 };
     public int[] Years = { 2023, 2024, 2025 };
-    public MudDataGrid<ResponseExpenseDto> DataGrid;
     private readonly ExpenseService _expenseService;
     private readonly IDialogService _dialogService;
 
@@ -38,7 +38,9 @@ public sealed partial class ExpenseListViewModel : ObservableObject
         _dialogService = dialogService;
     }
 
-    public async Task<GridData<ResponseExpenseDto>> ServerReload(GridState<ResponseExpenseDto> state)
+    public Func<Task> RefreshServerDataFunc { get; set; }
+
+    public async Task<GridData<ResponseExpenseDto>> ServerReload(GridState<ResponseExpenseDto> state, CancellationToken cancellationToken)
     {
         await RefreshDataAsync(state.Page, state.PageSize);
 
@@ -53,7 +55,7 @@ public sealed partial class ExpenseListViewModel : ObservableObject
     {
         SelectedMonth = month ?? SelectedMonth;
         SelectedYear = year ?? SelectedYear;
-        return DataGrid.ReloadServerData();
+        return RefreshServerDataFunc.Invoke();
     }
 
     public async Task ShowDeleteConfirmMessage(int id)

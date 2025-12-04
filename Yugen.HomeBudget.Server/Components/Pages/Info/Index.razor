@@ -1,16 +1,16 @@
-﻿@attribute [Route(MenuConstants.InfoPath)]
+﻿@attribute [Route(MenuConstants.SettingsInfoPath)]
 @using Microsoft.AspNetCore.Authorization
 @using Yugen.HomeBudget.Server.Components.Shared
-@using Yugen.HomeBudget.Server.Navigation
+@using Yugen.HomeBudget.Server.Models.Navigation
 @using Yugen.HomeBudget.Server.ViewModels.Info
 @inject InfoIndexViewodel ViewModel
 
 <MudGrid>
 
 	<MudItem xs="12">
-		<HeaderComponent PageTitle="@MenuConstants.InfoPath"
-						 Title="@MenuConstants.InfoPath"
-						 Breadcrumb="@MenuConstants.InfoPath" />
+		<HeaderComponent PageTitle="@MenuConstants.SettingsInfoMenuItem.Title"
+						 Title="@MenuConstants.SettingsInfoMenuItem.Title"
+						 Breadcrumb="@MenuConstants.SettingsInfoMenuItem.Title" />
 	</MudItem>
 
 	<MudItem xs="12">

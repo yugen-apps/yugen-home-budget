@@ -1,24 +1,23 @@
 ﻿using Microsoft.AspNetCore.Components;
 using MudBlazor;
 
-namespace Yugen.HomeBudget.Server.Components.Shared
+namespace Yugen.HomeBudget.Server.Components.Shared;
+
+public partial class MessageDialog
 {
-    public partial class MessageDialog
-    {
-        [CascadingParameter]
-        private IMudDialogInstance MudDialog { get; set; }
+    [CascadingParameter]
+    private IMudDialogInstance MudDialog { get; set; }
 
-        [Parameter]
-        public string ContentText { get; set; }
+    [Parameter]
+    public string ContentText { get; set; }
 
-        [Parameter]
-        public string ButtonText { get; set; }
+    [Parameter]
+    public string ButtonText { get; set; }
 
-        [Parameter]
-        public Color Color { get; set; }
+    [Parameter]
+    public Color Color { get; set; }
 
-        private void Submit() => MudDialog.Close(DialogResult.Ok(true));
+    private void Submit() => MudDialog.Close(DialogResult.Ok(true));
 
-        private void Cancel() => MudDialog.Cancel();
-    }
+    private void Cancel() => MudDialog.Cancel();
 }

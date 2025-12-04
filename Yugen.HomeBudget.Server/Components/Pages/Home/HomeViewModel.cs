@@ -1,8 +1,8 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using MudBlazor;
 using System;
-using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Yugen.HomeBudget.Application.Models;
 using Yugen.HomeBudget.Application.Models.Expense;
@@ -57,8 +57,6 @@ public sealed partial class HomeViewModel : ObservableObject
     private int Month => _now.Month;
 
     private int PreviousMonth => _now.AddMonths(-1).Month;
-
-    public MudDataGrid<ResponseExpenseDto> DataGrid;
 
     public string[] Labels { get; private set; } = [];
 
@@ -140,7 +138,7 @@ public sealed partial class HomeViewModel : ObservableObject
         catch { }
     }
 
-    public async Task<GridData<ResponseExpenseDto>> ServerReload(GridState<ResponseExpenseDto> state)
+    public async Task<GridData<ResponseExpenseDto>> ServerReload(GridState<ResponseExpenseDto> state, CancellationToken cancellationToken)
     {
         try
         {

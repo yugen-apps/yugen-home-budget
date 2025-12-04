@@ -1,7 +1,7 @@
 ﻿@using Microsoft.AspNetCore.Authorization
 @using Yugen.HomeBudget.Application.Models.Category
 @using Yugen.HomeBudget.Server.Components.Shared
-@using Yugen.HomeBudget.Server.Navigation
+@using Yugen.HomeBudget.Server.Models.Navigation
 @using Yugen.HomeBudget.Server.ViewModels.Expense
 @attribute [Route(MenuConstants.ExpenseDetailsPath)]
 @attribute [Route(MenuConstants.ExpenseDetailsRoute)]
@@ -25,8 +25,8 @@
 				</MudCardHeader>
 
 				<MudCardContent>
-					<MudForm @ref="ViewModel.Form"
-							 @bind-IsValid="ViewModel.IsFormValid"
+					<MudForm @bind-IsValid="ViewModel.IsFormValid"
+							 ValidationDelay="0"
 							 Model="ViewModel.Model">
 						<MudTextField Autofocus
 									  Label="Title"
@@ -52,7 +52,6 @@
 									  Label="Accrued"
 									  Placeholder="0"
 									  @bind-Value="@ViewModel.Model.Accrued" />
-
 	
 						<MudSelect T="ResponseCategoryDto"
 								   AnchorOrigin="Origin.TopCenter"
@@ -61,7 +60,7 @@
 								   Required="true"
 								   TransformOrigin="Origin.BottomCenter"
 								   Value="ViewModel.Model.SelectedCategory"
-								   ValueChanged="CategoryChanged">
+								   ValueChanged="ViewModel.CategoryChanged">
 							@foreach (var category in ViewModel.Model.Categories)
 							{
 								<MudSelectItem Value="category">

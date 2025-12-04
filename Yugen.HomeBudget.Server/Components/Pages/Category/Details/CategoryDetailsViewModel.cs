@@ -8,7 +8,7 @@ using Yugen.HomeBudget.Application.Services;
 using Yugen.HomeBudget.Server.Components.Shared;
 using Yugen.HomeBudget.Server.Models.Account;
 using Yugen.HomeBudget.Server.Models.Category;
-using Yugen.HomeBudget.Server.Navigation;
+using Yugen.HomeBudget.Server.Models.Navigation;
 using Yugen.HomeBudget.Server.Services;
 
 namespace Yugen.HomeBudget.Server.ViewModels.Category;
@@ -28,7 +28,6 @@ public sealed partial class CategoryDetailsViewModel : ObservableObject
     private int? _id;
 
     public bool IsAlertVisible;
-    public MudForm Form;
     public bool IsFormValid;
     public CategoryModel Model;
 
@@ -91,7 +90,7 @@ public sealed partial class CategoryDetailsViewModel : ObservableObject
         }
 
         Error = null;
-        await Form.Validate();
+
         if (IsFormValid)
         {
             try
@@ -139,13 +138,15 @@ public sealed partial class CategoryDetailsViewModel : ObservableObject
         Model.IconName = newIcon ?? Icons.Material.Filled.FormatBold;
     }
 
-    public void CommittedItemChanges(SubCategoryDto item)
+    public Task<DataGridEditFormAction> CommittedItemChanges(SubCategoryDto item)
     {
         if (item.Id == 0)
         {
             item.Id = Model.SubCategoriesDto.Count + 1;
             Model.SubCategoriesDto.Add(item);
         }
+
+        return Task.FromResult(DataGridEditFormAction.Close);
     }
 
     public async Task ShowDeleteConfirmMessage(SubCategoryDto subCategoryDto)

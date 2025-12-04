@@ -1,13 +1,13 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.AspNetCore.Components;
-using MudBlazor;
 using System;
 using System.Threading.Tasks;
+using Yugen.HomeBudget.Application.Models.Category;
 using Yugen.HomeBudget.Application.Models.Expense;
 using Yugen.HomeBudget.Application.Services;
 using Yugen.HomeBudget.Server.Models.Account;
 using Yugen.HomeBudget.Server.Models.Expense;
-using Yugen.HomeBudget.Server.Navigation;
+using Yugen.HomeBudget.Server.Models.Navigation;
 using Yugen.HomeBudget.Server.Services;
 
 namespace Yugen.HomeBudget.Server.ViewModels.Expense;
@@ -22,14 +22,15 @@ public sealed partial class ExpenseDetailsViewModel : ObservableObject
     [ObservableProperty]
     private string _error;
 
+    [ObservableProperty]
+    private ExpenseModel _model;
+
     private bool _busy;
     private CurrentUser _currentUser;
     private int? _id;
 
     public bool IsAlertVisible;
-    public MudForm Form;
     public bool IsFormValid;
-    public ExpenseModel Model;
 
     public ExpenseDetailsViewModel(
         AuthService authService,
@@ -81,6 +82,12 @@ public sealed partial class ExpenseDetailsViewModel : ObservableObject
         }
     }
 
+    public void CategoryChanged(ResponseCategoryDto category)
+    {
+        Model.CategoryChanged(category);
+        OnPropertyChanged(nameof(Model.SelectedSubCategory));
+    }
+
     public void CancelAsync()
     {
         _busy = true;
@@ -95,7 +102,6 @@ public sealed partial class ExpenseDetailsViewModel : ObservableObject
         }
 
         Error = null;
-        await Form.Validate();
         if (IsFormValid)
         {
             try
@@ -108,8 +114,8 @@ public sealed partial class ExpenseDetailsViewModel : ObservableObject
                         Model.Title,
                         (decimal)Model.Amount,
                         Model.DateTime,
-                        Model.SelectedCategory.Id, 
-                        Model.SelectedSubCategory.Id, 
+                        Model.SelectedCategory.Id,
+                        Model.SelectedSubCategory.Id,
                         Model.Accrued,
                         _currentUser.Id,
                         _currentUser.Id);
@@ -136,8 +142,8 @@ public sealed partial class ExpenseDetailsViewModel : ObservableObject
             catch (Exception ex)
             {
                 Error = ex.Message;
-                _busy = false;
             }
+            _busy = false;
         }
         IsAlertVisible = !string.IsNullOrWhiteSpace(Error);
     }
