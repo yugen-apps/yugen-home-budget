@@ -14,6 +14,7 @@ using Yugen.HomeBudget.Data;
 using Yugen.HomeBudget.Data.Models;
 using Yugen.HomeBudget.Data.Repositories;
 using Yugen.HomeBudget.Server.Components.Account;
+using Yugen.HomeBudget.Server.Components.Shared.LoadingSpinner;
 using Yugen.HomeBudget.Server.Models.Account;
 using Yugen.HomeBudget.Server.Services;
 using Yugen.HomeBudget.Server.ViewModels;
@@ -89,6 +90,8 @@ public class Program
         builder.Services.AddTransient<ExpenseDetailsViewModel>();
         builder.Services.AddTransient<ExpenseListViewModel>();
         builder.Services.AddTransient<InfoIndexViewodel>();
+
+        builder.Services.AddScoped<ILoadingSpinnerService, LoadingSpinnerService>();
 
         builder.Services.AddControllers();
 

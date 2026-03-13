@@ -8,6 +8,7 @@ using Yugen.HomeBudget.Application.Models;
 using Yugen.HomeBudget.Application.Models.Expense;
 using Yugen.HomeBudget.Application.Services;
 using Yugen.HomeBudget.Server.Components.Shared;
+using Yugen.HomeBudget.Server.Components.Shared.LoadingSpinner;
 using Yugen.HomeBudget.Server.Models.Home;
 
 namespace Yugen.HomeBudget.Server.ViewModels;
@@ -17,6 +18,7 @@ public sealed partial class HomeViewModel : ObservableObject
     private readonly CategoryService _categoryService;
     private readonly ExpenseService _expenseService;
     private readonly IDialogService _dialogService;
+    private readonly ILoadingSpinnerService _loadingSpinnerService;
 
     private readonly TaskCompletionSource _tcs = new();
     private readonly DateTimeOffset _now = DateTimeOffset.UtcNow;
@@ -45,11 +47,13 @@ public sealed partial class HomeViewModel : ObservableObject
     public HomeViewModel(
         CategoryService categoryService,
         ExpenseService expenseService,
-        IDialogService dialogService)
+        IDialogService dialogService,
+        ILoadingSpinnerService loadingSpinnerService)
     {
         _categoryService = categoryService;
         _expenseService = expenseService;
         _dialogService = dialogService;
+        _loadingSpinnerService = loadingSpinnerService;
     }
 
     private int Year => _now.Year;
@@ -64,6 +68,7 @@ public sealed partial class HomeViewModel : ObservableObject
         
     public async Task LoadDataAsync()
     {
+        _loadingSpinnerService.Wait();
         IsLoading = true;
 
         await LoadCurrentYearTotalExpense();
@@ -75,6 +80,7 @@ public sealed partial class HomeViewModel : ObservableObject
         _tcs.SetResult();
 
         IsLoading = false;
+        _loadingSpinnerService.Resume();
     }
 
     public async Task LoadCurrentYearTotalExpense()

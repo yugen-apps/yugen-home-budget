@@ -7,6 +7,7 @@ using Yugen.HomeBudget.Application.Models;
 using Yugen.HomeBudget.Application.Models.Category;
 using Yugen.HomeBudget.Application.Services;
 using Yugen.HomeBudget.Server.Components.Shared;
+using Yugen.HomeBudget.Server.Components.Shared.LoadingSpinner;
 using Yugen.HomeBudget.Server.Models;
 
 namespace Yugen.HomeBudget.Server.ViewModels.Category;
@@ -15,6 +16,7 @@ public sealed partial class CategoryListViewModel : ObservableObject
 {
     private readonly CategoryService _categoryService;
     private readonly IDialogService _dialogService;
+    private readonly ILoadingSpinnerService _loadingSpinnerService;
 
     [ObservableProperty]
     private bool _isLoading;
@@ -27,10 +29,12 @@ public sealed partial class CategoryListViewModel : ObservableObject
 
     public CategoryListViewModel(
         CategoryService categoryService,
-        IDialogService dialogService)
+        IDialogService dialogService,
+        ILoadingSpinnerService loadingSpinnerService)
     {
         _categoryService = categoryService;
         _dialogService = dialogService;
+        _loadingSpinnerService = loadingSpinnerService;
     }
 
     public ICollection<ResponseCategoryDto> Categories => PaginatedList.Items;
@@ -38,6 +42,7 @@ public sealed partial class CategoryListViewModel : ObservableObject
     public async Task LoadDataAsync()
     {
         IsLoading = true;
+        _loadingSpinnerService.Wait();
 
         try
         {
@@ -46,6 +51,7 @@ public sealed partial class CategoryListViewModel : ObservableObject
         finally
         {
             IsLoading = false;
+            _loadingSpinnerService.Resume();
         }
     }
 

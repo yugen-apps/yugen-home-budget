@@ -8,6 +8,7 @@ using Yugen.HomeBudget.Application.Models;
 using Yugen.HomeBudget.Application.Models.Expense;
 using Yugen.HomeBudget.Application.Services;
 using Yugen.HomeBudget.Server.Components.Shared;
+using Yugen.HomeBudget.Server.Components.Shared.LoadingSpinner;
 
 namespace Yugen.HomeBudget.Server.ViewModels.Expense;
 
@@ -17,6 +18,7 @@ public sealed partial class ExpenseListViewModel : ObservableObject
     public int[] Years = { 2023, 2024, 2025 };
     private readonly ExpenseService _expenseService;
     private readonly IDialogService _dialogService;
+    private readonly ILoadingSpinnerService _loadingSpinnerService;
 
     [ObservableProperty]
     private bool _isLoading;
@@ -32,10 +34,12 @@ public sealed partial class ExpenseListViewModel : ObservableObject
 
     public ExpenseListViewModel(
         ExpenseService expenseService,
-        IDialogService dialogService)
+        IDialogService dialogService,
+        ILoadingSpinnerService loadingSpinnerService)
     {
         _expenseService = expenseService;
         _dialogService = dialogService;
+        _loadingSpinnerService = loadingSpinnerService;
     }
 
     public Func<Task> RefreshServerDataFunc { get; set; }
@@ -97,6 +101,7 @@ public sealed partial class ExpenseListViewModel : ObservableObject
 
     public async Task RefreshDataAsync(int page, int pageSize)
     {
+        _loadingSpinnerService.Wait();
         IsLoading = true;
 
         try
@@ -106,6 +111,7 @@ public sealed partial class ExpenseListViewModel : ObservableObject
         finally
         {
             IsLoading = false;
+            _loadingSpinnerService.Resume();
         }
     }
 }

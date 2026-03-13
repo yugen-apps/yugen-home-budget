@@ -1,47 +1,49 @@
-﻿@inherits LayoutComponentBase
+﻿@using Yugen.HomeBudget.Server.Components.Shared.LoadingSpinner
+@inherits LayoutComponentBase
 
 <MudThemeProvider IsDarkMode="@_isDarkMode" />
 <MudPopoverProvider />
 <MudDialogProvider />
+<LoadingSpinnerProvider />
 
 <MudLayout>
 
-	<MudAppBar Dense="true">
-		<MudIconButton Icon="@Icons.Material.Filled.Menu"
-					   Color="Color.Inherit"
-					   Edge="Edge.Start"
-					   OnClick="() => DrawerToggle()" />
-		<MudSpacer />
-		<LoginDisplay DarkModeChanged="OnDarkModeChanged" />
-	</MudAppBar>
+    <MudAppBar Dense="true">
+        <MudIconButton Icon="@Icons.Material.Filled.Menu"
+                       Color="Color.Inherit"
+                       Edge="Edge.Start"
+                       OnClick="() => DrawerToggle()" />
+        <MudSpacer />
+        <LoginDisplay DarkModeChanged="OnDarkModeChanged" />
+    </MudAppBar>
 
-	<MudDrawer @bind-Open="@_drawerOpen"
-			   Breakpoint="Breakpoint.Md"
-			   Variant="DrawerVariant.Responsive">
-		<MudDrawerHeader>
-			<MudButton Href="/"
-					   StartIcon="@Icons.Material.Filled.Home">
-				Yugen.HomeBudget
-			</MudButton>
-		</MudDrawerHeader>
-		<SideMenu />
-	</MudDrawer>
+    <MudDrawer @bind-Open="@_drawerOpen"
+               Breakpoint="Breakpoint.Md"
+               Variant="DrawerVariant.Responsive">
+        <MudDrawerHeader>
+            <MudButton Href="/"
+                       StartIcon="@Icons.Material.Filled.Home">
+                Yugen.HomeBudget
+            </MudButton>
+        </MudDrawerHeader>
+        <SideMenu />
+    </MudDrawer>
 
-	<MudMainContent>
-		<MudContainer Class="mt-4">
-			@Body
-		</MudContainer>
-	</MudMainContent>
+    <MudMainContent>
+        <MudContainer Class="mt-4">
+            @Body
+        </MudContainer>
+    </MudMainContent>
 
-	<MudContainer Class="mt-16"
-				  MaxWidth="MaxWidth.ExtraExtraLarge">
-		<FooterMenu />
-	</MudContainer>
+    <MudContainer Class="mt-16"
+                  MaxWidth="MaxWidth.ExtraExtraLarge">
+        <FooterMenu />
+    </MudContainer>
 
 </MudLayout>
 
 <div id="blazor-error-ui" data-nosnippet>
-	An unhandled error has occurred.
-	<a href="." class="reload">Reload</a>
-	<span class="dismiss">🗙</span>
+    An unhandled error has occurred.
+    <a href="." class="reload">Reload</a>
+    <span class="dismiss">🗙</span>
 </div>
