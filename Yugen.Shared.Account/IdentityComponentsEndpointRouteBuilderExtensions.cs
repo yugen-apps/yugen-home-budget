@@ -15,7 +15,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Text.Json;
-using Yugen.HomeBudget.Data.Models;
+using Yugen.Home.Budget.Data.Models;
 using Yugen.Shared.Account.Navigation;
 using Yugen.Shared.Account.Pages;
 using Yugen.Shared.Account.Pages.Manage;

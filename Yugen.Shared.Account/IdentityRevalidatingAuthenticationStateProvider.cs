@@ -8,7 +8,7 @@ using System;
 using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
-using Yugen.HomeBudget.Data.Models;
+using Yugen.Home.Budget.Data.Models;
 
 namespace Yugen.Shared.Account;
 

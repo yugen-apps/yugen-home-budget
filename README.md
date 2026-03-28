@@ -42,44 +42,44 @@ add role (e.g.) contributor to id-yugen-home-budget for all the resources it nee
 user_id: the service principal or user-assigned managed identity client ID
 
 server_name: "sql-server-yugen.database.windows.net,1433"
-database: "sql-db-yugen-homebudget-dev"
+database: "sql-db-yugen-Home.Budget-dev"
 user_id: "ddc4c0ff-bab8-4f28-adda-7afa0a086920"
 
 Server=tcp:sql-server-yugen.database.windows.net,1433;
-Database=sql-db-yugen-homebudget;Encrypt=True;
+Database=sql-db-yugen-Home.Budget;Encrypt=True;
 User ID=ddc4c0ff-bab8-4f28-adda-7afa0a086920;
 Connection Timeout=10;Authentication=Active Directory Managed Identity;
 
-Server=tcp:sql-server-yugen.database.windows.net,1433;Database=sql-db-yugen-homebudget-dev;Encrypt=True;User ID=ddc4c0ff-bab8-4f28-adda-7afa0a086920;Connection Timeout=10;Authentication=Active Directory Managed Identity;
+Server=tcp:sql-server-yugen.database.windows.net,1433;Database=sql-db-yugen-Home.Budget-dev;Encrypt=True;User ID=ddc4c0ff-bab8-4f28-adda-7afa0a086920;Connection Timeout=10;Authentication=Active Directory Managed Identity;
 
 # Migrations
 
 ```
 dotnet ef migrations add V1 `
---startup-project ".\Yugen.HomeBudget.Server\Yugen.HomeBudget.Server.csproj" `
---project ".\Yugen.HomeBudget.Data\Yugen.HomeBudget.Data.csproj"`
+--startup-project ".\Yugen.Home.Budget.Server\Yugen.Home.Budget.Server.csproj" `
+--project ".\Yugen.Home.Budget.Data\Yugen.Home.Budget.Data.csproj"`
 --verbose
 ```
 
 ```
 dotnet ef database update `
---startup-project ".\Yugen.HomeBudget.Server\Yugen.HomeBudget.Server.csproj" `
---project ".\Yugen.HomeBudget.Data\Yugen.HomeBudget.Data.csproj"`
+--startup-project ".\Yugen.Home.Budget.Server\Yugen.Home.Budget.Server.csproj" `
+--project ".\Yugen.Home.Budget.Data\Yugen.Home.Budget.Data.csproj"`
 --configuration "debug" `
 --verbose
 ```
 
 ```
 dotnet build `
-".\Yugen.HomeBudget.Server\Yugen.HomeBudget.Server.csproj" `
+".\Yugen.Home.Budget.Server\Yugen.Home.Budget.Server.csproj" `
 --configuration Release `
 --verbosity detailed
 ```
 
 ```
 dotnet ef migrations bundle `
---startup-project ".\Yugen.HomeBudget.Server\Yugen.HomeBudget.Server.csproj" `
---project ".\Yugen.HomeBudget.Data\Yugen.HomeBudget.Data.csproj"`
+--startup-project ".\Yugen.Home.Budget.Server\Yugen.Home.Budget.Server.csproj" `
+--project ".\Yugen.Home.Budget.Data\Yugen.Home.Budget.Data.csproj"`
 --configuration Release `
 --self-contained `
 --verbose
@@ -107,7 +107,7 @@ yugen-home-budget
 DEV
 
 
-# Yugen.HomeBudget
+# Yugen.Home.Budget
 
 https://github.com/PlainAdmin/plain-free-bootstrap-admin-template
 
@@ -115,19 +115,19 @@ https://blazestack.blazorforest.com/
 
 AZURE_SQL_CONNECTIONSTRING
 
-Server=yugen-homebudget-sql-server.database.windows.net,1433;Database=yugen-homebudget-sql-db;User ID=pandasharp;Password={pwd};
+Server=yugen-Home.Budget-sql-server.database.windows.net,1433;Database=yugen-Home.Budget-sql-db;User ID=pandasharp;Password={pwd};
 
-Server=yugen-homebudget-sql-server.database.windows.net,1433;Database=yugen-homebudget-sql-db;Encrypt=True;Authentication=Active Directory Managed Identity;
+Server=yugen-Home.Budget-sql-server.database.windows.net,1433;Database=yugen-Home.Budget-sql-db;Encrypt=True;Authentication=Active Directory Managed Identity;
 
-Server=tcp:yugen-homebudget-sql-server.database.windows.net,1433;Database=yugen-homebudget-sql-db;Encrypt=True;Authentication=Active Directory Managed Identity;
+Server=tcp:yugen-Home.Budget-sql-server.database.windows.net,1433;Database=yugen-Home.Budget-sql-db;Encrypt=True;Authentication=Active Directory Managed Identity;
 
 
 
 Server
-yugen-homebudget-sql-server.database.windows.net,1433
+yugen-Home.Budget-sql-server.database.windows.net,1433
 
 Database
-yugen-homebudget-sql-db
+yugen-Home.Budget-sql-db
 
 
 {
@@ -168,12 +168,12 @@ GO
 
 - Add Login to SQL Server
 
-CREATE LOGIN [yugen-homebudget-app] FROM EXTERNAL PROVIDER
+CREATE LOGIN [yugen-Home.Budget-app] FROM EXTERNAL PROVIDER
 
 - Add User to Database
 
-CREATE USER [yugen-homebudget-app] FOR LOGIN [yugen-homebudget-app]
-ALTER ROLE db_datareader ADD MEMBER [yugen-homebudget-app];
-ALTER ROLE db_datawriter ADD MEMBER [yugen-homebudget-app];
-ALTER ROLE db_ddladmin ADD MEMBER [yugen-homebudget-app];
+CREATE USER [yugen-Home.Budget-app] FOR LOGIN [yugen-Home.Budget-app]
+ALTER ROLE db_datareader ADD MEMBER [yugen-Home.Budget-app];
+ALTER ROLE db_datawriter ADD MEMBER [yugen-Home.Budget-app];
+ALTER ROLE db_ddladmin ADD MEMBER [yugen-Home.Budget-app];
 GO

@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
-using Yugen.HomeBudget.Data.Models;
+using Yugen.Home.Budget.Data.Models;
 using Yugen.Shared.Account.Navigation;
 
 namespace Yugen.Shared.Account;

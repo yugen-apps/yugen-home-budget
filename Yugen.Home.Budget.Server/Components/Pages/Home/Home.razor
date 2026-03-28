@@ -1,0 +1,135 @@
+﻿@using Yugen.Home.Budget.Application.Models.Expense
+@using Yugen.Home.Budget.Server.Components.Shared
+@using Yugen.Home.Budget.Server.Models
+@using Yugen.Home.Budget.Server.Models.Navigation
+@using Yugen.Shared.Components
+@using Yugen.Shared.Models
+@attribute [Route(MenuConstants.HomePath)]
+@inject Yugen.Home.Budget.Server.ViewModels.HomeViewModel ViewModel
+
+<MudGrid>
+
+	<MudItem xs="12">
+		<HeaderComponent PageTitle="@MenuConstants.HomeMenuItem.Title"
+						 Title="@MenuConstants.HomeMenuItem.Title"
+						 Breadcrumb="@MenuConstants.HomeMenuItem.Title" />
+	</MudItem>
+
+	<AuthorizeView>
+		<Authorized>
+
+			<MudItem xs="12" sm="6" md="3">
+				<HomeCardComponent Header="Current Year"
+								   IconName="@Icons.Material.Filled.ShoppingCart"
+								   TotalExpense="@ViewModel.CurrentYearTotalExpense"
+								   Footer="Expense Total" />
+			</MudItem>
+
+			<MudItem xs="12" sm="6" md="3">
+				<HomeCardComponent Header="Previous Month"
+								   IconName="@Icons.Material.Filled.AttachMoney"
+								   TotalExpense="@ViewModel.PreviousMonthTotalExpense"
+								   Footer="Expense Total" />
+			</MudItem>
+
+			<MudItem xs="12" sm="6" md="3">
+				<HomeCardComponent Header="Current Month"
+								   IconName="@Icons.Material.Filled.CreditCard"
+								   TotalExpense="@ViewModel.CurrentMonthTotalExpense"
+								   Footer="Expense Total" />
+			</MudItem>
+
+			<MudItem xs="12" sm="6" md="3">
+				<HomeCardComponent Header="Current Year"
+								   IconName="@Icons.Material.Filled.Money"
+								   TotalAccrued="@ViewModel.CurrentYearTotalAccrued"
+								   Footer="Accrued Total" />
+			</MudItem>
+
+			<MudItem xs="12" sm="12" md="7">
+				<MudCard Elevation="8">
+					<MudCardHeader>
+						Current Month Expenses History
+					</MudCardHeader>
+
+					<MudCardContent>
+						<MudDataGrid T="ResponseExpenseDto"
+									 Loading="ViewModel.IsDataGridLoading"
+									 ServerData="ViewModel.ServerReload"
+									 Bordered="true"
+									 Dense="true">
+							<ToolBarContent>
+								<MudText Typo="Typo.h6">Expenses</MudText>
+								<MudSpacer />
+								<MudButtonGroup Class="ma-0 pa-0"
+												Color="Color.Success"
+												Variant="Variant.Filled">
+									<MudButton Color="Color.Primary"
+											   Href="@MenuConstants.ExpenseDetailsPath"
+											   StartIcon="@Icons.Material.Filled.Add"
+											   Variant="Variant.Filled">
+										Add New Item
+									</MudButton>
+								</MudButtonGroup>
+							</ToolBarContent>
+							<Columns>
+								<PropertyColumn Property="x => x.DateTimeOffset"
+												Title="@nameof(ResponseExpenseDto.DateTimeOffset)"
+												Format="d" />
+								<PropertyColumn Property="x => x.Title"
+												Title="@nameof(ResponseExpenseDto.Title)" />
+								<PropertyColumn Property="x => x.Amount"
+												Title="@nameof(ResponseExpenseDto.Amount)" />
+								<PropertyColumn Property="x => x.Accrued"
+												Title="@nameof(ResponseExpenseDto.Accrued)" />
+
+								<TemplateColumn CellClass="d-flex justify-between">
+									<CellTemplate Context="expenseContext">
+										<MudIconButton Size="@Size.Small"
+													   Icon="@Icons.Material.Outlined.Edit"
+													   Href="@($"{MenuConstants.ExpenseDetailsPath}/{expenseContext.Item.Id}")" />
+										<MudIconButton Size="@Size.Small"
+													   Icon="@Icons.Material.Outlined.Delete"
+													   OnClick="@(() => ViewModel.ShowDeleteConfirmMessage(expenseContext.Item.Id))" />
+									</CellTemplate>
+								</TemplateColumn>
+							</Columns>
+							<PagerContent>
+								<MudDataGridPager T="ResponseExpenseDto"
+												  PageSizeOptions=@( new int[] { Constants.PageSizeSmall, Constants.PageSize } ) />
+							</PagerContent>
+						</MudDataGrid>
+					</MudCardContent>
+				</MudCard>
+			</MudItem>
+
+			<MudItem xs="12" sm="12" md="5">
+				<MudCard Elevation="8">
+					<MudCardHeader>
+						Current Month Expenses Chart
+					</MudCardHeader>
+					<MudCardContent>
+						<MudChart ChartType="ChartType.Pie"
+								  ChartSeries="@ViewModel.Data.AsChartDataSet()"
+								  ChartLabels="@ViewModel.Labels"
+								  Width="300px"
+								  Height="300px" />
+					</MudCardContent>
+				</MudCard>
+			</MudItem>
+
+		</Authorized>
+
+		<NotAuthorized>
+			<MudItem xs="12">
+				<MudButton Href="/Account/Login"
+						   StartIcon="@Icons.Material.Filled.Login"
+						   Color="Color.Primary"
+						   Variant="Variant.Filled">
+					Please Login
+				</MudButton>
+			</MudItem>
+		</NotAuthorized>
+	</AuthorizeView>
+
+</MudGrid>

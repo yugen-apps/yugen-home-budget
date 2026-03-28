@@ -13,7 +13,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\Yugen.HomeBudget.Data\Yugen.HomeBudget.Data.csproj" />
+	  <ProjectReference Include="..\Yugen.Home.Budget.Data\Yugen.Home.Budget.Data.csproj" />
 	  <ProjectReference Include="..\Yugen.Shared\Yugen.Shared.csproj" />
 	</ItemGroup>
 

@@ -1,17 +1,17 @@
 {
     "configurations": [
         {
-            "name": "C#: Yugen.HomeBudget.Server [https]",
+            "name": "C#: Yugen.Home.Budget.Server [https]",
             "type": "dotnet",
             "request": "launch",
-            "projectPath": "${workspaceFolder}/Yugen.HomeBudget.Server/Yugen.HomeBudget.Server.csproj",
+            "projectPath": "${workspaceFolder}/Yugen.Home.Budget.Server/Yugen.Home.Budget.Server.csproj",
             "launchConfigurationId": "TargetFramework=;https"
         },
         {
-            "name": "C#: Yugen.HomeBudget.Server [http]",
+            "name": "C#: Yugen.Home.Budget.Server [http]",
             "type": "dotnet",
             "request": "launch",
-            "projectPath": "${workspaceFolder}/Yugen.HomeBudget.Server/Yugen.HomeBudget.Server.csproj",
+            "projectPath": "${workspaceFolder}/Yugen.Home.Budget.Server/Yugen.Home.Budget.Server.csproj",
             "launchConfigurationId": "TargetFramework=;http"
         }
     ]

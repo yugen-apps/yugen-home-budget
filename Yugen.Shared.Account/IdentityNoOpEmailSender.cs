@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using System.Threading.Tasks;
-using Yugen.HomeBudget.Data.Models;
+using Yugen.Home.Budget.Data.Models;
 
 namespace Yugen.Shared.Account;
 
