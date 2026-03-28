@@ -5,10 +5,10 @@ using System.Threading.Tasks;
 using Yugen.HomeBudget.Application.Models.Category;
 using Yugen.HomeBudget.Application.Models.Expense;
 using Yugen.HomeBudget.Application.Services;
-using Yugen.HomeBudget.Server.Models.Account;
 using Yugen.HomeBudget.Server.Models.Expense;
 using Yugen.HomeBudget.Server.Models.Navigation;
-using Yugen.HomeBudget.Server.Services;
+using Yugen.Shared.Account.Models;
+using Yugen.Shared.Account.Services;
 
 namespace Yugen.HomeBudget.Server.ViewModels.Expense;
 

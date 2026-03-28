@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 using Yugen.HomeBudget.Application.Models.Category;
 using Yugen.HomeBudget.Application.Services;
 using Yugen.HomeBudget.Server.Components.Shared;
-using Yugen.HomeBudget.Server.Models.Account;
 using Yugen.HomeBudget.Server.Models.Category;
 using Yugen.HomeBudget.Server.Models.Navigation;
-using Yugen.HomeBudget.Server.Services;
+using Yugen.Shared.Account.Models;
+using Yugen.Shared.Account.Services;
+using Yugen.Shared.Components;
 
 namespace Yugen.HomeBudget.Server.ViewModels.Category;
 

@@ -10,6 +10,7 @@ using Yugen.HomeBudget.Application.Services;
 using Yugen.HomeBudget.Server.Components.Shared;
 using Yugen.HomeBudget.Server.Components.Shared.LoadingSpinner;
 using Yugen.HomeBudget.Server.Models.Home;
+using Yugen.Shared.Components;
 
 namespace Yugen.HomeBudget.Server.ViewModels;
 

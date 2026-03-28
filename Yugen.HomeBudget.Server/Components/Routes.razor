@@ -1,9 +1,14 @@
-﻿@using Yugen.HomeBudget.Server.Components.Account.Shared
+﻿@using Yugen.Shared.Account.Shared
 @using Yugen.HomeBudget.Server.Components.Pages
 @implements IDisposable
 
 <Router AppAssembly="typeof(Program).Assembly"
-        AdditionalAssemblies="new[] { typeof(Client._Imports).Assembly }"
+		AdditionalAssemblies="
+		[
+			typeof(Client._Imports).Assembly,
+			typeof(Yugen.Shared._Imports).Assembly,
+			typeof(Yugen.Shared.Account._Imports).Assembly
+		]"
         NotFoundPage="typeof(NotFound)">
 	<Found Context="routeData">
 		<AuthorizeRouteView RouteData="routeData"

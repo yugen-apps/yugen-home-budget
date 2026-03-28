@@ -9,19 +9,19 @@
 	<link href="@Assets["_content/MudBlazor/MudBlazor.min.css"]" rel="stylesheet" />
 	<link href="@Assets["Yugen.HomeBudget.Server.styles.css"]" rel="stylesheet" />
 	<ImportMap />
-	<link href="assets/images/favicon.png" rel="icon" type="image/png" />
-	<link href="manifest.webmanifest" rel="manifest" />
-	<link href="assets/images/icon-512.png" rel="apple-touch-icon" sizes="512x512" />
-	<link href="assets/images/icon-192.png" rel="apple-touch-icon" sizes="192x192" />
+	<link href="@Assets["assets/images/favicon.png"]" rel="icon" type="image/png" />
+	<link href="@Assets["assets/images/icon-512.png"]" rel="apple-touch-icon" sizes="512x512" />
+	<link href="@Assets["assets/images/icon-192.png"]" rel="apple-touch-icon" sizes="192x192" />
+	<link href="@Assets["manifest.webmanifest"]" rel="manifest" />
 	<HeadOutlet @rendermode="PageRenderMode" />
 </head>
 
 <body>
 	<Routes @rendermode="PageRenderMode" />
+	@* <ReconnectModal /> *@
 	<script src="@Assets["_framework/blazor.web.js"]"></script>
-	<script src="@Assets["Components/Account/Shared/PasskeySubmit.razor.js"]" type="module"></script>
 	<script src="@Assets["_content/MudBlazor/MudBlazor.min.js"]"></script>
-	<script src="@Assets["_content/Extensions.MudBlazor.StaticInput/NavigationObserver.js"]"></script>
+	<script src="@Assets["_content/Yugen.Shared.Account/Shared/PasskeySubmit.razor.js"]" type="module"></script>
 	<script>
 		navigator.serviceWorker.register('service-worker.js', { updateViaCache: 'none' });
 	</script>

@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using System.Threading.Tasks;
-using Yugen.HomeBudget.Server.Services;
+using Yugen.Shared.Account.Services;
 
 namespace Yugen.HomeBudget.Server.Components.Layout;
 

@@ -35,16 +35,13 @@
     }
 </MudNavMenu>
 <MudDivider Class="my-2" />
-<MudStack AlignItems="AlignItems.End" Row="true">
-    <MudNavGroup Title="Debug"
-                 Icon="@Icons.Material.Filled.Settings">
-        @foreach (var menuItem in MenuConstants.SettingsMenuItems)
-        {
-            <MudNavLink Href="@menuItem.Path"
-                        Target="@menuItem.Target">
-                @menuItem.Title
-            </MudNavLink>
-        }
-    </MudNavGroup>
+<MudStack AlignItems="AlignItems.End"
+          Row="true">
+    <MudText Align="Align.Center"
+             Color="Color.Default"
+             Typo="Typo.body2"
+             class="pa-2">
+        @_version
+    </MudText>
 </MudStack>
 

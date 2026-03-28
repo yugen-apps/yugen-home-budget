@@ -7,8 +7,8 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="MudBlazor" Version="9.1.0" />
-		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+		<PackageReference Include="MudBlazor" Version="9.2.0" />
+		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
 		<PackageReference Include="EPPlus" Version="8.5.0" />
 		<PackageReference Include="Extensions.MudBlazor.StaticInput" Version="4.1.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="10.0.*" />
@@ -24,6 +24,8 @@
 	<ItemGroup>
 		<ProjectReference Include="..\Yugen.HomeBudget.Application\Yugen.HomeBudget.Application.csproj" />
 		<ProjectReference Include="..\Yugen.HomeBudget.Client\Yugen.HomeBudget.Client.csproj" />
+		<ProjectReference Include="..\Yugen.Shared.Account\Yugen.Shared.Account.csproj" />
+		<ProjectReference Include="..\Yugen.Shared\Yugen.Shared.csproj" />
 	</ItemGroup>
 
 </Project>

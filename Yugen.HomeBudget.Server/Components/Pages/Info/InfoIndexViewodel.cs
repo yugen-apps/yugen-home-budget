@@ -1,7 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Yugen.HomeBudget.Server.Services;
+using Yugen.Shared.Services;
 
 namespace Yugen.HomeBudget.Server.ViewModels.Info;
 

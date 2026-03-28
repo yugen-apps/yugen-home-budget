@@ -1,0 +1,9 @@
+﻿@using Yugen.Shared.Account.Navigation
+@inject NavigationManager NavigationManager
+
+@code {
+    protected override void OnInitialized()
+    {
+        NavigationManager.NavigateTo($"{AccountMenuConstants.AccountLoginPath}?returnUrl={Uri.EscapeDataString(NavigationManager.Uri)}", forceLoad: true);
+    }
+}

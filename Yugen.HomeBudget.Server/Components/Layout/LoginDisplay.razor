@@ -1,128 +1,118 @@
-﻿@if (Routes.IsAccount)
+﻿@using Yugen.HomeBudget.Server.Models.Navigation
+@if (Routes.IsAccount)
 {
-	<MudIconButton Color="Color.Inherit"
-				   Href="/"
-				   Icon="@Icons.Material.Filled.Home" />
+    <MudIconButton Color="Color.Inherit"
+                   Href="/"
+                   Icon="@Icons.Material.Filled.Home" />
 }
 else
 {
-	<MudMenu AnchorOrigin="Origin.BottomRight"
-			 TransformOrigin="Origin.TopRight">
-		<ActivatorContent>
-			<AuthorizeView Context="authorizeContext">
-				<Authorized>
-					<MudAvatar>
-						<MudImage Src="@Avatar" />
-					</MudAvatar>
-				</Authorized>
-				<NotAuthorized>
-					<MudAvatar>
-						<MudIcon Color="Color.Inherit"
-								 Icon="@Icons.Material.Filled.Settings" />
-					</MudAvatar>
-				</NotAuthorized>
-			</AuthorizeView>
-		</ActivatorContent>
-		@* https://www.fluentui-blazor.net/ProfileMenu *@
-		<ChildContent>
-			<MudContainer>
-				<AuthorizeView>
+    @* https://www.fluentui-blazor.net/ProfileMenu *@
+    <MudMenu AnchorOrigin="Origin.TopLeft"
+             Size="@Size.Large"
+             TransformOrigin="Origin.BottomLeft">
+        <ActivatorContent>
+            <AuthorizeView Context="authorizeContext">
 
-					<Authorized>
-						<MudMenuItem>
-							<MudText Typo="Typo.body1">
-								@GivenName
-							</MudText>
-							<MudText Typo="Typo.body2">
-								@UserName
-							</MudText>
-						</MudMenuItem>
-						<MudDivider />
-						<MudMenuItem Href="/Account/Manage"
-									 Icon="@Icons.Material.Filled.Settings"
-									 Label="Manage" />
-						<MudDivider />
-						<MudMenuItem Icon="@ThemeIcon"
-									 Label="@ThemeLabel"
-									 OnClick="@ToggleTheme" />
-						<MudDivider />
-						<form action="Account/Logout" method="post">
-							<AntiforgeryToken />
-							<input type="hidden" name="ReturnUrl" value="@Routes.CurrentUrl" />
-							<button type="submit" class="mud-nav-link mud-ripple">
-								<MudIcon Class="mr-3"
-										 Color="Color.Error"
-										 Icon="@Icons.Material.Filled.Logout" />
-								Logout
-							</button>
-						</form>
+                <Authorized>
+                    <MudAvatar>
+                        <MudImage Src="@Avatar"
+                                  @onclick="@context.ToggleAsync" />
+                    </MudAvatar>
+                </Authorized>
 
-						@* 
-						<MudText Class="mt-2"
-								 Typo="Typo.body1">
-								 @GivenName
-								 </MudText>
-						<MudText Class="mb-2" 
-								 Typo="Typo.body2">
-								 @UserName
-								 </MudText>
-						<MudDivider />
-						<MudButton Class="object-left"
-								   Color="Color.Default"
-								   FullWidth="true"
-								   Href="/Account/Manage"
-								   StartIcon="@Icons.Material.Filled.Settings">
-							Manage Account
-						</MudButton>
-						<MudDivider />
-						<MudButton Color="Color.Default"
-								   FullWidth="true"
-								   OnClick="@ToggleTheme"
-								   StartIcon="@ThemeIcon">
-							@ThemeLabel
-						</MudButton>
-						<MudDivider />						 
-						<form action="Account/Logout" method="post">
-							<AntiforgeryToken />
-							<input type="hidden" name="ReturnUrl" value="@Routes.CurrentUrl" />
-							<MudButton ButtonType="ButtonType.Submit"
-									   Color="Color.Error"
-									   FullWidth="true"
-									   StartIcon="@Icons.Material.Filled.Logout">
-								Logout
-							</MudButton>
-						</form>  
-						*@
-					</Authorized>
+                <NotAuthorized>
+                    <MudAvatar>
+                        <MudIconButton Color="Color.Inherit"
+                                       Icon="@Icons.Material.Filled.Settings"
+                                       OnClick="@context.ToggleAsync" />
+                    </MudAvatar>
+                </NotAuthorized>
 
-					<NotAuthorized>
-						<MudMenuItem Href="/Account/Login"
-									 Icon="@Icons.Material.Filled.Login"
-									 Label="Log In" />
-						@* <MudDivider />
-						<MudMenuItem Href="/Account/Register"
-									 Icon="@Icons.Material.Filled.PlusOne"
-									 Label="Register" /> *@
+            </AuthorizeView>
+        </ActivatorContent>
+        <ChildContent>
+            <AuthorizeView>
 
-						@* 
-						<MudButton Color="Color.Default"
-								   FullWidth="true"
-								   Href="/Account/Login"
-								   StartIcon="@Icons.Material.Filled.Login">
-							Log In
-						</MudButton>
-						<MudDivider />
-						<MudButton Color="Color.Default"
-								   FullWidth="true"
-								   Href="/Account/Register"
-								   StartIcon="@Icons.Material.Filled.PlusOne">
-							Register
-						</MudButton> 
-						*@
-					</NotAuthorized>
+                <Authorized>
+                    <MudCard class="pa-2">
+                        <MudCardHeader>
+                            <CardHeaderAvatar>
+                                <MudAvatar>
+                                    <MudImage Src="@Avatar" />
+                                </MudAvatar>
+                            </CardHeaderAvatar>
+                            <CardHeaderContent>
+                                <MudStack Row="true" AlignItems="AlignItems.Center">
+                                    <MudText Typo="Typo.h6">@GivenName</MudText>
+                                </MudStack>
+                                <MudText Typo="Typo.body2">@UserName</MudText>
+                            </CardHeaderContent>
+                        </MudCardHeader>
+                    </MudCard>
+                    <MudMenuItem Href="/Account/Manage"
+                                 Icon="@Icons.Material.Filled.Settings"
+                                 Label="Manage" />
+                    <MudDivider />
+                    <MudMenuItem Icon="@ThemeIcon"
+                                 Label="@ThemeLabel"
+                                 OnClick="@ToggleTheme" />
+                    <MudDivider />
+                    <MudMenu Label="Debug"
+                             StartIcon="@Icons.Material.Filled.BugReport">
+                        <MudMenuItem Href="@MenuConstants.SettingsInfoMenuItem.Path"
+                                     Label="@MenuConstants.SettingsInfoMenuItem.Title"
+                                     Icon="@Icons.Material.Filled.Info" />
+                        <MudDivider />
+                        <MudMenuItem Href="https://www.mudblazor.com/docs/overview"
+                                     Label="Docs"
+                                     Target="_blank"
+                                     Icon="@Icons.Material.Filled.Link" />
+                        <MudDivider />
+                        <MudMenuItem Href="https://www.mudblocks.cc"
+                                     Label="Demo"
+                                     Target="_blank"
+                                     Icon="@Icons.Material.Filled.Link" />
+                    </MudMenu>
+                    <MudDivider />
+                    <form action="Account/Logout" method="post">
+                        <AntiforgeryToken />
+                        <input type="hidden" name="ReturnUrl" value="@Routes.CurrentUrl" />
+                        <button type="submit" class="mud-nav-link mud-ripple">
+                            <MudIcon Class="mr-3"
+                                     Color="Color.Error"
+                                     Icon="@Icons.Material.Filled.Logout" />
+                            Logout
+                        </button>
+                    </form>
+                </Authorized>
 
-				</AuthorizeView>
-			</MudContainer>
-		</ChildContent>
-	</MudMenu>
+                <NotAuthorized>
+                    <MudMenuItem Href="/Account/Login"
+                                 Icon="@Icons.Material.Filled.Login"
+                                 Label="Log In" />
+                    <MudDivider />
+                    <MudMenuItem Href="/Account/Register"
+                                 Icon="@Icons.Material.Filled.PlusOne"
+                                 Label="Register"
+                                 Disabled="true" />
+                </NotAuthorized>
+
+            </AuthorizeView>
+        </ChildContent>
+    </MudMenu>
 }
+
+										 
+@* <MudStack AlignItems="AlignItems.End" Row="true">
+    <MudNavGroup Title="Debug"
+                 Icon="@Icons.Material.Filled.Settings">
+        @foreach (var menuItem in MenuConstants.SettingsMenuItems)
+        {
+            <MudNavLink Href="@menuItem.Path"
+                        Target="@menuItem.Target">
+                @menuItem.Title
+            </MudNavLink>
+        }
+    </MudNavGroup>
+</MudStack> *@

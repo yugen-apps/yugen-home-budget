@@ -12,20 +12,21 @@
         <MudIconButton Icon="@Icons.Material.Filled.Menu"
                        Color="Color.Inherit"
                        Edge="Edge.Start"
-                       OnClick="() => DrawerToggle()" />
+                       OnClick="DrawerToggle" />
+        <MudButton Color="Color.Inherit"
+                   EndIcon="@Icons.Material.Filled.Home"
+                   Href="/">
+            Yugen
+        </MudButton>
         <MudSpacer />
         <LoginDisplay DarkModeChanged="OnDarkModeChanged" />
     </MudAppBar>
 
     <MudDrawer @bind-Open="@_drawerOpen"
                Breakpoint="Breakpoint.Md"
+               ClipMode="DrawerClipMode.Docked"
                Variant="DrawerVariant.Responsive">
-        <MudDrawerHeader>
-            <MudButton Href="/"
-                       StartIcon="@Icons.Material.Filled.Home">
-                Yugen.HomeBudget
-            </MudButton>
-        </MudDrawerHeader>
+        <MudPaper Class="mt-4" />
         <SideMenu />
     </MudDrawer>
 
@@ -34,11 +35,6 @@
             @Body
         </MudContainer>
     </MudMainContent>
-
-    <MudContainer Class="mt-16"
-                  MaxWidth="MaxWidth.ExtraExtraLarge">
-        <FooterMenu />
-    </MudContainer>
 
 </MudLayout>
 
