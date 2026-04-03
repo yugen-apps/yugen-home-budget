@@ -7,6 +7,12 @@ on:
       server_project_name:
         required: true
         type: string
+      dotnet_version:
+        required: true
+        type: string
+      ef_version:
+        required: true
+        type: string
     outputs:
       major_minor_patch:
         value: ${{ jobs.build.outputs.major_minor_patch }}
@@ -15,22 +21,20 @@ jobs:
   build_ef:
     runs-on: ubuntu-latest
     env:
-      DOTNET_VERSION: "10.0.x"
       EF_BUNDLE: "efbundle"
-      EF_VERSION: "10.0.*"
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
       - name: Set up .NET Core
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v5
         with:
-          dotnet-version: ${{ env.DOTNET_VERSION }}
+          dotnet-version: ${{ inputs.dotnet_version }}
 
       - name: Set up dependency caching for faster builds
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ~/.nuget/packages
           key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
@@ -42,7 +46,7 @@ jobs:
         run: >
           dotnet tool install dotnet-ef 
           --global 
-          --version ${{ env.EF_VERSION }}
+          --version ${{ inputs.ef_version }}
 
       - name: Build with dotnet
         shell: bash
@@ -61,13 +65,13 @@ jobs:
           --verbose
 
       # - name: Upload artifact for deployment job
-      #   uses: actions/upload-artifact@v4
+      #   uses: actions/upload-artifact@v6
       #   with:
       #     name: appsettings
       #     path: ${{ inputs.server_project_name }}/appsettings.json
 
       - name: Upload artifact for deployment job
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: ${{ env.EF_BUNDLE }}
           path: ${{ env.EF_BUNDLE }}

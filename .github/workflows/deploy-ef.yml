@@ -15,7 +15,7 @@ on:
       #   type: string
 
 jobs:
-  deploy_new:
+  deploy_ef:
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment_name }}
     env:
@@ -24,13 +24,13 @@ jobs:
 
     steps:          
       # - name: Download appsettings.json artifact from build job
-      #   uses: actions/download-artifact@v4
+      #   uses: actions/download-artifact@v8
       #   with:
       #     name: appsettings
       #     path: ${{ env.ARTIFACTS_DIR }}
 
       - name: Download efbundle artifact from build job
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: ${{ env.EF_BUNDLE }}
           path: ${{ env.ARTIFACTS_DIR }}
@@ -43,7 +43,7 @@ jobs:
         shell: bash
         run: ls -al ${{ env.ARTIFACTS_DIR }}
 
-      - uses: azure/login@v2
+      - uses: azure/login@v3
         with:
           client-id: ${{ secrets.AZURE_CLIENT_ID }}
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
@@ -51,7 +51,7 @@ jobs:
           enable-AzPSSession: true
 
       - name: Apply EF migration script
-        uses: azure/powershell@v2
+        uses: azure/powershell@v3
         with:
           azPSVersion: "latest"
           failOnStandardError: true 

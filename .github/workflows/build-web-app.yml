@@ -4,6 +4,9 @@ on:
       server_project_name:
         required: true
         type: string
+      dotnet_version:
+        required: true
+        type: string
     outputs:
       major_minor_patch:
         value: ${{ jobs.build.outputs.major_minor_patch }}
@@ -14,11 +17,10 @@ jobs:
 
     env:
       AZURE_WEBAPP_PACKAGE: "myapp"
-      DOTNET_VERSION: "10.0.x"
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 1
 
@@ -42,12 +44,12 @@ jobs:
           Write-Host "${{ steps.set_version.outputs.MajorMinorPatchBuild}}"
 
       - name: Set up .NET Core
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v5
         with:
-          dotnet-version: ${{ env.DOTNET_VERSION }}
+          dotnet-version: ${{ inputs.dotnet_version }}
 
       - name: Set up dependency caching for faster builds
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ~/.nuget/packages
           key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
@@ -70,7 +72,7 @@ jobs:
           -p:Version=${{ steps.set_version.outputs.MajorMinorPatch }}
 
       - name: Upload artifact for deployment job
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: ${{ env.AZURE_WEBAPP_PACKAGE }}
           path: ${{env.DOTNET_ROOT}}/${{ env.AZURE_WEBAPP_PACKAGE }}/

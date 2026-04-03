@@ -22,6 +22,15 @@ on:
       user_id:
         required: true
         type: string
+      dotnet_version:
+        required: true
+        type: string
+        default: "10.0.x"
+      ef_version:
+        required: true
+        type: string
+        default: "10.0.*"
+        
 
 jobs:
   build_web_app:
@@ -29,6 +38,7 @@ jobs:
     secrets: inherit
     with:
       server_project_name: ${{ inputs.server_project_name }}
+      dotnet_version: ${{ inputs.dotnet_version }}
 
   deploy_web_app:
     uses: "./.github/workflows/deploy-web-app.yml"
@@ -47,6 +57,8 @@ jobs:
     with:
       data_project_name: ${{ inputs.data_project_name }}
       server_project_name: ${{ inputs.server_project_name }}
+      dotnet_version: ${{ inputs.dotnet_version }}
+      ef_version: ${{ inputs.ef_version }}
       # major_minor_patch: ${{needs.build_web_app.outputs.major_minor_patch}}
 
   deploy_ef:
