@@ -1,7 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Yugen.Shared.Services;
+using Yugen.Common.Blazor.Services;
 
 namespace Yugen.Home.Budget.Server.ViewModels.Info;
 

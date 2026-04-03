@@ -7,8 +7,8 @@ using Yugen.Home.Budget.Application.Models.Expense;
 using Yugen.Home.Budget.Application.Services;
 using Yugen.Home.Budget.Server.Models.Expense;
 using Yugen.Home.Budget.Server.Models.Navigation;
-using Yugen.Shared.Account.Models;
-using Yugen.Shared.Account.Services;
+using Yugen.Common.Blazor.Account.Models;
+using Yugen.Common.Blazor.Account.Services;
 
 namespace Yugen.Home.Budget.Server.ViewModels.Expense;
 

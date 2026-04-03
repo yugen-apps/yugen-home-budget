@@ -8,9 +8,9 @@ using Yugen.Home.Budget.Application.Services;
 using Yugen.Home.Budget.Server.Components.Shared;
 using Yugen.Home.Budget.Server.Models.Category;
 using Yugen.Home.Budget.Server.Models.Navigation;
-using Yugen.Shared.Account.Models;
-using Yugen.Shared.Account.Services;
-using Yugen.Shared.Components;
+using Yugen.Common.Blazor.Account.Models;
+using Yugen.Common.Blazor.Account.Services;
+using Yugen.Common.Blazor.Components;
 
 namespace Yugen.Home.Budget.Server.ViewModels.Category;
 

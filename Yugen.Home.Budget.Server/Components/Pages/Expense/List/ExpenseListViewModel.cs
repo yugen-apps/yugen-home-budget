@@ -8,8 +8,8 @@ using Yugen.Home.Budget.Application.Models;
 using Yugen.Home.Budget.Application.Models.Expense;
 using Yugen.Home.Budget.Application.Services;
 using Yugen.Home.Budget.Server.Components.Shared;
-using Yugen.Home.Budget.Server.Components.Shared.LoadingSpinner;
-using Yugen.Shared.Components;
+using Yugen.Common.Blazor.Components;
+using Yugen.Common.Blazor.Components.LoadingSpinner;
 
 namespace Yugen.Home.Budget.Server.ViewModels.Expense;
 

@@ -1,6 +1,6 @@
 ﻿using MudBlazor;
 using System.Collections.Generic;
-using Yugen.Shared.Models;
+using Yugen.Common.Blazor.Models;
 
 namespace Yugen.Home.Budget.Server.Models.Navigation;
 

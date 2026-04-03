@@ -1,4 +1,4 @@
-﻿@using Yugen.Shared.Account.Shared
+﻿@using Yugen.Common.Blazor.Account.Shared
 @using Yugen.Home.Budget.Server.Components.Pages
 @implements IDisposable
 
@@ -6,8 +6,8 @@
 		AdditionalAssemblies="
 		[
 			typeof(Client._Imports).Assembly,
-			typeof(Yugen.Shared._Imports).Assembly,
-			typeof(Yugen.Shared.Account._Imports).Assembly
+			typeof(Yugen.Common.Blazor._Imports).Assembly,
+			typeof(Yugen.Common.Blazor.Account._Imports).Assembly
 		]"
         NotFoundPage="typeof(NotFound)">
 	<Found Context="routeData">

@@ -7,10 +7,10 @@ using Yugen.Home.Budget.Application.Models;
 using Yugen.Home.Budget.Application.Models.Category;
 using Yugen.Home.Budget.Application.Services;
 using Yugen.Home.Budget.Server.Components.Shared;
-using Yugen.Home.Budget.Server.Components.Shared.LoadingSpinner;
 using Yugen.Home.Budget.Server.Models;
-using Yugen.Shared.Components;
-using Yugen.Shared.Models;
+using Yugen.Common.Blazor.Components;
+using Yugen.Common.Blazor.Components.LoadingSpinner;
+using Yugen.Common.Blazor.Models;
 
 namespace Yugen.Home.Budget.Server.ViewModels.Category;
 

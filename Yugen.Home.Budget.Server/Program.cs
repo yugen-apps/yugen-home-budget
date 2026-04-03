@@ -13,15 +13,15 @@ using Yugen.Home.Budget.Application.Services;
 using Yugen.Home.Budget.Data;
 using Yugen.Home.Budget.Data.Models;
 using Yugen.Home.Budget.Data.Repositories;
-using Yugen.Home.Budget.Server.Components.Shared.LoadingSpinner;
 using Yugen.Home.Budget.Server.ViewModels;
 using Yugen.Home.Budget.Server.ViewModels.Category;
 using Yugen.Home.Budget.Server.ViewModels.Expense;
 using Yugen.Home.Budget.Server.ViewModels.Info;
-using Yugen.Shared.Account;
-using Yugen.Shared.Account.Models;
-using Yugen.Shared.Account.Services;
-using Yugen.Shared.Services;
+using Yugen.Common.Blazor.Account;
+using Yugen.Common.Blazor.Account.Models;
+using Yugen.Common.Blazor.Account.Services;
+using Yugen.Common.Blazor.Components.LoadingSpinner;
+using Yugen.Common.Blazor.Services;
 
 namespace Yugen.Home.Budget.Server;
 
@@ -55,7 +55,7 @@ public class Program
 			.AddIdentityCookies();
 
 #if DEBUG
-		AddDbContext(builder, false);
+		AddDbContext(builder, true);
 #else
         AddDbContext(builder, false);
 #endif
@@ -126,8 +126,8 @@ public class Program
 			.AddInteractiveWebAssemblyRenderMode()
 			.AddAdditionalAssemblies([
 				typeof(Client._Imports).Assembly,
-				typeof(Yugen.Shared._Imports).Assembly,
-				typeof(Yugen.Shared.Account._Imports).Assembly
+				typeof(Yugen.Common.Blazor._Imports).Assembly,
+				typeof(Yugen.Common.Blazor.Account._Imports).Assembly
 				]);
 
 		// Add additional endpoints required by the Identity /Account Razor components.
