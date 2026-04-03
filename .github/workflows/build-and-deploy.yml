@@ -23,11 +23,11 @@ on:
         required: true
         type: string
       dotnet_version:
-        required: true
+        required: false
         type: string
         default: "10.0.x"
       ef_version:
-        required: true
+        required: false
         type: string
         default: "10.0.*"
         
