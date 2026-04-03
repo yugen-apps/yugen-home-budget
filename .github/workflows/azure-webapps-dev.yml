@@ -15,10 +15,10 @@ jobs:
     uses: "./.github/workflows/build-and-deploy.yml"
     secrets: inherit
     with:
-      azure_webapp_name: webapp-yugen-home-budget-dev
-      data_project_name: Yugen.Home.Budget.Data
+      azure_webapp_name: "webapp-yugen-home-budget-dev"
+      data_project_name: "Yugen.Home.Budget.Data"
       database: "sql-db-yugen-homebudget-dev"
       environment_name: "DEV"
       server_name: "sql-server-yugen.database.windows.net,1433"
-      server_project_name: Yugen.Home.Budget.Server
+      server_project_name: "Yugen.Home.Budget.Server"
       user_id: "ddc4c0ff-bab8-4f28-adda-7afa0a086920"      
