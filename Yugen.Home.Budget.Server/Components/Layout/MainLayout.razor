@@ -1,0 +1,45 @@
+﻿@using Yugen.Common.Blazor.Components.LoadingSpinner
+@inherits LayoutComponentBase
+
+<MudThemeProvider IsDarkMode="@_isDarkMode" />
+<MudPopoverProvider />
+<MudDialogProvider />
+<LoadingSpinnerProvider />
+
+<MudLayout>
+
+    <MudAppBar Dense="true">
+        <MudIconButton Icon="@Icons.Material.Filled.Menu"
+                       Color="Color.Inherit"
+                       Edge="Edge.Start"
+                       OnClick="DrawerToggle" />
+        <MudButton Color="Color.Inherit"
+                   EndIcon="@Icons.Material.Filled.Home"
+                   Href="/">
+            Yugen
+        </MudButton>
+        <MudSpacer />
+        <LoginDisplay DarkModeChanged="OnDarkModeChanged" />
+    </MudAppBar>
+
+    <MudDrawer @bind-Open="@_drawerOpen"
+               Breakpoint="Breakpoint.Md"
+               ClipMode="DrawerClipMode.Docked"
+               Variant="DrawerVariant.Responsive">
+        <MudPaper Class="mt-4" />
+        <SideMenu />
+    </MudDrawer>
+
+    <MudMainContent>
+        <MudContainer Class="mt-4">
+            @Body
+        </MudContainer>
+    </MudMainContent>
+
+</MudLayout>
+
+<div id="blazor-error-ui" data-nosnippet>
+    An unhandled error has occurred.
+    <a href="." class="reload">Reload</a>
+    <span class="dismiss">🗙</span>
+</div>

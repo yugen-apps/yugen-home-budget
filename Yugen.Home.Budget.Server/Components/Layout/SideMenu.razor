@@ -1,0 +1,47 @@
+﻿@using Yugen.Home.Budget.Server.Models.Navigation
+
+<MudNavMenu>
+    <MudDivider Class="my-2" />
+    @foreach (var menuItem in MenuConstants.MenuItems)
+    {
+        @if (menuItem.IsParent)
+        {
+            <MudNavGroup Title="@menuItem.Title"
+                         Icon="@menuItem.Icon">
+                @foreach (var menuSubItem in menuItem.MenuSubItems)
+                {
+                    <AuthorizeView Policy="@menuSubItem.Policy">
+                        <Authorized>
+                            <MudNavLink Href="@menuSubItem.Path"
+                                        Icon="@menuItem.Icon">
+                                @menuSubItem.Title
+                            </MudNavLink>
+                        </Authorized>
+                    </AuthorizeView>
+                }
+            </MudNavGroup>
+        }
+        else
+        {
+            <AuthorizeView Policy="@menuItem.Policy">
+                <Authorized>
+                    <MudNavLink Href="@menuItem.Path"
+                                Icon="@menuItem.Icon">
+                        @menuItem.Title
+                    </MudNavLink>
+                </Authorized>
+            </AuthorizeView>
+        }
+    }
+</MudNavMenu>
+<MudDivider Class="my-2" />
+<MudStack AlignItems="AlignItems.End"
+          Row="true">
+    <MudText Align="Align.Center"
+             Color="Color.Default"
+             Typo="Typo.body2"
+             class="pa-2">
+        @_version
+    </MudText>
+</MudStack>
+

@@ -1,0 +1,13 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path=".github/workflows/build-and-deploy.yml" />
+    <File Path=".github/workflows/yugen-home-budget-cicd.yml" />
+    <File Path="README.md" />
+  </Folder>
+  <Project Path="Yugen.Common.Blazor.Account/Yugen.Common.Blazor.Account.csproj" />
+  <Project Path="Yugen.Common.Blazor/Yugen.Common.Blazor.csproj" />
+  <Project Path="Yugen.Home.Budget.Application/Yugen.Home.Budget.Application.csproj" />
+  <Project Path="Yugen.Home.Budget.Client/Yugen.Home.Budget.Client.csproj" />
+  <Project Path="Yugen.Home.Budget.Data/Yugen.Home.Budget.Data.csproj" />
+  <Project Path="Yugen.Home.Budget.Server/Yugen.Home.Budget.Server.csproj" />
+</Solution>
