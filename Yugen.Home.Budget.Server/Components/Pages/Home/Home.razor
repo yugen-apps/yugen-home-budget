@@ -1,9 +1,8 @@
-﻿@using Yugen.Home.Budget.Application.Models.Expense
-@using Yugen.Home.Budget.Server.Components.Shared
-@using Yugen.Home.Budget.Server.Models
-@using Yugen.Home.Budget.Server.Models.Navigation
-@using Yugen.Common.Blazor.Components
+﻿@using Yugen.Common.Blazor.Components
 @using Yugen.Common.Blazor.Models
+@using Yugen.Home.Budget.Application.Models.Expense
+@using Yugen.Home.Budget.Server.Components.Shared
+@using Yugen.Home.Budget.Server.Models.Navigation
 @attribute [Route(MenuConstants.HomePath)]
 @inject Yugen.Home.Budget.Server.ViewModels.HomeViewModel ViewModel
 
@@ -19,31 +18,27 @@
 		<Authorized>
 
 			<MudItem xs="12" sm="6" md="3">
-				<HomeCardComponent Header="Current Year"
-								   IconName="@Icons.Material.Filled.ShoppingCart"
-								   TotalExpense="@ViewModel.CurrentYearTotalExpense"
-								   Footer="Expense Total" />
+				<HomeCardComponent Header="Monthly Expenses"
+								   IconName="@Icons.Material.Filled.Euro"
+								   TotalExpense="@ViewModel.MonthTotalExpense" />
 			</MudItem>
 
 			<MudItem xs="12" sm="6" md="3">
-				<HomeCardComponent Header="Previous Month"
-								   IconName="@Icons.Material.Filled.AttachMoney"
-								   TotalExpense="@ViewModel.PreviousMonthTotalExpense"
-								   Footer="Expense Total" />
-			</MudItem>
-
-			<MudItem xs="12" sm="6" md="3">
-				<HomeCardComponent Header="Current Month"
-								   IconName="@Icons.Material.Filled.CreditCard"
-								   TotalExpense="@ViewModel.CurrentMonthTotalExpense"
-								   Footer="Expense Total" />
-			</MudItem>
-
-			<MudItem xs="12" sm="6" md="3">
-				<HomeCardComponent Header="Current Year"
+				<HomeCardComponent Header="Monthly Accrued"
 								   IconName="@Icons.Material.Filled.Money"
-								   TotalAccrued="@ViewModel.CurrentYearTotalAccrued"
-								   Footer="Accrued Total" />
+								   TotalAccrued="@ViewModel.MonthTotalAccrued" />
+			</MudItem>
+
+			<MudItem xs="12" sm="6" md="3">
+				<HomeCardComponent Header="Year Expenses"
+								   IconName="@Icons.Material.Filled.CreditCard"
+								   TotalExpense="@ViewModel.YearTotalExpense" />
+			</MudItem>
+
+			<MudItem xs="12" sm="6" md="3">
+				<HomeCardComponent Header="Year Accrued"
+								   IconName="@Icons.Material.Filled.Money"
+								   TotalAccrued="@ViewModel.YearTotalAccrued" />
 			</MudItem>
 
 			<MudItem xs="12" sm="12" md="7">
@@ -79,9 +74,11 @@
 								<PropertyColumn Property="x => x.Title"
 												Title="@nameof(ResponseExpenseDto.Title)" />
 								<PropertyColumn Property="x => x.Amount"
-												Title="@nameof(ResponseExpenseDto.Amount)" />
+												Title="@nameof(ResponseExpenseDto.Amount)"
+												Format="c" />
 								<PropertyColumn Property="x => x.Accrued"
-												Title="@nameof(ResponseExpenseDto.Accrued)" />
+												Title="@nameof(ResponseExpenseDto.Accrued)"
+												Format="c" />
 
 								<TemplateColumn CellClass="d-flex justify-between">
 									<CellTemplate Context="expenseContext">

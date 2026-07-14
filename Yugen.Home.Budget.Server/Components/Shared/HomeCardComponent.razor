@@ -1,23 +1,31 @@
 ﻿<MudCard Elevation="8">
-	<MudCardHeader>
-		<MudCardHeader>
-			<CardHeaderAvatar>
-				<MudAvatar Color="Color.Secondary">
-					<MudIcon Icon="@IconName" />
-				</MudAvatar>
-			</CardHeaderAvatar>
-			<CardHeaderContent>
-				<MudText Typo="Typo.body2">@Header</MudText>
-				<MudText Typo="Typo.body2">@Footer</MudText>
-			</CardHeaderContent>
-		</MudCardHeader>
-	</MudCardHeader>
-	<MudCardActions>
-		<MudChip T="string">$ @Current</MudChip>
-		<MudChip T="string"
-				 Color="Color.Primary"
-				 Icon="@Icon">
-			@Percentage %
-		</MudChip>
-	</MudCardActions>
+    <MudCardHeader>
+        <MudCardHeader>
+            <CardHeaderAvatar>
+                <MudAvatar Color="Color.Secondary">
+                    <MudIcon Icon="@IconName" />
+                </MudAvatar>
+            </CardHeaderAvatar>
+            <CardHeaderContent>
+                <MudText Typo="Typo.body1">@Header</MudText>
+                <MudChip T="string"
+                         Color="Color.Primary"
+                         Icon="@Icon">
+                    @Percentage %
+                </MudChip>
+            </CardHeaderContent>
+        </MudCardHeader>
+    </MudCardHeader>
+    <MudCardContent>
+        <MudStack>
+        <MudChip T="string"
+                 Color="Color.Info">
+            Current: @(string.Format("{0:C}", Current))
+        </MudChip>
+        <MudChip T="string"
+                 Color="Color.Tertiary">
+            Previous: @(string.Format("{0:C}", CompareTo))
+        </MudChip>
+        </MudStack>
+    </MudCardContent>
 </MudCard>

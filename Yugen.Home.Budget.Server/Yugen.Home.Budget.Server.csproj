@@ -7,18 +7,19 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="MudBlazor" Version="9.5.0" />
+		<PackageReference Include="MudBlazor" Version="9.7.0" />
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
-		<PackageReference Include="EPPlus" Version="8.5.4" />
+		<PackageReference Include="EPPlus" Version="8.6.1" />
 		<PackageReference Include="Extensions.MudBlazor.StaticInput" Version="4.1.0" />
-		<PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="10.0.*" />
-		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="10.0.*" />
-		<PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="10.0.*" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="10.0.*" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.*">
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="10.0.10" />
+		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="10.0.10" />
+		<PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="10.0.10" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="10.0.10" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.10">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
+		<PackageReference Include="Riok.Mapperly" Version="5.0.0-next.10" />
 	</ItemGroup>
 
 	<ItemGroup>

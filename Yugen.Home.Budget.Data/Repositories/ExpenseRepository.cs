@@ -7,165 +7,153 @@ using Yugen.Home.Budget.Data.Models;
 
 namespace Yugen.Home.Budget.Data.Repositories
 {
-	public class ExpenseRepository : BaseRepository
-	{
-		private readonly ApplicationDbContext _context;
+    public class ExpenseRepository : BaseRepository
+    {
+        private readonly ApplicationDbContext _context;
 
-		public ExpenseRepository(ApplicationDbContext context)
-		{
-			_context = context;
-		}
+        public ExpenseRepository(ApplicationDbContext context)
+        {
+            _context = context;
+        }
 
-		public async Task<BaseListDto<Expense>> ListAsync(
-			int page,
-			int pageSize,
-			int month,
-			int year)
-		{
-			var query = _context.Expenses
-				.Include(e => e.Category)
-				.Include(e => e.SubCategory)
-				.OrderByDescending(x => x.DateTimeOffset)
-				.AsQueryable();
+        public async Task<BaseListDto<Expense>> ListAsync(
+            int page,
+            int pageSize,
+            DateTime? start,
+            DateTime? end)
+        {
+            var query = _context.Expenses
+                .Include(e => e.Category)
+                .Include(e => e.SubCategory)
+                .OrderByDescending(x => x.DateTimeOffset)
+                .AsQueryable();
 
-			query = FilterResults(query, year, month);
+            if (start.HasValue &&
+                end.HasValue)
+            {
+                query = FilterResults(query, start.Value, end.Value);
+            }
 
-			var pagedResults = await GetListAsync(query, page, pageSize);
+            var pagedResults = await GetListAsync(query, page, pageSize);
 
-			return pagedResults;
-		}
+            return pagedResults;
+        }
 
-		private IQueryable<Expense> FilterResults(IQueryable<Expense> query, int year, int month)
-		{
-			if (year > 0)
-			{
-				query = query.Where(x => x.DateTimeOffset.Year == year);
-			}
+        public async Task<decimal> SumAsync(DateTime start, DateTime end)
+        {
+            var query = _context.Expenses.AsQueryable();
 
-			if (month > 0)
-			{
-				query = query.Where(x => x.DateTimeOffset.Month == month);
-			}
+            query = FilterResults(query, start, end);
 
-			return query;
-		}
+            return await query.SumAsync(x => x.Amount);
+        }
 
-		public async Task<decimal> SumAsync(int year, int month)
-		{
-			if (month == 0)
-			{
-				return await _context.Expenses
-					.Where(x => x.DateTimeOffset.Year == year)
-					.SumAsync(x => x.Amount);
-			}
+        public async Task<decimal> SumAccruedAsync(DateTime start, DateTime end)
+        {
+            var query = _context.Expenses.AsQueryable();
 
-			return await _context.Expenses
-				.Where(x => x.DateTimeOffset.Month == month &&
-							x.DateTimeOffset.Year == year)
-				.SumAsync(x => x.Amount);
-		}
+            query = FilterResults(query, start, end);
 
-		public async Task<decimal> SumAccruedAsync(int year, int month)
-		{
-			if (month == 0)
-			{
-				return await _context.Expenses
-					.Where(x => x.DateTimeOffset.Year == year)
-					.SumAsync(x => x.Accrued);
-			}
+            return await query.SumAsync(x => x.Accrued);
+        }
 
-			return await _context.Expenses
-				.Where(x => x.DateTimeOffset.Month == month &&
-							x.DateTimeOffset.Year == year)
-				.SumAsync(x => x.Accrued);
-		}
+        public async Task<List<IGrouping<Category, Expense>>> GroupedByCategoryAsync(DateTime start, DateTime end)
+        {
+            var query = _context.Expenses.AsQueryable();
 
-		public async Task<List<IGrouping<Category, Expense>>> GroupedByCategoryAsync(int year, int month)
-		{
-			return await _context.Expenses
-				.Where(x => x.DateTimeOffset.Month == month &&
-							x.DateTimeOffset.Year == year)
-				.Include(e => e.Category)
-				.GroupBy(e => e.Category)
-				.ToListAsync();
-		}
+            query = FilterResults(query, start, end);
 
-		public async Task<Expense> GetAsync(int id)
-		{
-			var expense = await _context.Expenses.FindAsync(id);
+            return await query
+                .Include(e => e.Category)
+                .GroupBy(e => e.Category)
+                .ToListAsync();
+        }
 
-			if (expense == null)
-			{
-				return null;
-			}
+        public async Task<Expense> GetAsync(int id)
+        {
+            var expense = await _context.Expenses.FindAsync(id);
 
-			await _context.Entry(expense)
-				.Reference(e => e.Category)
-				.LoadAsync();
+            if (expense == null)
+            {
+                return null;
+            }
 
-			await _context.Entry(expense)
-				.Reference(e => e.SubCategory)
-				.LoadAsync();
+            await _context.Entry(expense)
+                .Reference(e => e.Category)
+                .LoadAsync();
 
-			return expense;
-		}
+            await _context.Entry(expense)
+                .Reference(e => e.SubCategory)
+                .LoadAsync();
 
-		public async Task<Expense> CreateAsync(Expense expense)
-		{
-			expense.CreatedOn = DateTimeOffset.UtcNow;
+            return expense;
+        }
 
-			_context.Expenses.Add(expense);
+        public async Task<Expense> CreateAsync(Expense expense)
+        {
+            expense.CreatedOn = DateTimeOffset.UtcNow;
+            expense.LastModifiedOn = DateTimeOffset.UtcNow;
 
-			await _context.Entry(expense)
-				.Reference(e => e.Category)
-				.LoadAsync();
+            _context.Expenses.Add(expense);
 
-			await _context.Entry(expense)
-				.Reference(e => e.SubCategory)
-				.LoadAsync();
+            await _context.Entry(expense)
+                .Reference(e => e.Category)
+                .LoadAsync();
 
-			await _context.SaveChangesAsync();
+            await _context.Entry(expense)
+                .Reference(e => e.SubCategory)
+                .LoadAsync();
 
-			return expense;
-		}
+            await _context.SaveChangesAsync();
 
-		public async Task<Expense> UpdateAsync(Expense expense)
-		{
-			expense.LastModifiedOn = DateTimeOffset.UtcNow;
+            return expense;
+        }
 
-			_context.Expenses.Update(expense);
+        public async Task<Expense> UpdateAsync(Expense expense)
+        {
+            expense.LastModifiedOn = DateTimeOffset.UtcNow;
 
-			await _context.Entry(expense)
-				.Reference(e => e.Category)
-				.LoadAsync();
+            _context.Expenses.Update(expense);
 
-			await _context.Entry(expense)
-				.Reference(e => e.SubCategory)
-				.LoadAsync();
+            await _context.Entry(expense)
+                .Reference(e => e.Category)
+                .LoadAsync();
 
-			await _context.SaveChangesAsync();
+            await _context.Entry(expense)
+                .Reference(e => e.SubCategory)
+                .LoadAsync();
 
-			return expense;
-		}
+            await _context.SaveChangesAsync();
 
-		public async Task DeleteAsync(Expense expense)
-		{
-			_context.Expenses.Remove(expense);
+            return expense;
+        }
 
-			await _context.SaveChangesAsync();
-		}
+        public async Task DeleteAsync(Expense expense)
+        {
+            _context.Expenses.Remove(expense);
 
-		public async Task<int> CountAsync(int year, int month)
-		{
-			return await _context.Expenses
-				.Where(x => x.DateTimeOffset.Month == month &&
-							x.DateTimeOffset.Year == year)
-				.CountAsync();
-		}
+            await _context.SaveChangesAsync();
+        }
 
-		public async Task<bool> ExistsAsync(string title)
-		{
-			return await _context.Expenses.AnyAsync(x => x.Title == title);
-		}
-	}
+        public async Task<int> CountAsync(int year, int month)
+        {
+            return await _context.Expenses
+                .Where(x => x.DateTimeOffset.Month == month &&
+                            x.DateTimeOffset.Year == year)
+                .CountAsync();
+        }
+
+        public async Task<bool> ExistsAsync(string title)
+        {
+            return await _context.Expenses.AnyAsync(x => x.Title == title);
+        }
+
+        private IQueryable<Expense> FilterResults(IQueryable<Expense> query, DateTime start, DateTime end)
+        {
+            query = query.Where(x => x.DateTimeOffset >= start.Date &&
+                                        x.DateTimeOffset <= end.Date);
+
+            return query;
+        }
+    }
 }

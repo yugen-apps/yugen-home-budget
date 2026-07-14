@@ -4,17 +4,17 @@ using System.Threading.Tasks;
 
 namespace Yugen.Home.Budget.Client
 {
-	internal class Program
-	{
-		private static async Task Main(string[] args)
-		{
-			var builder = WebAssemblyHostBuilder.CreateDefault(args);
+    internal class Program
+    {
+        private static async Task Main(string[] args)
+        {
+            var builder = WebAssemblyHostBuilder.CreateDefault(args);
 
-			builder.Services.AddAuthorizationCore();
-			builder.Services.AddCascadingAuthenticationState();
-			builder.Services.AddAuthenticationStateDeserialization();
+            builder.Services.AddAuthorizationCore();
+            builder.Services.AddCascadingAuthenticationState();
+            builder.Services.AddAuthenticationStateDeserialization();
 
-			await builder.Build().RunAsync();
-		}
-	}
+            await builder.Build().RunAsync();
+        }
+    }
 }

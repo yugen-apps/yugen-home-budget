@@ -1,19 +1,19 @@
 ﻿namespace Yugen.Home.Budget.Data.Models;
 
-public class SubCategory : Entity
+public class SubCategory : BaseEntity
 {
-	public SubCategory()
-	{
-	}
+    public SubCategory()
+    {
+    }
 
-	public SubCategory(string title)
-	{
-		Title = title;
-	}
+    public SubCategory(string title)
+    {
+        Title = title;
+    }
 
-	public string Title { get; set; }
+    public string Title { get; set; }
 
-	public int? CategoryId { get; set; }
+    public int? CategoryId { get; set; }
 
-	public Category Category { get; set; }
+    public Category Category { get; set; }
 }

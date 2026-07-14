@@ -8,37 +8,37 @@ namespace Yugen.Home.Budget.Server.Components.Shared;
 
 public partial class IconsDialog
 {
-	[CascadingParameter]
-	private IMudDialogInstance MudDialog { get; set; }
+    [CascadingParameter]
+    private IMudDialogInstance MudDialog { get; set; }
 
-	[Parameter]
-	public string ButtonText { get; set; }
+    [Parameter]
+    public string ButtonText { get; set; }
 
-	[Parameter]
-	public string IconName { get; set; }
+    [Parameter]
+    public string IconName { get; set; }
 
-	private List<MudIcons> MudIconList { get; set; } = [];
+    private List<MudIcons> MudIconList { get; set; } = [];
 
-	private void Submit() => MudDialog.Close(DialogResult.Ok(IconName));
+    private void Submit() => MudDialog.Close(DialogResult.Ok(IconName));
 
-	private void Cancel() => MudDialog.Cancel();
+    private void Cancel() => MudDialog.Cancel();
 
-	public Color IsActive(string iconName)
-	{
-		return IconName == iconName
-			? Color.Primary
-			: Color.Default;
-	}
+    public Color IsActive(string iconName)
+    {
+        return IconName == iconName
+            ? Color.Primary
+            : Color.Default;
+    }
 
-	public void SetIcon(string iconName)
-	{
-		IconName = iconName;
-	}
+    public void SetIcon(string iconName)
+    {
+        IconName = iconName;
+    }
 
-	protected override Task OnInitializedAsync()
-	{
-		MudIconList = IconHelper.GetMudIconsByType(IconType.Filled);
+    protected override Task OnInitializedAsync()
+    {
+        MudIconList = IconHelper.GetMudIconsByType(IconType.Filled);
 
-		return base.OnInitializedAsync();
-	}
+        return base.OnInitializedAsync();
+    }
 }

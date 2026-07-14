@@ -1,11 +1,9 @@
 ﻿@using Microsoft.AspNetCore.Authorization
-@using Yugen.Home.Budget.Application.Models.Expense
-@using Yugen.Home.Budget.Server.Components.Shared
-@using Yugen.Home.Budget.Server.Models
-@using Yugen.Home.Budget.Server.Models.Navigation
-@using Yugen.Home.Budget.Server.ViewModels.Expense
 @using Yugen.Common.Blazor.Components
 @using Yugen.Common.Blazor.Models
+@using Yugen.Home.Budget.Application.Models.Expense
+@using Yugen.Home.Budget.Server.Models.Navigation
+@using Yugen.Home.Budget.Server.ViewModels.Expense
 @attribute [Route(MenuConstants.ExpensePath)]
 @attribute [Authorize]
 @inject ExpenseListViewModel ViewModel
@@ -23,31 +21,19 @@
 			<MudCardHeader>
 
 				<MudButton Color="Color.Secondary"
-						   Href="@($"{MenuConstants.ApiExport}/{ViewModel.SelectedYear}")"
+						   Href="@($"{MenuConstants.ApiExport}/{ViewModel.DateRange.Start?.Year}")"
 						   StartIcon="@Icons.Material.Filled.FileDownload"
 						   Variant="Variant.Filled">
-					Export
+					Export Year
 				</MudButton>
 				<MudSpacer />
-				<MudSelect Label="Month"
-						   T="int"
-						   Value="ViewModel.SelectedMonth"
-						   ValueChanged="(month) => ViewModel.DateChanged(month, null)">
-					@foreach (var month in ViewModel.Months)
-					{
-						<MudSelectItem Value="month">@month</MudSelectItem>
-					}
-				</MudSelect>
-				<MudSpacer />
-				<MudSelect Label="Year"
-						   T="int"
-						   Value="ViewModel.SelectedYear"
-						   ValueChanged="(year) => ViewModel.DateChanged(null, year)">
-					@foreach (var year in ViewModel.Years)
-					{
-						<MudSelectItem Value="year">@year</MudSelectItem>
-					}
-				</MudSelect>
+
+				<MudDateRangePicker 
+					@bind-DateRange="@ViewModel.DateRange"
+					@bind-DateRange:after="@ViewModel.DateRangeChanged"
+					MaxDays="365"
+					Margin="Margin.Dense" />
+
 
 			</MudCardHeader>
 
@@ -78,9 +64,11 @@
 						<PropertyColumn Property="x => x.Title"
 										Title="@nameof(ResponseExpenseDto.Title)" />
 						<PropertyColumn Property="x => x.Amount"
-										Title="@nameof(ResponseExpenseDto.Amount)" />
+										Title="@nameof(ResponseExpenseDto.Amount)"
+										Format="c" />
 						<PropertyColumn Property="x => x.Accrued"
-										Title="@nameof(ResponseExpenseDto.Accrued)" />
+										Title="@nameof(ResponseExpenseDto.Accrued)"
+										Format="c" />
 						<PropertyColumn Property=" x=> x.CategoryDto.Title"
 										Title="Category" />
 						<PropertyColumn Property="x => x.SubCategoryDto.Title"

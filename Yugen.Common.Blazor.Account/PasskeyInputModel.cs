@@ -2,6 +2,6 @@ namespace Yugen.Common.Blazor.Account;
 
 public class PasskeyInputModel
 {
-	public string CredentialJson { get; set; }
-	public string Error { get; set; }
+    public string CredentialJson { get; set; }
+    public string Error { get; set; }
 }

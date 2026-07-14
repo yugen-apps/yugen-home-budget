@@ -7,18 +7,18 @@ namespace Yugen.Home.Budget.Server.Components;
 
 public partial class App
 {
-	[CascadingParameter]
-	private HttpContext HttpContext { get; set; } = default!;
+    [CascadingParameter]
+    private HttpContext HttpContext { get; set; } = default!;
 
-	//private IComponentRenderMode PageRenderMode => HttpContext.Request.Path.StartsWithSegments("/Account")
-	//    ? null
-	//    : new InteractiveServerRenderMode(false);
+    //private IComponentRenderMode PageRenderMode => HttpContext.Request.Path.StartsWithSegments("/Account")
+    //    ? null
+    //    : new InteractiveServerRenderMode(false);
 
-	private IComponentRenderMode PageRenderMode => HttpContext.AcceptsInteractiveRouting()
-		? new InteractiveServerRenderMode(false)
-		: null;
+    private IComponentRenderMode PageRenderMode => HttpContext.AcceptsInteractiveRouting()
+        ? new InteractiveServerRenderMode(false)
+        : null;
 
-	//private IComponentRenderMode PageRenderMode => HttpContext.AcceptsInteractiveRouting()
-	//    ? new InteractiveAutoRenderMode()
-	//    : null;
+    //private IComponentRenderMode PageRenderMode => HttpContext.AcceptsInteractiveRouting()
+    //    ? new InteractiveAutoRenderMode()
+    //    : null;
 }

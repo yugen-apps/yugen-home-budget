@@ -5,39 +5,39 @@ namespace Yugen.Home.Budget.Server.Components;
 
 public partial class Routes
 {
-	public static string CurrentUrl { get; private set; }
+    public static string CurrentUrl { get; private set; }
 
-	public static bool IsAccount => CurrentUrl?.StartsWith("Account") ?? false;
+    public static bool IsAccount => CurrentUrl?.StartsWith("Account") ?? false;
 
-	public static bool IsAccountManage => CurrentUrl?.StartsWith("Account/Manage") ?? false;
+    public static bool IsAccountManage => CurrentUrl?.StartsWith("Account/Manage") ?? false;
 
-	[Inject]
-	private NavigationManager NavigationManager { get; set; }
+    [Inject]
+    private NavigationManager NavigationManager { get; set; }
 
-	protected override void OnInitialized()
-	{
-		if (NavigationManager == null)
-		{
-			return;
-		}
+    protected override void OnInitialized()
+    {
+        if (NavigationManager == null)
+        {
+            return;
+        }
 
-		CurrentUrl = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
-		NavigationManager.LocationChanged += OnLocationChanged;
-	}
+        CurrentUrl = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
+        NavigationManager.LocationChanged += OnLocationChanged;
+    }
 
-	private void OnLocationChanged(object sender, LocationChangedEventArgs e)
-	{
-		CurrentUrl = NavigationManager?.ToBaseRelativePath(e.Location);
-		StateHasChanged();
-	}
+    private void OnLocationChanged(object sender, LocationChangedEventArgs e)
+    {
+        CurrentUrl = NavigationManager?.ToBaseRelativePath(e.Location);
+        StateHasChanged();
+    }
 
-	public void Dispose()
-	{
-		if (NavigationManager == null)
-		{
-			return;
-		}
+    public void Dispose()
+    {
+        if (NavigationManager == null)
+        {
+            return;
+        }
 
-		NavigationManager.LocationChanged -= OnLocationChanged;
-	}
+        NavigationManager.LocationChanged -= OnLocationChanged;
+    }
 }

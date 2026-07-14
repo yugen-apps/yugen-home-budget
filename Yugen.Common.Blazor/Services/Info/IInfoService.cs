@@ -5,10 +5,10 @@ namespace Yugen.Common.Blazor.Services.Info;
 
 public interface IInfoService
 {
-	bool CanConnect();
+    bool CanConnect();
 
-	Task<Dictionary<string, string>> GetAsync(bool isAuthenticated);
-	void TestRead();
-	void TestWrite();
+    Task<Dictionary<string, string>> GetAsync(bool isAuthenticated);
+    void TestRead();
+    void TestWrite();
 }
 

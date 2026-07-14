@@ -4,9 +4,9 @@ namespace Yugen.Common.Blazor.Components.LoadingSpinner;
 
 public interface ILoadingSpinnerService
 {
-	void Wait();
+    void Wait();
 
-	void Resume();
+    void Resume();
 
-	event Action<bool> OnSpinnerStateChanged;
+    event Action<bool> OnSpinnerStateChanged;
 }

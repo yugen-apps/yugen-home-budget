@@ -20,70 +20,70 @@ using Yugen.Home.Budget.Server.ViewModels.Info;
 
 namespace Yugen.Home.Budget.Server.Helpers;
 
-public static class ServiceCollectionExtensions
+public static partial class ServiceCollectionExtensions
 {
-	private const string ServerHttpClient = "ServerHttpClient";
-	private const string DataProject = "Yugen.Home.Budget.Data";
+    private const string ServerHttpClient = "ServerHttpClient";
+    private const string DataProject = "Yugen.Home.Budget.Data";
 
-	public static void ConfigureServices(
-		this IServiceCollection services,
-		ConfigurationManager configuration)
-	{
-		var useInMemoryDatabase = configuration.GetValue<bool>("UseInMemoryDatabase");
-		if (useInMemoryDatabase)
-		{
-			services.AddDbContext<ApplicationDbContext>(options => options.UseInMemoryDatabase("db"));
-		}
-		else
-		{
-			var connectionString = configuration.GetConnectionString("AZURE_SQL_CONNECTIONSTRING");
-				// ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+    public static void ConfigureServices(
+        this IServiceCollection services,
+        ConfigurationManager configuration)
+    {
+        var useInMemoryDatabase = configuration.GetValue<bool>("UseInMemoryDatabase");
+        if (useInMemoryDatabase)
+        {
+            services.AddDbContext<ApplicationDbContext>(options => options.UseInMemoryDatabase("db"));
+        }
+        else
+        {
+            var connectionString = configuration.GetConnectionString("AZURE_SQL_CONNECTIONSTRING");
+            // ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 
-			services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connectionString,
-																						b => b.MigrationsAssembly(DataProject)),
-																   ServiceLifetime.Transient);
-		}
+            services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connectionString,
+                                                                                        b => b.MigrationsAssembly(DataProject)),
+                                                                   ServiceLifetime.Transient);
+        }
 
-		services.AddDatabaseDeveloperPageExceptionFilter();
+        services.AddDatabaseDeveloperPageExceptionFilter();
 
-		services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
-		services.AddScoped<CategoryRepository>();
-		services.AddScoped<ExpenseRepository>();
+        services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
+        services.AddScoped<CategoryRepository>();
+        services.AddScoped<ExpenseRepository>();
 
-		services.AddScoped<CategoryService>();
-		services.AddScoped<ExpenseService>();
+        services.AddScoped<CategoryService>();
+        services.AddScoped<ExpenseService>();
 
-		services.AddScoped<AuthService>();
+        services.AddScoped<AuthService>();
 
-		var baseAddress = configuration.GetValue<string>("BaseUrl") ?? string.Empty;
-		services.AddHttpClient(ServerHttpClient, client => client.BaseAddress = new Uri(baseAddress));
-		// Supply HttpClient instances that include access tokens when making requests to the server project
-		services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>()
-										   .CreateClient(ServerHttpClient));
+        var baseAddress = configuration.GetValue<string>("BaseUrl") ?? string.Empty;
+        services.AddHttpClient(ServerHttpClient, client => client.BaseAddress = new Uri(baseAddress));
+        // Supply HttpClient instances that include access tokens when making requests to the server project
+        services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>()
+                                           .CreateClient(ServerHttpClient));
 
-		services.AddTransient<HomeViewModel>();
-		services.AddTransient<CategoryDetailsViewModel>();
-		services.AddTransient<CategoryListViewModel>();
-		services.AddTransient<ExpenseDetailsViewModel>();
-		services.AddTransient<ExpenseListViewModel>();
-		services.AddTransient<InfoIndexViewodel>();
+        services.AddTransient<HomeViewModel>();
+        services.AddTransient<CategoryDetailsViewModel>();
+        services.AddTransient<CategoryListViewModel>();
+        services.AddTransient<ExpenseDetailsViewModel>();
+        services.AddTransient<ExpenseListViewModel>();
+        services.AddTransient<InfoIndexViewodel>();
 
-		services.AddScoped<ILoadingSpinnerService, LoadingSpinnerService>();
-		services.AddScoped<IInfoService, InfoService>();
-	}
+        services.AddScoped<ILoadingSpinnerService, LoadingSpinnerService>();
+        services.AddScoped<IInfoService, InfoService>();
+    }
 
-	public static async Task InitializeServicesAsync(this IServiceProvider services)
-	{
-		using var scope = services.CreateScope();
+    public static async Task InitializeServicesAsync(this IServiceProvider services)
+    {
+        using var scope = services.CreateScope();
 
-		// Wake Up DB
-		var infoService = scope.ServiceProvider.GetRequiredService<IInfoService>();
-		while (!infoService.CanConnect())
-		{
-			await Task.Delay(10000);
-		}
+        // Wake Up DB
+        var infoService = scope.ServiceProvider.GetRequiredService<IInfoService>();
+        while (!infoService.CanConnect())
+        {
+            await Task.Delay(10000);
+        }
 
-		using var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-		await context.Database.EnsureCreatedAsync();
-	}
+        using var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+        await context.Database.EnsureCreatedAsync();
+    }
 }

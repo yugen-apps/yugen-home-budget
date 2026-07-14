@@ -5,16 +5,16 @@ namespace Yugen.Home.Budget.Server.Components.Pages.Expense.List;
 
 public partial class ExpenseList
 {
-	private MudDataGrid<ResponseExpenseDto> DataGrid;
+    private MudDataGrid<ResponseExpenseDto> DataGrid;
 
-	protected override void OnAfterRender(bool firstRender)
-	{
-		if (firstRender)
-		{
-			ViewModel.RefreshServerDataFunc ??= DataGrid.ReloadServerData;
-		}
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender)
+        {
+            ViewModel.RefreshServerDataFunc ??= DataGrid.ReloadServerData;
+        }
 
-		base.OnAfterRender(firstRender);
-	}
+        base.OnAfterRender(firstRender);
+    }
 }
 

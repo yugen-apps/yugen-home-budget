@@ -1,6 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using MudBlazor;
-using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -9,197 +8,167 @@ using Yugen.Common.Blazor.Components.LoadingSpinner;
 using Yugen.Home.Budget.Application.Models;
 using Yugen.Home.Budget.Application.Models.Expense;
 using Yugen.Home.Budget.Application.Services;
+using Yugen.Home.Budget.Server.Helpers;
 using Yugen.Home.Budget.Server.Models.Home;
 
 namespace Yugen.Home.Budget.Server.ViewModels;
 
 public sealed partial class HomeViewModel : ObservableObject
 {
-	private readonly CategoryService _categoryService;
-	private readonly ExpenseService _expenseService;
-	private readonly IDialogService _dialogService;
-	private readonly ILoadingSpinnerService _loadingSpinnerService;
+    private readonly CategoryService _categoryService;
+    private readonly ExpenseService _expenseService;
+    private readonly IDialogService _dialogService;
+    private readonly ILoadingSpinnerService _loadingSpinnerService;
 
-	private readonly TaskCompletionSource _tcs = new();
-	private readonly DateTimeOffset _now = DateTimeOffset.UtcNow;
+    private readonly TaskCompletionSource _tcs = new();
 
-	[ObservableProperty]
-	private TotalExpense _currentYearTotalExpense;
+    [ObservableProperty]
+    public partial TotalExpense MonthTotalExpense { get; set; }
 
-	[ObservableProperty]
-	private TotalExpense _previousMonthTotalExpense;
+    [ObservableProperty]
+    public partial TotalAccrued MonthTotalAccrued { get; set; }
 
-	[ObservableProperty]
-	private TotalExpense _currentMonthTotalExpense;
+    [ObservableProperty]
+    public partial TotalExpense YearTotalExpense { get; set; }
 
-	[ObservableProperty]
-	private TotalAccrued _currentYearTotalAccrued;
+    [ObservableProperty]
+    public partial TotalAccrued YearTotalAccrued { get; set; }
 
-	[ObservableProperty]
-	private bool _isLoading;
+    [ObservableProperty]
+    public partial bool IsLoading { get; set; }
 
-	[ObservableProperty]
-	private bool _isDataGridLoading;
+    [ObservableProperty]
+    public partial bool IsDataGridLoading { get; set; }
 
-	[ObservableProperty]
-	private PaginatedList<ResponseExpenseDto> _paginatedList = new();
+    [ObservableProperty]
+    public partial PaginatedList<ResponseExpenseDto> PaginatedList { get; set; } = new();
 
-	public HomeViewModel(
-		CategoryService categoryService,
-		ExpenseService expenseService,
-		IDialogService dialogService,
-		ILoadingSpinnerService loadingSpinnerService)
-	{
-		_categoryService = categoryService;
-		_expenseService = expenseService;
-		_dialogService = dialogService;
-		_loadingSpinnerService = loadingSpinnerService;
-	}
+    public HomeViewModel(
+        CategoryService categoryService,
+        ExpenseService expenseService,
+        IDialogService dialogService,
+        ILoadingSpinnerService loadingSpinnerService)
+    {
+        _categoryService = categoryService;
+        _expenseService = expenseService;
+        _dialogService = dialogService;
+        _loadingSpinnerService = loadingSpinnerService;
+    }
 
-	private int Year => _now.Year;
+    public string[] Labels { get; private set; } = [];
 
-	private int Month => _now.Month;
+    public double[] Data { get; private set; } = [];
 
-	private int PreviousMonth => _now.AddMonths(-1).Month;
+    public async Task LoadDataAsync()
+    {
+        _loadingSpinnerService.Wait();
+        IsLoading = true;
 
-	public string[] Labels { get; private set; } = [];
+        try
+        {
+            var previousMonthExpenseTotal = await _expenseService.SumAsync(DateTimeHelper.PreviousMonthStart, DateTimeHelper.PreviousMonthEnd);
+            var currentMonthExpenseTotal = await _expenseService.SumAsync(DateTimeHelper.CurrentMonthStart, DateTimeHelper.CurrentMonthEnd);
+            MonthTotalExpense = new TotalExpense(currentMonthExpenseTotal, previousMonthExpenseTotal);
 
-	public double[] Data { get; private set; } = [];
+            var previousMonthTotalAccrued = await _expenseService.SumAccruedAsync(DateTimeHelper.PreviousMonthStart, DateTimeHelper.PreviousMonthEnd);
+            var currentMonthTotalAccrued = await _expenseService.SumAccruedAsync(DateTimeHelper.CurrentMonthStart, DateTimeHelper.CurrentMonthEnd);
+            MonthTotalAccrued = new TotalAccrued(currentMonthTotalAccrued, previousMonthTotalAccrued);
 
-	public async Task LoadDataAsync()
-	{
-		_loadingSpinnerService.Wait();
-		IsLoading = true;
+            var previousYearTotalExpense = await _expenseService.SumAsync(DateTimeHelper.PreviousYearStart, DateTimeHelper.PreviousYearEnd);
+            var currentYearTotalExpense = await _expenseService.SumAsync(DateTimeHelper.CurrentYearStart, DateTimeHelper.CurrentYearEnd);
+            YearTotalExpense = new TotalExpense(currentYearTotalExpense, previousYearTotalExpense);
 
-		await LoadCurrentYearTotalExpense();
-		await LoadPreviousMonthTotalExpense();
-		await LoadCurrentMonthTotalExpense();
-		await LoadCurrentYearTotalAccrued();
-		await LoadChartData();
+            var previousYearTotalAccrued = await _expenseService.SumAccruedAsync(DateTimeHelper.PreviousYearStart, DateTimeHelper.PreviousYearEnd);
+            var currentYearTotalAccrued = await _expenseService.SumAccruedAsync(DateTimeHelper.CurrentYearStart, DateTimeHelper.CurrentYearEnd);
+            YearTotalAccrued = new TotalAccrued(currentYearTotalAccrued, previousYearTotalAccrued);
+        }
+        catch { }
 
-		_tcs.SetResult();
+        await LoadChartData();
 
-		IsLoading = false;
-		_loadingSpinnerService.Resume();
-	}
+        _tcs.SetResult();
 
-	public async Task LoadCurrentYearTotalExpense()
-	{
-		try
-		{
-			var currentYearTotalExpense = await _expenseService.SumAsync(Year, 0);
-			CurrentYearTotalExpense = new TotalExpense(currentYearTotalExpense);
-		}
-		catch { }
-	}
+        IsLoading = false;
+        _loadingSpinnerService.Resume();
+    }
 
-	public async Task LoadPreviousMonthTotalExpense()
-	{
-		try
-		{
-			var previousMonthExpenseTotal = await _expenseService.SumAsync(Year, PreviousMonth);
-			PreviousMonthTotalExpense = new TotalExpense(previousMonthExpenseTotal, CurrentMonthTotalExpense?.Current ?? 0);
-		}
-		catch { }
-	}
+    public async Task LoadChartData()
+    {
+        try
+        {
+            var data = await _expenseService.GroupedByCategoryAsync(DateTimeHelper.CurrentMonthStart, DateTimeHelper.CurrentMonthEnd);
+            if (data != null)
+            {
+                var labels = data.Select(x => x.Category).ToList();
+                var values = data.Select(x => (double)x.Total).ToList();
 
-	public async Task LoadCurrentMonthTotalExpense()
-	{
-		try
-		{
-			var currentMonthExpenseTotal = await _expenseService.SumAsync(Year, Month);
-			CurrentMonthTotalExpense = new TotalExpense(currentMonthExpenseTotal, PreviousMonthTotalExpense?.Current ?? 0);
-		}
-		catch { }
-	}
+                var currentMonthAccruedTotal = await _expenseService.SumAccruedAsync(DateTimeHelper.CurrentMonthStart, DateTimeHelper.CurrentMonthEnd);
+                labels.Add("Accrued");
+                values.Add((double)currentMonthAccruedTotal);
 
-	public async Task LoadCurrentYearTotalAccrued()
-	{
-		try
-		{
-			var currentYearTotalAccrued = await _expenseService.SumAccruedAsync(Year, 0);
-			CurrentYearTotalAccrued = new TotalAccrued(currentYearTotalAccrued);
-		}
-		catch { }
-	}
+                Labels = labels.ToArray();
+                Data = values.ToArray();
+            }
+        }
+        catch { }
+    }
 
-	public async Task LoadChartData()
-	{
-		try
-		{
-			var data = await _expenseService.GroupedByCategoryAsync(Year, Month);
-			if (data != null)
-			{
-				var labels = data.Select(x => x.Category).ToList();
-				var values = data.Select(x => (double)x.Total).ToList();
+    public async Task<GridData<ResponseExpenseDto>> ServerReload(GridState<ResponseExpenseDto> state, CancellationToken _)
+    {
+        try
+        {
+            IsDataGridLoading = true;
 
-				var currentMonthAccruedTotal = await _expenseService.SumAccruedAsync(Year, Month);
-				labels.Add("Accrued");
-				values.Add((double)currentMonthAccruedTotal);
+            await _tcs.Task;
 
-				Labels = labels.ToArray();
-				Data = values.ToArray();
-			}
-		}
-		catch { }
-	}
+            PaginatedList = await _expenseService.ListAsync(state.Page, state.PageSize, DateTimeHelper.CurrentMonthStart, DateTimeHelper.CurrentMonthEnd) ?? new();
 
-	public async Task<GridData<ResponseExpenseDto>> ServerReload(GridState<ResponseExpenseDto> state, CancellationToken cancellationToken)
-	{
-		try
-		{
-			IsDataGridLoading = true;
+            return new GridData<ResponseExpenseDto>
+            {
+                TotalItems = PaginatedList.TotalItems,
+                Items = PaginatedList.Items
+            };
+        }
+        finally
+        {
+            IsDataGridLoading = false;
+        }
+    }
 
-			await _tcs.Task;
+    public async Task ShowDeleteConfirmMessage(int id)
+    {
+        var parameters = new DialogParameters<MessageDialog>
+        {
+            { x => x.ContentText, "Do you really want to delete these records? This process cannot be undone." },
+            { x => x.ButtonText, "Delete" },
+            { x => x.Color, Color.Error }
+        };
 
-			PaginatedList = await _expenseService.ListAsync(state.Page, state.PageSize, Month, Year) ?? new();
+        var dialog = await _dialogService.ShowAsync<MessageDialog>("Delete", parameters);
 
-			return new GridData<ResponseExpenseDto>
-			{
-				TotalItems = PaginatedList.TotalItems,
-				Items = PaginatedList.Items
-			};
-		}
-		finally
-		{
-			IsDataGridLoading = false;
-		}
-	}
+        var result = await dialog.Result;
+        if ((result?.Canceled) != false)
+        {
+            return;
+        }
 
-	public async Task ShowDeleteConfirmMessage(int id)
-	{
-		var parameters = new DialogParameters<MessageDialog>
-		{
-			{ x => x.ContentText, "Do you really want to delete these records? This process cannot be undone." },
-			{ x => x.ButtonText, "Delete" },
-			{ x => x.Color, Color.Error }
-		};
+        await DeleteAsync(id);
+    }
 
-		var dialog = await _dialogService.ShowAsync<MessageDialog>("Delete", parameters);
+    private async Task DeleteAsync(int id)
+    {
+        var result = await _expenseService.DeleteAsync(id);
+        if (!result)
+        {
+            return;
+        }
 
-		var result = await dialog.Result;
-		if ((result?.Canceled) != false)
-		{
-			return;
-		}
+        var deletedItem = PaginatedList.Items.FirstOrDefault(x => x.Id == id);
+        if (deletedItem == null)
+        {
+            return;
+        }
 
-		await DeleteAsync(id);
-	}
-
-	private async Task DeleteAsync(int id)
-	{
-		var result = await _expenseService.DeleteAsync(id);
-		if (!result)
-		{
-			return;
-		}
-
-		var deletedItem = PaginatedList.Items.FirstOrDefault(x => x.Id == id);
-		if (deletedItem == null)
-		{
-			return;
-		}
-
-		PaginatedList.Remove(deletedItem);
-	}
+        PaginatedList.Remove(deletedItem);
+    }
 }

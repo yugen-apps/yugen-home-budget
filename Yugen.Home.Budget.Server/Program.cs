@@ -7,6 +7,7 @@ using MudBlazor.Services;
 using System.Threading.Tasks;
 using Yugen.Common.Blazor.Account;
 using Yugen.Common.Blazor.Account.Extensions;
+using Yugen.Common.Blazor.Middlewares;
 using Yugen.Home.Budget.Data;
 using Yugen.Home.Budget.Data.Models;
 using Yugen.Home.Budget.Server.Helpers;
@@ -16,80 +17,84 @@ namespace Yugen.Home.Budget.Server;
 
 public class Program
 {
-	public static async Task Main(string[] args)
-	{
-		var builder = WebApplication.CreateBuilder(args);
+    public static async Task Main(string[] args)
+    {
+        var builder = WebApplication.CreateBuilder(args);
 
-		// Add services to the container.
-		builder.Services.AddRazorComponents()
-			.AddInteractiveServerComponents()
-			.AddInteractiveWebAssemblyComponents()
-			.AddAuthenticationStateSerialization();
+        builder.Services.AddLocalization();
 
-		builder.Services.AddCascadingAuthenticationState();
-		builder.Services.AddScoped<IdentityRedirectManager>();
-		builder.Services.AddScoped<AuthenticationStateProvider, IdentityRevalidatingAuthenticationStateProvider>();
+        // Add services to the container.
+        builder.Services.AddRazorComponents()
+            .AddInteractiveServerComponents()
+            .AddInteractiveWebAssemblyComponents()
+            .AddAuthenticationStateSerialization();
 
-		builder.Services.AddAuthentication(options =>
-			{
-				options.DefaultScheme = IdentityConstants.ApplicationScheme;
-				options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
-			})
-			.TryAddGoogleAuth(builder.Configuration, "Authentication:Google")
-			.AddIdentityCookies();
+        builder.Services.AddCascadingAuthenticationState();
+        builder.Services.AddScoped<IdentityRedirectManager>();
+        builder.Services.AddScoped<AuthenticationStateProvider, IdentityRevalidatingAuthenticationStateProvider>();
 
-		builder.Services.AddIdentityCore<ApplicationUser>(options =>
-			{
-				options.SignIn.RequireConfirmedAccount = true;
-				options.Stores.SchemaVersion = IdentitySchemaVersions.Version3;
-			})
-			.AddEntityFrameworkStores<ApplicationDbContext>()
-			.AddSignInManager()
-			.AddDefaultTokenProviders();
+        builder.Services.AddAuthentication(options =>
+            {
+                options.DefaultScheme = IdentityConstants.ApplicationScheme;
+                options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
+            })
+            .TryAddGoogleAuth(builder.Configuration, "Authentication:Google")
+            .AddIdentityCookies();
 
-		builder.Services.ConfigureServices(builder.Configuration);
+        builder.Services.AddIdentityCore<ApplicationUser>(options =>
+            {
+                options.SignIn.RequireConfirmedAccount = true;
+                options.Stores.SchemaVersion = IdentitySchemaVersions.Version3;
+            })
+            .AddEntityFrameworkStores<ApplicationDbContext>()
+            .AddSignInManager()
+            .AddDefaultTokenProviders();
 
-		builder.Services.AddControllers();
+        builder.Services.ConfigureServices(builder.Configuration);
 
-		builder.Services.AddMudServices();
+        builder.Services.AddControllers();
 
-		var app = builder.Build();
+        builder.Services.AddMudServices();
 
-		// Configure the HTTP request pipeline.
-		if (app.Environment.IsDevelopment())
-		{
-			app.UseWebAssemblyDebugging();
-			app.UseMigrationsEndPoint();
-		}
-		else
-		{
-			app.UseExceptionHandler(MenuConstants.ErrorPath);
-			// The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-			app.UseHsts();
-		}
+        var app = builder.Build();
 
-		app.UseStatusCodePagesWithReExecute(MenuConstants.NotFoundPath, createScopeForStatusCodePages: true);
-		app.UseHttpsRedirection();
+        app.UseMiddleware<RequestLocalizationMiddleware>();
 
-		app.UseAntiforgery();
+        // Configure the HTTP request pipeline.
+        if (app.Environment.IsDevelopment())
+        {
+            app.UseWebAssemblyDebugging();
+            app.UseMigrationsEndPoint();
+        }
+        else
+        {
+            app.UseExceptionHandler(MenuConstants.ErrorPath);
+            // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+            app.UseHsts();
+        }
 
-		app.MapControllers();
+        app.UseStatusCodePagesWithReExecute(MenuConstants.NotFoundPath, createScopeForStatusCodePages: true);
+        app.UseHttpsRedirection();
 
-		app.MapStaticAssets();
-		app.MapRazorComponents<Components.App>()
-			.AddInteractiveServerRenderMode()
-			.AddInteractiveWebAssemblyRenderMode()
-			.AddAdditionalAssemblies([
-				typeof(Client._Imports).Assembly,
-				typeof(Yugen.Common.Blazor._Imports).Assembly,
-				typeof(Yugen.Common.Blazor.Account._Imports).Assembly
-				]);
+        app.UseAntiforgery();
 
-		// Add additional endpoints required by the Identity /Account Razor components.
-		app.MapAdditionalIdentityEndpoints();
+        app.MapControllers();
 
-		await app.Services.InitializeServicesAsync();
+        app.MapStaticAssets();
+        app.MapRazorComponents<Components.App>()
+            .AddInteractiveServerRenderMode()
+            .AddInteractiveWebAssemblyRenderMode()
+            .AddAdditionalAssemblies([
+                typeof(Client._Imports).Assembly,
+                typeof(Yugen.Common.Blazor._Imports).Assembly,
+                typeof(Yugen.Common.Blazor.Account._Imports).Assembly
+                ]);
 
-		app.Run();
-	}
+        // Add additional endpoints required by the Identity /Account Razor components.
+        app.MapAdditionalIdentityEndpoints();
+
+        await app.Services.InitializeServicesAsync();
+
+        app.Run();
+    }
 }

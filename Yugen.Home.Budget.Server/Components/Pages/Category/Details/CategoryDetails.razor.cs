@@ -7,20 +7,20 @@ namespace Yugen.Home.Budget.Server.Components.Pages.Category.Details;
 
 public partial class CategoryDetails
 {
-	[Parameter]
-	public int? Id { get; set; }
+    [Parameter]
+    public int? Id { get; set; }
 
-	private MudDataGrid<SubCategoryDto> _elementGrid = default!;
+    private MudDataGrid<SubCategoryDto> _elementGrid = default!;
 
-	protected override async Task OnInitializedAsync()
-	{
-		await ViewModel.OnInitializedAsync(Id);
+    protected override async Task OnInitializedAsync()
+    {
+        await ViewModel.OnInitializedAsync(Id);
 
-		await base.OnInitializedAsync();
-	}
+        await base.OnInitializedAsync();
+    }
 
-	private async Task NewItemAsync()
-	{
-		await _elementGrid.SetEditingItemAsync(new SubCategoryDto());
-	}
+    private async Task NewItemAsync()
+    {
+        await _elementGrid.SetEditingItemAsync(new SubCategoryDto());
+    }
 }
