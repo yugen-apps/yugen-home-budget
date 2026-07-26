@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Yugen.Home.Budget.Data.Models;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace Yugen.Home.Budget.Data.Repositories
 {
@@ -135,12 +136,13 @@ namespace Yugen.Home.Budget.Data.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task<int> CountAsync(int year, int month)
+        public async Task<int> CountAsync(DateTime start, DateTime end)
         {
-            return await _context.Expenses
-                .Where(x => x.DateTimeOffset.Month == month &&
-                            x.DateTimeOffset.Year == year)
-                .CountAsync();
+            var query = _context.Expenses.AsQueryable();
+
+            query = FilterResults(query, start, end);
+
+            return await query.CountAsync();
         }
 
         public async Task<bool> ExistsAsync(string title)
@@ -150,8 +152,8 @@ namespace Yugen.Home.Budget.Data.Repositories
 
         private IQueryable<Expense> FilterResults(IQueryable<Expense> query, DateTime start, DateTime end)
         {
-            query = query.Where(x => x.DateTimeOffset >= start.Date &&
-                                        x.DateTimeOffset <= end.Date);
+            query = query.Where(x => x.DateTimeOffset.Date >= start.Date &&
+                                     x.DateTimeOffset.Date <= end.Date);
 
             return query;
         }
