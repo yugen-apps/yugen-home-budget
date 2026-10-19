@@ -14,7 +14,7 @@
 		<PackageReference Include="EPPlus" Version="8.6.3" />
 		<PackageReference Include="Extensions.MudBlazor.StaticInput" Version="4.1.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="10.0.10" />
-		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="10.0.10" />
+		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="10.0.13" />
 		<PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="10.0.10" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="10.0.10" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.10">
