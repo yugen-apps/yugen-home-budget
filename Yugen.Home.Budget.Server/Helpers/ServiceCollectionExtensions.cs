@@ -59,7 +59,7 @@ public static partial class ServiceCollectionExtensions
         services.AddHttpClient(ServerHttpClient, client => client.BaseAddress = new Uri(baseAddress));
         // Supply HttpClient instances that include access tokens when making requests to the server project
         services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>()
-                                           .CreateClient(ServerHttpClient));
+                                   .CreateClient(ServerHttpClient));
 
         services.AddTransient<HomeViewModel>();
         services.AddTransient<CategoryDetailsViewModel>();
@@ -78,12 +78,10 @@ public static partial class ServiceCollectionExtensions
 
         // Wake Up DB
         var infoService = scope.ServiceProvider.GetRequiredService<IInfoService>();
-        while (!infoService.CanConnect())
-        {
-            await Task.Delay(10000);
-        }
+        await infoService.CanConnectAsync();
 
-        using var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-        await context.Database.EnsureCreatedAsync();
+        // TODO:
+        //using var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+        //await context.Database.EnsureCreatedAsync();
     }
 }

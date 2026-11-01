@@ -1,10 +1,12 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using MudBlazor;
 using System.Linq;
+using System.Net.NetworkInformation;
 using System.Threading;
 using System.Threading.Tasks;
 using Yugen.Common.Blazor.Components;
 using Yugen.Common.Blazor.Components.LoadingSpinner;
+using Yugen.Common.Blazor.Services.Info;
 using Yugen.Home.Budget.Application.Models;
 using Yugen.Home.Budget.Application.Models.Expense;
 using Yugen.Home.Budget.Application.Services;
@@ -17,6 +19,7 @@ public sealed partial class HomeViewModel : ObservableObject
 {
     private readonly CategoryService _categoryService;
     private readonly ExpenseService _expenseService;
+    private readonly IInfoService _infoService;
     private readonly IDialogService _dialogService;
     private readonly ILoadingSpinnerService _loadingSpinnerService;
 
@@ -41,11 +44,18 @@ public sealed partial class HomeViewModel : ObservableObject
     public partial bool IsDataGridLoading { get; set; }
 
     [ObservableProperty]
+    public partial Severity DbStatus { get; set; }
+
+    [ObservableProperty]
+    public partial string DbStatusText { get; set; }
+
+    [ObservableProperty]
     public partial PaginatedList<ResponseExpenseDto> PaginatedList { get; set; } = new();
 
     public HomeViewModel(
         CategoryService categoryService,
         ExpenseService expenseService,
+        IInfoService infoService,
         IDialogService dialogService,
         ILoadingSpinnerService loadingSpinnerService)
     {
@@ -53,6 +63,7 @@ public sealed partial class HomeViewModel : ObservableObject
         _expenseService = expenseService;
         _dialogService = dialogService;
         _loadingSpinnerService = loadingSpinnerService;
+        _infoService = infoService;
     }
 
     public string[] Labels { get; private set; } = [];
@@ -63,6 +74,11 @@ public sealed partial class HomeViewModel : ObservableObject
     {
         _loadingSpinnerService.Wait();
         IsLoading = true;
+
+        while(!await TryConnectToDb())
+        {
+            await Task.Delay(5000);
+        }
 
         try
         {
@@ -90,6 +106,27 @@ public sealed partial class HomeViewModel : ObservableObject
 
         IsLoading = false;
         _loadingSpinnerService.Resume();
+    }
+
+    private async Task<bool> TryConnectToDb()
+    {
+        DbStatus = Severity.Warning;
+        DbStatusText = "...DB Connecting...";
+
+        var isDbReady = await _infoService.CanConnectAsync();
+
+        if (isDbReady)
+        {
+            DbStatus = Severity.Success;
+            DbStatusText = "DB Connected";
+        }
+        else
+        {
+            DbStatus = Severity.Error;
+            DbStatusText = "DB error";
+        }
+
+        return isDbReady;
     }
 
     public async Task LoadChartData()

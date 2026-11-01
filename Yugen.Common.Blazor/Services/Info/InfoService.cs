@@ -83,7 +83,7 @@ public class InfoService : IInfoService
         return _list;
     }
 
-    public bool CanConnect() => _dbContext.Database.CanConnect();
+    public Task<bool> CanConnectAsync() => _dbContext.Database.CanConnectAsync();
 
     public void TestRead()
     {
